@@ -1,45 +1,165 @@
 <template>
-  <div id="carrinho">
-    <top />
-    <div class="pl-5 pr-5 mt-12">
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="title mt-4 mb-sm-4">
-            <h2 style="font-weight: bold">Carrinho de Compras</h2>
-            <div class="line"></div>
-          </div>
-          <div class="row">
-            <div class="col-md-5 title_desc d-none d-md-block">
-              <p style="text-align: left; font-weight: bold">Item</p>
+  <section id="carrinho">
+    <top :tela="'ecommerce'" />
+    <div class="container">
+      <div class="pl-5 pr-5 mt-12">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="title mt-4 mb-sm-4">
+              <h2 style="font-weight: bold">Carrinho de Compras</h2>
+              <div class="line"></div>
             </div>
-            <div class="col-md-2 title_desc d-none d-md-block">
-              <p style="font-weight: bold">Preço</p>
+            <div class="row">
+              <div class="col-md-5 title_desc d-none d-md-block">
+                <p style="text-align: left; font-weight: bold">Item</p>
+              </div>
+              <div class="col-md-2 title_desc d-none d-md-block">
+                <p style="font-weight: bold">Preço</p>
+              </div>
+              <div class="col-md-2 title_desc d-none d-md-block">
+                <p style="font-weight: bold">Qtd</p>
+              </div>
+              <div class="col-md-2 title_desc d-none d-md-block">
+                <p style="font-weight: bold">Subtotal</p>
+              </div>
+              <div class="col-md-1 title_desc d-none d-md-block"></div>
             </div>
-            <div class="col-md-2 title_desc d-none d-md-block">
-              <p style="font-weight: bold">Qtd</p>
-            </div>
-            <div class="col-md-2 title_desc d-none d-md-block">
-              <p style="font-weight: bold">Subtotal</p>
-            </div>
-            <div class="col-md-1 title_desc d-none d-md-block"></div>
-          </div>
-          <div v-if="state.carrinho.length > 0">
-            <div v-for="produto in state.carrinho" :key="produto.produtos_id">
-              <div class="row">
-                <div class="col-sm-12 mb-sm-4 col-md-5 d-flex">
-                  <div class="img">
-                    <img :src="produto.imagem" id="img_produto" />
-                    <p class="mt-3 w-75 ml-3">{{ produto.nome }}</p>
+            <div v-if="state.carrinho.length > 0">
+              <div v-for="produto in state.carrinho" :key="produto.produtos_id">
+                <div class="row">
+                  <div class="col-sm-12 mb-sm-4 col-md-5 d-flex">
+                    <div class="img">
+                      <img :src="produto.imagem" id="img_produto" v-if="produto.imagem" />
+                      <img v-else id="img_produto" :src="'/images/site/produto_sem_foto.png'" />
+                      <p class="mt-3 w-75 ml-3">{{ produto.nome }}</p>
+                    </div>
+                  </div>
+                  <div class="col-8 col-sm-8 col-md-2 d-flex">
+                    <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
+                      <p style="font-weight: bold">Preço:</p>
+                    </div>
+                    <div class="element_produto mt-md-3">
+                      <p style="font-weight: bold">
+                        {{
+                          produto.preco.toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-4 col-md-2 mt-md-3">
+                    <div class="div_qtd">
+                      <input class="qtd_text" type="text" @change="
+                        checkNumberInput(
+                          produto.produtos_id,
+                          $event.target.value
+                        )
+                        " :value="produto.quantidade" />
+                      <div class="btns_qtd">
+                        <button type="button" @click="addQtd(produto.produtos_id)" class="btn_qtd">
+                          <i class="bi bi-chevron-up" style="font-size: 14px"></i>
+                        </button>
+                        <button type="button" @click="removeQtd(produto.produtos_id)" class="btn_qtd"
+                          :disabled="produto.quantidade === 1">
+                          <i class="bi bi-chevron-down" style="font-size: 14px"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex col-md-2">
+                    <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
+                      <p>Subtotal:</p>
+                    </div>
+                    <div class="element_produto mt-md-3">
+                      <p style="font-weight: bold">
+                        {{
+                          produto.subtotal.toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="d-flex col-md-1 icon_remove_div mt-2">
+                    <button id="btn_remove" @click="removeItem(produto.produtos_id)">
+                      <i id="trashicon" class="bi bi-trash"></i>
+                    </button>
                   </div>
                 </div>
-                <div class="col-8 col-sm-8 col-md-2 d-flex">
-                  <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
-                    <p style="font-weight: bold">Preço:</p>
+              </div>
+            </div>
+            <div class="btns">
+              <a href="/produtos">
+                <button title="Continuar Comprando" class="btn_transparent">
+                  Continuar Comprando
+                </button></a>
+              <button title="Limpar Carrinho" @click="limparCarrinho" class="btn_gold" v-if="state.carrinho.length > 0">
+                Limpar Carrinho
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-4 mb-4 mb-sm-4 mb-md-4 mt-5">
+            <div class="quad">
+              <h2 style="font-weight: bold">Resumo</h2>
+              <h4>Estimativa Frete</h4>
+              <p>Coloque seu para estimativa de frete</p>
+              <hr />
+              <div class="row">
+                <div class="col-6">
+                  <div>
+                    <p style="font-weight: bold">Subtotal</p>
                   </div>
-                  <div class="element_produto mt-md-3">
+                  <div>
+                    <p style="font-weight: bold">Frete</p>
+                  </div>
+                  <div>
+                    <p style="font-weight: bold">Total</p>
+                  </div>
+                  <div>
+                    <p style="font-weight: bold">Total Com Desconto</p>
+                  </div>
+                  <div>
+                    <p style="font-weight: bold">Total No Pix</p>
+                  </div>
+                </div>
+                <div style="text-align: right" class="col-6">
+                  <div v-if="state.carrinho.length > 0">
                     <p style="font-weight: bold">
                       {{
-                        produto.preco.toLocaleString("pt-br", {
+                        state.carrinho.valor_total.toLocaleString("pt-br", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      }}
+                    </p>
+                    <div>
+                      <p style="font-weight: bold">Frete</p>
+                    </div>
+                    <p style="font-weight: bold">
+                      {{
+                        state.carrinho.valor_total.toLocaleString("pt-br", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      }}
+                    </p>
+                    <p style="font-weight: bold">
+                      {{
+                        state.carrinho.valor_total_desconto.toLocaleString(
+                          "pt-br",
+                          {
+                            style: "currency",
+                            currency: "BRL",
+                          }
+                        )
+                      }}
+                    </p>
+                    <p style="font-weight: bold">
+                      {{
+                        state.carrinho.valor_total_pix.toLocaleString("pt-br", {
                           style: "currency",
                           currency: "BRL",
                         })
@@ -47,134 +167,76 @@
                     </p>
                   </div>
                 </div>
-                <div class="col-4 col-sm-4 col-md-2 mt-md-3">
-                  <div class="div_qtd">
-                    <input class="qtd_text" type="number" @change="
-                      checkNumberInput(
-                        produto.produtos_id,
-                        $event.target.value
-                      )
-                      " :value="produto.quantidade" />
-                    <div class="btns_qtd">
-                      <button type="button" @click="addQtd(produto.produtos_id)" class="btn_qtd">
-                        <i class="bi bi-chevron-up" style="font-size: 14px"></i>
-                      </button>
-                      <button type="button" @click="removeQtd(produto.produtos_id)" class="btn_qtd"
-                        :disabled="produto.quantidade === 1">
-                        <i class="bi bi-chevron-down" style="font-size: 14px"></i>
-                      </button>
-                    </div>
+              </div>
+              <div class="div_btn_quad">
+                <button type="button" @click="fazerPedido()" class="btn_pedido" v-if="state.carrinho.length > 0"
+                  :disabled="state.loading">
+                  <div class="d-flex align-items-center" v-if="state.loading">
+                    <strong role="status">Carregando Pedido...</strong>
+                    <div class="spinner-border ms-auto" aria-hidden="true"></div>
                   </div>
-                </div>
-                <div class="d-flex col-md-2">
-                  <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
-                    <p>Subtotal:</p>
-                  </div>
-                  <div class="element_produto mt-md-3">
-                    <p style="font-weight: bold">
-                      {{
-                        produto.subtotal.toLocaleString("pt-br", {
-                          style: "currency",
-                          currency: "BRL",
-                      })
-                      }}
-                    </p>
-                  </div>
-                </div>
-                <div class="d-flex col-md-1 icon_remove_div mt-2">
-                  <button id="btn_remove" @click="removeItem(produto.produtos_id)">
-                    <i id="trashicon" class="bi bi-trash"></i>
+                  <span v-if="!state.loading">Finalizar Pedido</span>
+                </button>
+                <a href="/produtos" v-else>
+                  <button type="button" class="btn_pedido">
+                    Adicione algum produto
+                  </button> </a><!--
+                <a href="/ver-endereco">
+                  <button type="button" class="btn_endereco" v-if="client_id">
+                    Checar meu Endereço
                   </button>
-                </div>
+                </a>-->
               </div>
-            </div>
-          </div>
-          <div class="btns">
-            <a href="/produtos">
-              <button title="Continuar Comprando" class="btn_transparent">Continuar Comprando</button></a>
-            <button title="Limpar Carrinho" @click="limparCarrinho" class="btn_gold" v-if="state.carrinho.length > 0">
-              Limpar Carrinho
-            </button>
-          </div>
-        </div>
-        <div class="col-lg-4 mb-4 mb-sm-4 mb-md-4 mt-5">
-          <div class="quad">
-            <h2 style="font-weight: bold">Resumo</h2>
-            <h4>Estimativa Frete</h4>
-            <p>Coloque seu para estimativa de frete</p>
-            <hr />
-            <div class="row">
-              <div class="col-6">
-                <div>
-                  <p style="font-weight: bold">Subtotal</p>
-                </div>
-                <div>
-                  <p style="font-weight: bold">Frete</p>
-                </div>
-                <div>
-                  <p style="font-weight: bold">Total</p>
-                </div>
-              </div>
-              <div style="text-align: right" class="col-6">
-                <div v-if="state.carrinho.length > 0">
-                  <p style="font-weight: bold">
-                    {{
-                      state.valores_produtos.total_desconto.toLocaleString(
-                        "pt-br",
-                        {
-                          style: "currency",
-                          currency: "BRL",
-                        }
-                    )
-                    }}
-                  </p>
-                  <div>
-                    <p style="font-weight: bold">Frete</p>
-                  </div>
-                  <p style="font-weight: bold">
-                    {{
-                      state.valores_produtos.total_desconto.toLocaleString(
-                        "pt-br",
-                        { 
-                          style: "currency",
-                          currency: "BRL",
-                        }
-                      )
-                    }}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="div_btn_quad">
-              <button type="button" @click="irPedido()" class="btn_pedido"
-                v-if="state.carrinho.length > 0 && client_id">
-                Continuar para Pedido
-              </button>
-              <a href="/login" v-else-if="state.carrinho.length > 0 && !client_id">
-                <button type="button" class="btn_pedido">
-                  Continuar para Pedido
-                </button>
-              </a>
-              <a href="/produtos" v-else>
-                <button type="button" class="btn_pedido">
-                  Adicione algum produto
-                </button>
-              </a>
-              <a href="/ver-endereco"> <button type="button" class="btn_endereco" v-if="client_id">
-                  Checar meu Endereço
-                </button>
-              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </section>
+  <div class="toast toast-center" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      <strong class="me-auto">Erro</strong>
+      <small class="text-dark">Agora</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Ocorreu um erro ao realizar o pedido. Por favor, tente novamente.
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title text-danger" id="exampleModalLabel">
+            ATENÇÃO
+          </h1>
+        </div>
+        <div class="modal-body">
+          Seu pedido foi
+          <strong class="text-success text-decoration-underline">finalizado com sucesso</strong>
+          e foi encaminhado aos nossos consultores. Logo entraremos em contato
+          via WhatsApp ou email.
+        </div>
+        <div class="modal-footer">
+          <nuxt-link to="/">
+            <button type="button" class="btn-ok" data-bs-dismiss="modal">
+              Ir para Home
+            </button>
+          </nuxt-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
 <script>
 import services from "../services/axios";
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
+// import endereco from "~/services/axios/endereco";
 export default {
   setup() {
     definePageMeta({
@@ -193,26 +255,43 @@ export default {
     const authClienteStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(authClienteStore);
     const state = reactive({
+      loading: false,
       carrinho: [],
       valores_produtos: {
         total: 0,
         total_pix: 0,
         total_desconto: 0,
       },
+      carrinho: {
+        valor_total: "",
+        valor_total_desconto: "",
+        valor_total_pix: "",
+        valor_frete: "",
+        valor_produtos: "",
+      },
       dados: { enderecos: { cidade: { estado: {} } } },
+      pedido: {},
     });
     state.carrinho = itens;
     state.valores_produtos = valores_produtos;
+
+    state.carrinho.valor_frete = 0;
+    state.carrinho.valor_total_desconto = valores_produtos.value.total_desconto;
+    state.carrinho.valor_total_pix = valores_produtos.value.total_pix;
+    state.carrinho.valor_produtos = valores_produtos.value.total;
+    state.carrinho.valor_total =
+      valores_produtos.value.total + state.carrinho.valor_frete;
+    //  console.log(state.carrinho.valor_total);
+    state.produtos = itens;
+
     onMounted(() => {
       fetchDataCliente(client_id.value, client_token.value);
-      console.log(state.id_endereco);
     });
 
     function checkNumberInput(itemId, qtd) {
       if (isNaN(qtd) || qtd < 1) qtd = 1;
       setQtd(itemId, qtd);
     }
-
     async function fetchDataCliente(id, token) {
       try {
         const { data } = await services.clientes.getDataCliente({
@@ -221,17 +300,6 @@ export default {
         });
         state.dados = data;
         state.id_endereco = data.enderecos[0].id;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    function upEndereco() {
-      try {
-        services.clientes.upEndereco({
-          id_endereco: state.id_endereco,
-          endereco: state.dados.enderecos,
-          client_token,
-        });
       } catch (error) {
         console.log(error);
       }
@@ -248,28 +316,56 @@ export default {
         state.dados.enderecos.codigo_ibge = res.data.ibge;
       });
     }
-    function irPedido() {
+    async function fazerPedido() {
       try {
-        if (state.id_endereco) {
-          router.push("/confirmar-pedido");
+        if (state.dados.id) {
+          state.loading = true;
+          await services.clientes
+            .fazerPedido({
+              client_token: client_token.value,
+              pedido: {
+                cliente_id: state.dados.id,
+                endereco_id: state.id_endereco,
+                valor_total: state.carrinho.valor_total,
+                valor_frete: state.carrinho.valor_frete,
+                valor_total_desconto: state.carrinho.valor_total_desconto,
+                valor_total_pix: state.carrinho.valor_total_pix,
+                valor_produtos: state.carrinho.valor_produtos,
+                produtos: state.carrinho,
+              },
+            })
+            .then(() => {
+              limparCarrinho();
+              // Exibe o modal de sucesso
+              const myModal = new bootstrap.Modal(
+                document.getElementById("exampleModal")
+              );
+              myModal.show();
+            })
+            .finally(() => {
+              state.loading = false;
+            });
         } else {
-          if (
-            confirm(
-              "Ops, vimos que não poussí endereço cadastrado, gostaria de adicionar um novo endereço?"
-            )
-          ) {
-            router.push("/criar-endereco");
-          }
+          localStorage.setItem(
+            "destinoUrl",
+            router.currentRoute.value.fullPath
+          );
+          console.log(router.currentRoute.value.fullPath);
+          router.push("/login");
         }
       } catch (error) {
         console.log(error);
+        // Exibe o toast de erro
+        const errorToast = new bootstrap.Toast(
+          document.getElementById("errorToast")
+        );
+        errorToast.show();
       }
     }
     return {
-      irPedido,
+      fazerPedido,
       state,
       cepAtributes,
-      upEndereco,
       limparCarrinho,
       addQtd,
       removeQtd,
@@ -285,12 +381,13 @@ export default {
 #carrinho {
   min-height: 91vh;
 }
+
 #trashicon {
   color: red;
   font-size: 14pt;
 }
 
-.icon_div {   
+.icon_div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -588,6 +685,75 @@ export default {
 .title_modal {
   color: red;
 }
+
+#togglePass {
+  background: transparent;
+  border: none;
+}
+
+.btn-ok {
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: 1px solid rgba(76, 76, 76, 1);
+  background: rgba(76, 76, 76, 1);
+  color: #fff;
+  width: 200px;
+  padding: 5px;
+  transition: 0.3s;
+}
+
+.btn-ok:hover {
+  border: 1px solid rgb(122, 122, 122);
+  background: rgb(122, 122, 122);
+}
+
+.modal-title {
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+.modal-body {
+  padding: 15px;
+  font-size: 12pt;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 0;
+}
+
+.toast-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1055;
+}
+
+.toast-header {
+  font-size: 14pt;
+  font-family: "Poppins", sans-serif;
+  color: red;
+}
+
+.toast-header i {
+  margin-right: 5px;
+}
+
+.toast-body {
+  font-size: 12pt;
+  font-family: "Poppins", sans-serif;
+}
+
+.toast {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
 
 @media (min-width: 992px) and (max-width: 1200px) {
   .desc_produto p {

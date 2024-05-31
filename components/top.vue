@@ -181,18 +181,21 @@ a {
 }
 
 #dropdownMenuLink {
-  color: #000;
+  color: #fff;
+}
+#dropdownMenuLink:hover {
+  color: #00A859;
 }
 
 #dropdownMenuLink i {
   font-size: 22px;
-  color: #797979;
+  color: #fff;
   transition: 0.3s;
 }
 
 #dropdownMenuLink i:hover {
   font-size: 22px;
-  color: #000;
+  color: #00A859;
 }
 
 .option {
