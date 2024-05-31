@@ -1,20 +1,31 @@
 <template>
   <div>
-    <section id="section_1">
+    <section id="section_1" style="position: relative">
+      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div v-for="(banner, index) in state.banner_topo" :key="banner.id"
+            :class="['carousel-item', { active: index === 0 }]">
+            <img id="imagem-banner" :src="banner.imagem" :alt="'Imagem Banner Número ' + index" class="d-block w-100" />
+          </div>
+        </div>
+      </div>
       <div class="div_linear_gradiant">
         <top />
         <div class="container">
           <div class="content_1">
             <div class="text-center">
-              <h1>SOLUÇÕES AGRÍCOLAS ABRANGENTES</h1>
-              <p>Explore nossa vasta gama de peças agrícolas para manter suas operações no campo funcionando sem
-                problemas. Desde tratores até implementos especializados, temos tudo o que você precisa
-                para otimizar seu desempenho agrícola.</p>
+              <h1>Aumente a Eficiência da sua Operação!</h1>
+              <p>
+                Descubra como nossas peças de alta qualidade podem impulsionar
+                sua produção. Encontre soluções para plantadeiras,
+                colheitadeiras e pulverizadores aqui!
+              </p>
               <div class="mt-12">
-                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i>EXPLORE AGORA</a>
-                <a class="btn-orcamento" target="_blank"
-                  :href="'https://wa.me/55' + state.empresa.telefone + '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'"><i
-                    class="bi bi-whatsapp"></i> TIRE SUAS DÚVIDAS </a>
+                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i> Explorar Agora</a>
+                <a class="btn-orcamento" target="_blank" :href="'https://wa.me/55' +
+                  state.empresa.telefone +
+                  '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
+                  "><i class="bi bi-whatsapp"></i> Orçamento Rápido</a>
               </div>
             </div>
           </div>
@@ -413,13 +424,23 @@ function previousPage() {
   background-position: center;
   position: relative;
   background-size: cover;
-  background-image: url('/public/images/site/back.png');
 }
 
 .div_linear_gradiant {
-  background: linear-gradient(#263c28, #263c281c);
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#imagem-banner {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
 }
 
 .content_1 {
@@ -428,6 +449,7 @@ function previousPage() {
   align-items: center;
   height: 80vh;
 }
+
 
 .content_1 h1 {
   color: #3CCF4E;

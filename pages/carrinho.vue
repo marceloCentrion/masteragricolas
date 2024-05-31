@@ -470,7 +470,7 @@ export default {
 }
 
 .div_qtd {
-  width: 50%;
+  width: 70%;
   border-radius: 5px;
   background: var(--Color---1, #f5f7ff);
   border: solid 2px #f5f7ff;
@@ -760,6 +760,18 @@ export default {
     padding: 5px;
     margin-left: 0;
   }
+
+  .div_qtd {
+    width: 90%;
+    border-radius: 5px;
+    background: var(--Color---1, #f5f7ff);
+    border: solid 2px #f5f7ff;
+    border: none;
+    padding: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -770,6 +782,10 @@ export default {
 
   .icon_div {
     margin-top: 2rem;
+  }
+
+  .div_qtd {
+    width: 90%;
   }
 }
 
@@ -797,6 +813,10 @@ export default {
 
   #btn_remove {
     margin-bottom: 1rem;
+  }
+
+  .div_qtd {
+    width: 60%;
   }
 }
 
@@ -842,6 +862,11 @@ export default {
   #btn_remove {
     margin-bottom: 1rem;
   }
+
+  .div_qtd {
+    width: 60%;
+  }
+
 }
 
 
