@@ -88,15 +88,18 @@
       <div class="content_sub">
         <p>PRODUTOS</p>
         <h1>Navegue por Subcategoria</h1>
-        <div class="row">
-          <div class="col-md-3 col-sm-4 col-6" v-for="grupo in state.categorias_destaque" :key="grupo.id">
+        <carousel :items-to-show="1">
+          <slide v-for="categoria in state.categorias" :key="categoria.id">
             <div class="quad_cat">
-              <img :src="grupo.imagem" alt="Imagem Categoria"
-                style="max-height: 150px; width: auto; margin-bottom: 10px" />
-              <h4>{{ grupo.nome }}</h4>
+              <img :src="categoria.imagem" alt="Imagem Categoria" class="imagem_categoria" />
+              <h4>{{ categoria.nome }}</h4>
             </div>
-          </div>
-        </div>
+          </slide>
+          <template #addons>
+            <navigation />
+            <pagination />
+          </template>
+        </carousel>
       </div>
     </div>
     <section id="section_3">
@@ -243,6 +246,9 @@ import { ref, computed } from 'vue';
 import { asyncServices } from "./../services/fetch";
 import axios from "~/services/axios";
 import { Collapse } from "vue-collapsed";
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css'
+
 
 const currentPage = ref(1);
 const itemsPerPage = 4;
@@ -274,16 +280,7 @@ fetchBannerMeio();
 fetchGrupo1();
 fetchEmpresa();
 fetchCat();
-fetchCategoriaDestaque();
 
-async function fetchCategoriaDestaque() {
-  try {
-    const { data } = await axios.categoria.getDestaque();
-    state.categorias_destaque = data;
-  } catch (error) {
-    console.log(error);
-  }
-}
 async function fetchGrupo1() {
   try {
     const { data } = await axios.grupos.getGrupoUm();
@@ -315,6 +312,7 @@ async function fetchCat() {
   try {
     const { data } = await axios.categoria.getAllSite();
     state.categorias = data;
+    console.log(data)
   } catch (error) {
     console.log(error);
   }
@@ -586,16 +584,18 @@ function previousPage() {
 
 }
 
+.imagem_categoria {
+  max-height: 150px;
+  width: auto;
+  margin-bottom: 10px;
+}
+
 .quad_cat {
   background: rgba(76, 76, 76, 1);
   text-align: center;
   border-radius: 15px;
   width: 100%;
   padding: 20px;
-}
-
-.quad_cat img {
-  width: 100%;
 }
 
 .quad_cat h4 {
@@ -1156,17 +1156,20 @@ hr {
   .content_sec_8 h1 {
     font-size: 30px;
   }
-  .question{
+
+  .question {
     font-size: 10pt;
   }
 
   .form-container {
     width: 90%;
   }
+
   .content_news h1 {
     font-size: 30px;
   }
-  .div_input_news button{
+
+  .div_input_news button {
     margin-left: 1rem;
     padding: 10px 10px;
   }
