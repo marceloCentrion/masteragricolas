@@ -1,6 +1,6 @@
 <template>
   <div>
-    <top :tela="'ecommerce'" /> 
+    <top :tela="'ecommerce'" />
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-lg-3">
@@ -40,11 +40,18 @@
             <div class="row mb-6">
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MIN" />
+                <input class="input_valor" type="text" placeholder="MIN" v-model="state.preco_inicial" />
               </div>
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MÁX" />
+                <input class="input_valor" type="text" placeholder="MÁX" v-model="state.preco_final" />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div>
+                <button class="btn_transparent" type="button" @click="filtraPorPreco()" title="Aplicar Faixa de Preço">
+                  Aplicar
+                </button>
               </div>
             </div>
             <!-- <h2 class="h2_side">Ferramentas de Adivinhação</h2>
@@ -138,6 +145,8 @@ export default {
       empresa: {},
       categoria_urn: "",
       checkbox: ['todos'],
+      preco_final: "",
+      preco_inicial: "",
     });
 
     fetchCategoria();
@@ -227,6 +236,18 @@ export default {
           history.pushState({}, "", "/produtos/" + busca);
         });
     }
+
+    async function filtraPorPreco() {
+      try {
+        const { data } = await services.produtos.porFaixaPreco({
+          preco_inicial: state.preco_inicial,
+          preco_final: state.preco_final,
+        });
+        state.produtos = data;
+      } catch {
+        alert("Erro ao filtrar por faixa de preço");
+      }
+    }
     return {
       state,
       filtrados,
@@ -234,12 +255,24 @@ export default {
       menuShow,
       checkboxState,
       handleCheckbox,
+      fetchBusca,
+      filtraPorPreco,
     };
   },
 };
 </script>
 
 <style scoped>
+.btn_transparent {
+  background: transparent;
+  border: solid 2px #334B35;
+  font-family: 'Livvic', sans-serif;
+  color: #334B35;
+  font-weight: 600;
+  padding: 5px 20px;
+  border-radius: 5px;
+}
+
 .nav-link {
   color: #252B42;
   font-weight: 600;
@@ -249,11 +282,11 @@ export default {
 }
 
 .nav-link:hover {
-  color: #00A859 !important;
+  color: #3CCF4E !important;
 }
 
 .nav-link-selected {
-  color: #00A859 !important;
+  color: #3CCF4E !important;
 }
 
 .div_line {
@@ -279,13 +312,13 @@ ol {
 }
 
 .a-bread:hover {
-  color: #016938;
+  color: #3CCF4E;
 }
 
 .h2_side {
   color: #fff;
   font-size: 18px;
-  background: #000000;
+  background: #263C28;
   padding: 8px 12px;
 }
 
@@ -446,14 +479,12 @@ ul {
   border-radius: 4px;
 }
 
-
 @media (min-width: 992px) and (max-width: 1200px) {
 
   .h2_side,
   .h2-cores {
     font-size: 13pt;
   }
-
 
   #menu {
     width: 100%;

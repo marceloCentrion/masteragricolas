@@ -21,7 +21,8 @@
               <li class="item-nav" v-for="categoria in state.categorias" :key="categoria.id">
                 <!-- <span class="">{{ categoria.nome }}</span> -->
                 <!-- <input type="checkbox" /> -->
-                <a @click="filtrados(categoria.urn)" style="cursor: pointer" class="nav-link px-0" :class="{ 'nav-link-selected': categoria.urn == state.categoria_urn, }">
+                <a @click="filtrados(categoria.urn)" style="cursor: pointer" class="nav-link px-0"
+                  :class="{ 'nav-link-selected': categoria.urn == state.categoria_urn, }">
                   <span class="">{{ categoria.nome }}</span>
                 </a>
                 <!-- <hr /> -->
@@ -39,11 +40,18 @@
             <div class="row mb-6">
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MIN" />
+                <input class="input_valor" type="text" placeholder="MIN" v-model="state.preco_inicial" />
               </div>
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MÁX" />
+                <input class="input_valor" type="text" placeholder="MÁX" v-model="state.preco_final" />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div>
+                <button class="btn_transparent" type="button" @click="filtraPorPreco()" title="Aplicar Faixa de Preço">
+                  Aplicar
+                </button>
               </div>
             </div>
             <!-- <h2 class="h2_side">Ferramentas de Adivinhação</h2>
@@ -118,10 +126,8 @@ export default {
     const checkboxState = ref('todos');
     const handleCheckbox = (value) => {
       if (value === 'todos') {
-        // Se 'todos' já estiver selecionado e for clicado novamente, desmarca 'todos'
         state.checkbox = [];
       } else {
-        // Se clicar em qualquer outro, desmarca 'todos' e seleciona o clicado
         state.checkbox = [value];
       }
     };
@@ -140,6 +146,8 @@ export default {
       empresa: {},
       categoria_urn: "",
       checkbox: ['todos'],
+      preco_final: "",
+      preco_inicial: "",
     });
 
     fetchCategoria();
@@ -221,6 +229,18 @@ export default {
         console.log(error);
       }
     }
+    async function filtraPorPreco() {
+      try {
+        const { data } = await services.produtos.porFaixaPreco({
+          preco_inicial: state.preco_inicial,
+          preco_final: state.preco_final,
+        });
+        state.produtos = data;
+      } catch {
+        alert("Erro ao filtrar por faixa de preço");
+      }
+    }
+
 
     return {
       state,
@@ -230,6 +250,7 @@ export default {
       menuShow,
       checkboxState,
       handleCheckbox,
+      filtraPorPreco
     };
   },
 };
@@ -416,6 +437,16 @@ ul {
   font-size: 12pt;
   margin-right: 1rem;
 
+}
+
+.btn_transparent {
+  background: transparent;
+  border: solid 2px #334B35;
+  font-family: 'Livvic', sans-serif;
+  color: #334B35;
+  font-weight: 600;
+  padding: 5px 20px;
+  border-radius: 5px;
 }
 
 .div_local span {

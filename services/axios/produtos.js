@@ -88,5 +88,11 @@ export default httpClient => ({
   //     data: response.data
   //   }
   // },
+  porFaixaPreco: async ({ preco_inicial, preco_final }) => {
+    const response = await httpClient.post('/produtos-por-faixa-preco', { preco_inicial, preco_final });
+    return {
+      data: response.data
+    }
+  },
 
 });
