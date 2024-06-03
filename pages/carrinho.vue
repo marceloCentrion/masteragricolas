@@ -236,6 +236,7 @@
 import services from "../services/axios";
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
+import produtos from "~/services/axios/produtos";
 // import endereco from "~/services/axios/endereco";
 export default {
   setup() {
@@ -243,7 +244,7 @@ export default {
       layout: "site",
     });
     useServerHead({
-      title: "Protecty Alarmes - Carrinho",
+      title: "MASTER - Carrinho",
     });
 
     const router = useRouter();
@@ -263,6 +264,7 @@ export default {
         total_desconto: 0,
       },
       carrinho: {
+        id: "",
         valor_total: "",
         valor_total_desconto: "",
         valor_total_pix: "",
@@ -271,6 +273,7 @@ export default {
       },
       dados: { enderecos: { cidade: { estado: {} } } },
       pedido: {},
+      produtos: [],
     });
     state.carrinho = itens;
     state.valores_produtos = valores_produtos;

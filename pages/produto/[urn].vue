@@ -177,21 +177,28 @@ export default {
     function addProduto() {
       const carrinhoStore = useCarrinhoStore();
       const { addItem } = carrinhoStore;
+      if (state.produto.imagens.length > 0) {
+        var img = state.produto.imagens[0].imagem;
+      } else {
+        var img = null;
+      }
       var produto = {
+        id: state.produto.id,
         produtos_id: state.produto.id,
         nome: state.produto.nome,
+        valor: parseFloat(state.produto.preco),
         preco: parseFloat(state.produto.preco),
         preco_desconto: parseFloat(state.produto.preco_desconto),
         preco_pix: parseFloat(state.produto.preco_pix),
         urn: state.produto.urn,
-        imagem: state.produto.imagens[0].imagem,
+        imagem: img,
         quantidade: state.qtd,
         subtotal: parseFloat(state.produto.preco) * state.qtd,
         subtotal_desconto: parseFloat(state.produto.preco_desconto) * state.qtd,
         subtotal_pix: parseFloat(state.produto.preco_pix) * state.qtd,
       };
       addItem(produto);
-      router.push('/carrinho')
+      router.push("/carrinho");
     }
 
     function verImg(imagem_id) {
