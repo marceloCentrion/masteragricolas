@@ -72,7 +72,14 @@ export default {
             authStorage.client_token = results.data.token;
             authStorage.client_id = results.data.id;
             authStorage.client_nome = results.data.nome;
-            router.go(0);
+            const destinoUrl = localStorage.getItem("destinoUrl");
+            if (destinoUrl) {
+              console.log(destinoUrl);
+              localStorage.removeItem("destinoUrl");
+              router.push(destinoUrl);
+            } else {
+              router.push("/");
+            }
           }
         })
         .catch((error) => {
