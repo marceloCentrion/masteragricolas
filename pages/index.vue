@@ -7,14 +7,26 @@
           <div class="content_1">
             <div class="text-center">
               <h1>SOLUÇÕES AGRÍCOLAS ABRANGENTES</h1>
-              <p>Explore nossa vasta gama de peças agrícolas para manter suas operações no campo funcionando sem
-                problemas. Desde tratores até implementos especializados, temos tudo o que você precisa
-                para otimizar seu desempenho agrícola.</p>
+              <p>
+                Explore nossa vasta gama de peças agrícolas para manter suas
+                operações no campo funcionando sem problemas. Desde tratores até
+                implementos especializados, temos tudo o que você precisa para
+                otimizar seu desempenho agrícola.
+              </p>
               <div class="mt-12">
-                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i>EXPLORE AGORA</a>
-                <a class="btn-orcamento" target="_blank"
-                  :href="'https://wa.me/55' + state.empresa.telefone + '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'"><i
-                    class="bi bi-whatsapp"></i> TIRE SUAS DÚVIDAS </a>
+                <a class="btn-explorar" href="/produtos"
+                  ><i class="bi bi-search"></i>EXPLORE AGORA</a
+                >
+                <a
+                  class="btn-orcamento"
+                  target="_blank"
+                  :href="
+                    'https://wa.me/55' +
+                    state.empresa.telefone +
+                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
+                  "
+                  ><i class="bi bi-whatsapp"></i> TIRE SUAS DÚVIDAS
+                </a>
               </div>
             </div>
           </div>
@@ -27,19 +39,22 @@
         <div class="col-lg-4 col-md-6">
           <div class="quad">
             <div class="div_flex">
-              <div><img src="./../public/images/site/Frame.png" alt="Frame"></div>
+              <div>
+                <img src="./../public/images/site/Frame.png" alt="Frame" />
+              </div>
               <div>
                 <h3>Quer tirar dúvidas</h3>
                 <p>Fale com um consultor</p>
               </div>
             </div>
-
           </div>
         </div>
-        <div class="col-lg-4 d-md-none d-lg-block ">
+        <div class="col-lg-4 d-md-none d-lg-block">
           <div class="quad_light">
             <div class="div_flex">
-              <div><img src="./../public/images/site/Frame3.png" alt="Frame"></div>
+              <div>
+                <img src="./../public/images/site/Frame3.png" alt="Frame" />
+              </div>
               <div>
                 <h3>Whatsapp Exclusivo</h3>
                 <p>Para Clientes Master</p>
@@ -50,7 +65,9 @@
         <div class="col-lg-4 col-md-6">
           <div class="quad">
             <div class="div_flex">
-              <div><img src="./../public/images/site/Frame2.png" alt="Frame"></div>
+              <div>
+                <img src="./../public/images/site/Frame2.png" alt="Frame" />
+              </div>
               <div>
                 <h3>Nossos Feedback</h3>
                 <p>Veja o que estão falando</p>
@@ -61,7 +78,9 @@
         <div class="col-lg-4 col-md-6 offset-md-3 d-none d-md-block d-lg-none">
           <div class="quad_light">
             <div class="div_flex">
-              <div><img src="./../public/images/site/Frame3.png" alt="Frame"></div>
+              <div>
+                <img src="./../public/images/site/Frame3.png" alt="Frame" />
+              </div>
               <div>
                 <h3>Whatsapp Exclusivo</h3>
                 <p>Para Clientes Master</p>
@@ -77,7 +96,11 @@
           <p>LINHA COMPLETA</p>
           <h1>Semeadeiras</h1>
           <div class="row">
-            <div class="col-lg-3 col-md-6" v-for="(produto) in displayedProdutos" :key="produto.id">
+            <div
+              class="col-lg-3 col-md-6"
+              v-for="produto in displayedProdutos"
+              :key="produto.id"
+            >
               <cardLinha :produto="produto" />
             </div>
           </div>
@@ -89,10 +112,17 @@
         <p>PRODUTOS</p>
         <h1>Navegue por Subcategoria</h1>
         <div class="row">
-          <div class="col-md-3 col-sm-4 col-6" v-for="grupo in state.categorias_destaque" :key="grupo.id">
+          <div
+            class="col-md-3 col-sm-4 col-6"
+            v-for="grupo in state.categorias_destaque"
+            :key="grupo.id"
+          >
             <div class="quad_cat">
-              <img :src="grupo.imagem" alt="Imagem Categoria"
-                style="max-height: 150px; width: auto; margin-bottom: 10px" />
+              <img
+                :src="grupo.imagem"
+                alt="Imagem Categoria"
+                style="max-height: 150px; width: auto; margin-bottom: 10px"
+              />
               <h4>{{ grupo.nome }}</h4>
             </div>
           </div>
@@ -105,15 +135,22 @@
           <p>PRODUTOS</p>
           <h1>Mais Vendidos</h1>
           <div class="row">
-            <div class="col-lg-3 col-md-6" v-for="(produto) in displayedProdutos" :key="produto.id">
+            <div
+              class="col-lg-3 col-md-6"
+              v-for="produto in displayedProdutos"
+              :key="produto.id"
+            >
               <cardProduto :produto="produto" />
             </div>
           </div>
           <div class="pagination">
-            <button @click="previousPage" :disabled="currentPage === 1"><i class="bi bi-chevron-left"></i></button>
+            <button @click="previousPage" :disabled="currentPage === 1">
+              <i class="bi bi-chevron-left"></i>
+            </button>
             <span>{{ currentPage }}</span>
-            <button @click="nextPage" :disabled="currentPage === totalPages"><i
-                class="bi bi-chevron-right"></i></button>
+            <button @click="nextPage" :disabled="currentPage === totalPages">
+              <i class="bi bi-chevron-right"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -126,12 +163,19 @@
               <div class="content_3">
                 <div>
                   <h2>QUEM SOMOS</h2>
-                  <h3>A Master é líder no mercado de peças agrícolas, simplificando a aquisição de componentes
-                    essenciais para o ciclo agrícola.</h3>
-                  <p>Oferecemos uma ampla gama de peças para plantadeiras, colheitadeiras, pulverizadores, plataformas,
-                    grades, pontas de pulverização, rolamentos, filtros, correntes e correias de diversas linhas e
-                    marcas. Nosso foco está em auxiliar nossos clientes a superar desafios, oferecendo preços justos e
-                    qualidade superior.</p>
+                  <h3>
+                    A Master é líder no mercado de peças agrícolas,
+                    simplificando a aquisição de componentes essenciais para o
+                    ciclo agrícola.
+                  </h3>
+                  <p>
+                    Oferecemos uma ampla gama de peças para plantadeiras,
+                    colheitadeiras, pulverizadores, plataformas, grades, pontas
+                    de pulverização, rolamentos, filtros, correntes e correias
+                    de diversas linhas e marcas. Nosso foco está em auxiliar
+                    nossos clientes a superar desafios, oferecendo preços justos
+                    e qualidade superior.
+                  </p>
                 </div>
               </div>
             </div>
@@ -143,9 +187,12 @@
       <div class="container">
         <div class="content_sec_8">
           <h1>Perguntas Frequentes</h1>
-          <p>Navegue por esta seção informativa para encontrar soluções rápidas e claras para as perguntas mais comuns.
+          <p>
+            Navegue por esta seção informativa para encontrar soluções rápidas e
+            claras para as perguntas mais comuns.
           </p>
         </div>
+        <!--
         <div class="container mt-5 pb-12">
           <div @click="toggleSection(0)" class="question-answer">
             <h5 class="question">
@@ -186,11 +233,12 @@
             </Collapse>
           </div>
         </div>
+-->
       </div>
     </section>
     <section id="section_form">
       <div class="div_img">
-        <img src="@/public/images/site/back_form.png" alt="back_form">
+        <img src="@/public/images/site/back_form.png" alt="back_form" />
       </div>
       <div class="form-container">
         <form>
@@ -200,36 +248,55 @@
           </div>
           <div class="form-group">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo">
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome completo"
+            />
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Digite seu email">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu email"
+            />
           </div>
           <div class="form-group">
             <label for="mensagem">Mensagem</label>
-            <textarea id="mensagem" name="mensagem" rows="4" placeholder="Digite sua mensagem"></textarea>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows="4"
+              placeholder="Digite sua mensagem"
+            ></textarea>
           </div>
           <div class="form-group">
             <button type="submit">ENVIAR</button>
           </div>
         </form>
       </div>
-
     </section>
     <div class="banner_news">
       <div class="container">
         <div class="row">
           <div class="col-md-4">
             <div class="content_news">
-              <h1>fique por dentro </h1>
-              <h3>das <span style="color: #3CCF4E">novidades!</span></h3>
+              <h1>fique por dentro</h1>
+              <h3>das <span style="color: #3ccf4e">novidades!</span></h3>
               <p>Cadastre seu email para ficar atualizado.</p>
             </div>
           </div>
           <div class="col-md-8">
             <div class="div_input_news">
-              <input type="text" class="input_news" placeholder="SEU E-MAIL" v-model="state.newsletter.email" />
+              <input
+                type="text"
+                class="input_news"
+                placeholder="SEU E-MAIL"
+                v-model="state.newsletter.email"
+              />
               <button type="button" @click="envNews()">Cadastrar</button>
             </div>
           </div>
@@ -239,7 +306,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 import { asyncServices } from "./../services/fetch";
 import axios from "~/services/axios";
 import { Collapse } from "vue-collapsed";
@@ -257,16 +324,16 @@ const state = reactive({
   banner_topo: [{}],
   grupo_destaque_um: [{}],
   grupo_destaque_dois: [{}],
-  newsletter: { email: '' },
+  newsletter: { email: "" },
   loader: false,
-  empresa: { telefone: '', },
+  empresa: { telefone: "" },
 });
 useHead({
   title: "MASTER - Home",
-})
+});
 definePageMeta({
   layout: "site",
-})
+});
 
 fetchProdutos();
 fetchBannerTopo();
@@ -297,7 +364,7 @@ async function fetchGrupo1() {
     // // Limitar aos dois primeiros elementos
     // state.grupo_destaque_um = grupos.slice(0, 3);
     state.grupo_destaque_um = data;
-    console.log(data)
+    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -306,7 +373,7 @@ async function fetchEmpresa() {
   try {
     const { data } = await axios.empresa.getSite();
     state.empresa = data;
-    console.log(data)
+    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -373,7 +440,9 @@ async function envNews() {
     });
 }
 
-const totalPages = computed(() => Math.ceil(state.produtos_home.destaque2.length / itemsPerPage));
+const totalPages = computed(() =>
+  Math.ceil(state.produtos_home.destaque2.length / itemsPerPage)
+);
 // Calcula os produtos a serem exibidos na página atual
 const displayedProdutos = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
@@ -415,7 +484,7 @@ function previousPage() {
   background-position: center;
   position: relative;
   background-size: cover;
-  background-image: url('/public/images/site/back.png');
+  background-image: url("/public/images/site/back.png");
 }
 
 .div_linear_gradiant {
@@ -432,10 +501,10 @@ function previousPage() {
 }
 
 .content_1 h1 {
-  color: #3CCF4E;
+  color: #3ccf4e;
   font-weight: 900;
   font-size: 90px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .content_1 p {
@@ -443,18 +512,18 @@ function previousPage() {
   font-weight: 500;
   font-size: 16px;
   line-height: 1.4;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .btn-explorar {
   padding: 16px 24px;
   border-radius: 4px;
   color: rgba(255, 255, 255, 1);
-  background: #3CCF4E;
-  border: 1px solid #3CCF4E;
+  background: #3ccf4e;
+  border: 1px solid #3ccf4e;
   text-decoration: none;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-right: 10px;
   transition: 0.3s;
 }
@@ -463,22 +532,22 @@ function previousPage() {
   padding: 16px 24px;
   border-radius: 4px;
   color: rgba(255, 255, 255, 1);
-  background: #263C28;
-  border: 1px solid #3CCF4E;
+  background: #263c28;
+  border: 1px solid #3ccf4e;
   text-decoration: none;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .btn-orcamento {
   padding: 16px 24px;
   border-radius: 4px;
   color: rgba(255, 255, 255, 1);
-  background: #263C28;
-  border: 1px solid #3CCF4E;
+  background: #263c28;
+  border: 1px solid #3ccf4e;
   text-decoration: none;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: 0.3s;
 }
 
@@ -486,17 +555,16 @@ function previousPage() {
   padding: 16px 24px;
   border-radius: 4px;
   color: rgba(255, 255, 255, 1);
-  background: #3CCF4E;
-  border: 1px solid #3CCF4E;
+  background: #3ccf4e;
+  border: 1px solid #3ccf4e;
   text-decoration: none;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: 0.5s;
-
 }
 
 .quad {
-  background: #263C28;
+  background: #263c28;
   width: 100%;
   padding: 20px;
   margin-top: 4rem;
@@ -504,7 +572,7 @@ function previousPage() {
 }
 
 .quad h3 {
-  color: #3CCF4E;
+  color: #3ccf4e;
   font-weight: 700;
 }
 
@@ -515,7 +583,7 @@ function previousPage() {
 }
 
 .quad_light {
-  background: #3CCF4E;
+  background: #3ccf4e;
   width: 100%;
   padding: 20px;
   margin-top: 4rem;
@@ -523,7 +591,7 @@ function previousPage() {
 }
 
 .quad_light h3 {
-  color: #263C28;
+  color: #263c28;
   font-weight: 700;
 }
 
@@ -531,7 +599,6 @@ function previousPage() {
   color: #fff;
   font-weight: 600;
   margin-bottom: 5px;
-
 }
 
 .div_flex {
@@ -545,45 +612,43 @@ function previousPage() {
 }
 
 .content_sub h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 3rem;
   font-size: 32px;
   font-weight: bold;
   line-height: 44px;
   text-align: center;
-  color: #3CCF4E;
+  color: #3ccf4e;
 }
 
 .content_sub P {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 10px;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
   text-align: center;
-  color: #263C28;
-
+  color: #263c28;
 }
 
 .content2 h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 3rem;
   font-size: 32px;
   font-weight: bold;
   line-height: 44px;
   text-align: left;
-  color: #3CCF4E;
+  color: #3ccf4e;
 }
 
 .content2 P {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 10px;
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
   text-align: left;
-  color: #263C28;
-
+  color: #263c28;
 }
 
 .quad_cat {
@@ -610,10 +675,9 @@ function previousPage() {
 }
 
 .rectangle_cat {
-  background: #263C28;
+  background: #263c28;
   padding: 5rem;
   margin-top: 2rem;
-
 }
 
 .pagination {
@@ -622,23 +686,22 @@ function previousPage() {
 }
 
 .pagination button {
-  background-color: #263C28;
+  background-color: #263c28;
   color: #fff;
   padding: 5px 10px;
   border-radius: 4px;
 }
 
 .pagination span {
-  font-family: 'Poppins', sans-serif;
-  color: #F7C35F;
+  font-family: "Poppins", sans-serif;
+  color: #f7c35f;
   font-size: 20px;
   font-weight: 700;
 }
 
-
 #section_4 {
   margin-top: 4rem;
-  background-image: url('/public/images/site/truck.png');
+  background-image: url("/public/images/site/truck.png");
   height: 80vh;
   background-size: cover;
   background-position: center;
@@ -660,7 +723,7 @@ function previousPage() {
 }
 
 .content_3 h2 {
-  color: #263C28;
+  color: #263c28;
   font-weight: 500;
   margin-bottom: 2rem;
 }
@@ -681,7 +744,7 @@ function previousPage() {
 .banner_news {
   width: 100%;
   height: 300px;
-  background-color: #263C28;
+  background-color: #263c28;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -689,31 +752,30 @@ function previousPage() {
 
 .content_news h1 {
   color: #fff;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: bolder;
   font-size: 50px;
 }
 
 .content_news h3 {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 23px;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .content_news h3 span {
   color: #fff;
   font-size: 23px;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .content_news p {
-  font-family: 'Poppins', sans-serif;
-  color: #E4E4EB;
+  font-family: "Poppins", sans-serif;
+  color: #e4e4eb;
   font-weight: lighter;
 }
-
 
 .div_input_news {
   display: flex;
@@ -721,9 +783,9 @@ function previousPage() {
 }
 
 .input_news {
-  background-color: #334B35;
+  background-color: #334b35;
   border-radius: 4px;
-  color: #FFF;
+  color: #fff;
   font-weight: 600;
   padding: 10px 20px;
   width: 70%;
@@ -731,35 +793,34 @@ function previousPage() {
 }
 
 .div_input_news button {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: rgb(255, 255, 255);
   font-weight: bold;
-  background: #3CCF4E;
+  background: #3ccf4e;
   padding: 10px 20px;
   border-radius: 4px;
   transition: 0.3s;
   margin-left: 2rem;
-
 }
 
 .backgroud_sec_8 {
-  background-color: #263C28;
+  background-color: #263c28;
   padding-top: 3rem;
-  padding-bottom: 10px
+  padding-bottom: 10px;
 }
 
 .content_sec_8 h1 {
-  color: #3CCF4E;
+  color: #3ccf4e;
   font-weight: 700;
   font-size: 40px;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
 }
 
 .content_sec_8 p {
   color: #ffff;
   margin-top: 1rem;
   margin-bottom: 2rem;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
 }
 
 .question-answer {
@@ -775,7 +836,7 @@ function previousPage() {
 }
 
 .question i {
-  color: #3CCF4E;
+  color: #3ccf4e;
   float: right;
 }
 
@@ -786,11 +847,10 @@ function previousPage() {
 }
 
 hr {
-  background-color: #FFF;
+  background-color: #fff;
   height: 2px;
   border: none;
 }
-
 
 #section_form {
   position: relative;
@@ -812,11 +872,11 @@ hr {
 
 .form-title {
   text-align: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .form-title h2 {
-  color: #3CCF4E;
+  color: #3ccf4e;
   font-weight: 700;
 }
 
@@ -826,7 +886,6 @@ hr {
 
 .form-group {
   margin-bottom: 15px;
-
 }
 
 .form-group label {
@@ -843,12 +902,12 @@ hr {
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border: 1px solid #3CCF4E;
+  border: 1px solid #3ccf4e;
 }
 
 .form-group textarea {
@@ -857,7 +916,7 @@ hr {
 
 .form-group button {
   padding: 10px 15px;
-  background-color: #3CCF4E;
+  background-color: #3ccf4e;
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -868,7 +927,7 @@ hr {
 }
 
 .form-group button:hover {
-  background-color: #263C28;
+  background-color: #263c28;
 }
 
 .div_img img {
@@ -885,7 +944,6 @@ hr {
 
   .content_1 h1 {
     font-size: 40px;
-
   }
 
   .content_1 h3 {
@@ -932,7 +990,6 @@ hr {
     margin-bottom: 2rem;
   }
 
-
   .content_1 h1 {
     font-size: 38px;
   }
@@ -977,7 +1034,6 @@ hr {
     margin-bottom: 2rem;
   }
 
-
   .content_1 h1 {
     font-size: 40px;
     line-height: 1;
@@ -1018,11 +1074,11 @@ hr {
   }
 
   #triangulo-para-direita {
-    display: none
+    display: none;
   }
 
   #triangulo-para-esquerda {
-    display: none
+    display: none;
   }
 
   #section_2 {
@@ -1041,7 +1097,6 @@ hr {
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
-
 
   .content_1 h1 {
     font-size: 30px;
@@ -1113,7 +1168,6 @@ hr {
 
   .content_grenn2 {
     margin-top: 2rem;
-
   }
 
   .content_grenn2 h2 {
@@ -1156,7 +1210,7 @@ hr {
   .content_sec_8 h1 {
     font-size: 30px;
   }
-  .question{
+  .question {
     font-size: 10pt;
   }
 
@@ -1166,7 +1220,7 @@ hr {
   .content_news h1 {
     font-size: 30px;
   }
-  .div_input_news button{
+  .div_input_news button {
     margin-left: 1rem;
     padding: 10px 10px;
   }
