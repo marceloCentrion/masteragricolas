@@ -2,7 +2,7 @@
   <div class="card-card">
     <div id="card">
       <div id="div_img" v-if="produto.imagens.length <= 0">
-        <img id="img" src="./../images/fundo-sem-imagem.png" />
+        <!--<img id="img" src="./../images/fundo-sem-imagem.png" />-->
       </div>
       <div id="div_img" v-else>
         <img id="img" :src="produto.imagens[0].imagem" />

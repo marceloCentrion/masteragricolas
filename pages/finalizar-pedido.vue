@@ -5,7 +5,6 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="div_img">
-              <img src="./../public/images/logos/logo_mistica_transparente.png" />
             </div>
           </div>
         </div>

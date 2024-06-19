@@ -1,12 +1,19 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg" style="width: 100%;">
+    <nav class="navbar navbar-expand-lg" style="width: 100%">
       <div class="container">
         <a class="navbar-brand" href="/"><img src="/images/site/logo.png" /></a>
-        <button class="navbar-toggler btn-cell" type="button" data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-          aria-label="Toggle navigation">
-          <i class="bi bi-list icon-cell"></i> </button>
+        <button
+          class="navbar-toggler btn-cell"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="bi bi-list icon-cell"></i>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <div class="container-fluid">
             <div class="div_content">
@@ -34,8 +41,14 @@
               </div>
               <div class="icons">
                 <form>
-                  <button @click="buscar()" type="button" class="btn-lupa"><i class="bi bi-search"></i></button>
-                  <input type="text" placeholder="O que está procurando?" v-model="state.busca" />
+                  <button @click="buscar()" type="button" class="btn-lupa">
+                    <i class="bi bi-search"></i>
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="O que está procurando?"
+                    v-model="state.busca"
+                  />
                 </form>
                 <div class="div_icon">
                   <a href="/carrinho"><i class="bi bi-cart3"></i></a>
@@ -44,23 +57,35 @@
                   <a href="/login"> <i class="bi bi-person"></i></a>
                 </div>
                 <div class="dropdown" v-else>
-                  <a class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span><i class="bi bi-person"></i> {{ state.client_nome }}</span>
+                  <a
+                    class="dropdown-toggle"
+                    role="button"
+                    id="dropdownMenuLink"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span
+                      ><i class="bi bi-person"></i>
+                      {{ state.client_nome }}</span
+                    >
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li>
-                      <a class="dropdown-item" href="/meus-pedidos"><i class="bi bi-basket i"></i> Meus Pedidos</a>
+                      <a class="dropdown-item" href="/meus-pedidos"
+                        ><i class="bi bi-basket i"></i> Meus Pedidos</a
+                      >
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/minha-conta"><i class="bi bi-gear i"></i> Configuração da
-                        Conta</a>
+                      <a class="dropdown-item" href="/minha-conta"
+                        ><i class="bi bi-gear i"></i> Configuração da Conta</a
+                      >
                     </li>
                     <li>
-                      <a class="dropdown-item" href="" @click="deslogar"><i class="bi bi-door-open-fill"></i> Sair</a>
+                      <a class="dropdown-item" href="" @click="deslogar"
+                        ><i class="bi bi-door-open-fill"></i> Sair</a
+                      >
                     </li>
-                    <li>
-                    </li>
+                    <li></li>
                   </ul>
                 </div>
               </div>
@@ -80,7 +105,7 @@ export default {
     const state = reactive({
       client_nome: null,
       client_token: null,
-      busca: '',
+      busca: "",
     });
     onMounted(() => {
       state.client_token = storage.client_token;
@@ -117,7 +142,7 @@ export default {
 
 <style scoped>
 nav {
-  background: #263C28;
+  background: #263c28;
 }
 
 .div_content {
@@ -133,13 +158,13 @@ nav {
 
 .div_icon i {
   font-size: 22px;
-  color: #FFFFFF;
+  color: #ffffff;
   transition: 0.5s;
 }
 
 .div_icon i:hover {
   font-size: 22px;
-  color: #3CCF4E;
+  color: #3ccf4e;
 }
 
 .div_icon {
@@ -168,7 +193,6 @@ input {
   border-radius: 4px 0px 0px 4px;
   color: #fff;
   padding: 10px;
-
 }
 
 a {
@@ -176,7 +200,7 @@ a {
 }
 
 .dropdown-item:focus {
-  background: #00A859;
+  background: #00a859;
   color: #000;
 }
 
@@ -184,7 +208,7 @@ a {
   color: #fff;
 }
 #dropdownMenuLink:hover {
-  color: #00A859;
+  color: #00a859;
 }
 
 #dropdownMenuLink i {
@@ -195,7 +219,7 @@ a {
 
 #dropdownMenuLink i:hover {
   font-size: 22px;
-  color: #00A859;
+  color: #00a859;
 }
 
 .option {
@@ -207,12 +231,11 @@ a {
 .option_a {
   margin-left: 10px;
   margin-right: 10px;
-
 }
 
 .option_a p {
-  font-family: 'Poppins', sans-serif;
-  color: #FFFFFF;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
   font-weight: 500;
   font-size: 16px;
   margin-bottom: 0;
@@ -220,11 +243,11 @@ a {
 }
 
 .option_a p:hover {
-  color: #00A859;
+  color: #00a859;
 }
 
 .option_a i {
-  color: #CFB14E;
+  color: #cfb14e;
   font-weight: 400;
   font-size: 16px;
 }
@@ -233,26 +256,22 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .icon-cell {
-  color: #00A859;
+  color: #00a859;
   font-size: 25pt;
 }
 
 .btn-cell {
-  border: solid 1px #FFFFFF1F;
+  border: solid 1px #ffffff1f;
 }
 
-
 @media (min-width: 992px) and (max-width: 1200px) {
-
   .option_a p {
     line-height: 1;
     font-size: 14px;
   }
-
 }
 
 @media (min-width: 768px) and (max-width: 991px) {

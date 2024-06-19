@@ -8,7 +8,6 @@
               <form>
                 <div class="row">
                   <div class="div_img_logo">
-                    <img alt="Protecty Alarmes" src="./../public/images/logos/logo_mistica_transparente.png" />
                   </div>
                 </div>
                 <p class="span_input">
