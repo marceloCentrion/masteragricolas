@@ -4,9 +4,16 @@
       <div class="container-fluid">
         <div class="div">
           <div class="div_2">
-            <a target="_blank" :href="state.empresa.facebook"> <i class="bi bi-facebook"></i></a>
-            <a target="_blank" :href="state.empresa.instagram"> <i class="bi bi-instagram"></i></a>
-            <p>Bem vindo a Comparts, um site de vendas de peças agrícolas feito para você!</p>
+            <a target="_blank" :href="state.empresa.facebook">
+              <i class="bi bi-facebook"></i
+            ></a>
+            <a target="_blank" :href="state.empresa.instagram">
+              <i class="bi bi-instagram"></i
+            ></a>
+            <p>
+              Bem vindo a Master Peças Agrícolas, um site de vendas de peças
+              agrícolas feito para você!
+            </p>
           </div>
           <div class="div_2">
             <i class="bi bi-envelope-fill"></i>
@@ -24,16 +31,16 @@
 import axios from "./../services/axios";
 const state = reactive({
   empresa: {
-    instagram: '',
-    facebook: '',
-  }
+    instagram: "",
+    facebook: "",
+  },
 });
 fetchEmpresa();
 async function fetchEmpresa() {
   try {
     const { data } = await axios.empresa.getSite();
     state.empresa = data;
-    console.log(data)
+    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -73,7 +80,8 @@ i {
   margin-right: 10px;
 }
 
-@media (min-width: 992px) and (max-width: 1200px) {}
+@media (min-width: 992px) and (max-width: 1200px) {
+}
 
 @media (min-width: 768px) and (max-width: 991px) {
   .div {
@@ -85,7 +93,6 @@ i {
   .div {
     display: block;
   }
-
 }
 
 @media (max-width: 575px) {
@@ -103,6 +110,5 @@ i {
   .bi-instagram {
     display: none;
   }
-
 }
 </style>

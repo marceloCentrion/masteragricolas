@@ -26,7 +26,7 @@ import cepService from './cep';
 const API_ENVS = {
   production: '',
   development: '',
-  local: 'https://backend.comparts.com.br/api',
+  local: 'https://backend.masterpecasagricolas.com.br/api',
   cep: 'http://viacep.com.br/ws/',
 }
 const httpClient = axios.create({
