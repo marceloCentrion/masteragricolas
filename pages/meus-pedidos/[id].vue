@@ -1,5 +1,6 @@
 <template>
   <div style="background: #fcfcfc">
+    
     <div class="container">
       <div class="title mt-4 mb-2">
         <h2>Pedido</h2>

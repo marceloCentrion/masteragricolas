@@ -1,13 +1,13 @@
 <template>
   <div>
-    <a href="#"><img id="whatsapp" src="/public/images/site/whatsapp.png" alt="whatsapp" /></a>
+    <a href="#"
+      ><img id="whatsapp" src="/public/images/site/whatsapp.png" alt="whatsapp"
+    /></a>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style scoped>
@@ -16,7 +16,7 @@ export default {
   height: 70px;
   position: fixed;
   right: 50px;
-  bottom: 10px;
+  bottom: 60px;
   opacity: 0.5;
   z-index: 100;
 }

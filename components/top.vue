@@ -48,6 +48,7 @@
                     type="text"
                     placeholder="O que está procurando?"
                     v-model="state.busca"
+                    @keydown.enter.prevent="handleEnter($event.target.value)"
                   />
                 </form>
                 <div class="div_icon">
@@ -111,7 +112,10 @@ export default {
       state.client_token = storage.client_token;
       state.client_nome = storage.client_nome;
     });
-
+    const handleEnter = (event) => {
+      // Seu código aqui. Este método será chamado quando "Enter" for pressionado
+      buscar();
+    };
     async function deslogar() {
       if (confirm("Deseja realmente sair?")) {
         try {
@@ -135,6 +139,7 @@ export default {
       state,
       deslogar,
       buscar,
+      handleEnter,
     };
   },
 };

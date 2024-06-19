@@ -54,6 +54,7 @@
       </div>
     </section>
     <btnWhatsapp />
+
     <div class="container">
       <div class="row">
         <div class="col-lg-4 col-md-6">
@@ -128,6 +129,7 @@
       </div>
     </section>
     <div class="container">
+      <!--
       <div class="content_sub">
         <p>PRODUTOS</p>
         <h1>Navegue por Subcategoria</h1>
@@ -156,70 +158,72 @@
           </carousel>
         </div>
       </div>
-      <section id="section_3">
-        <div class="container">
-          <div class="content2">
-            <p>PRODUTOS</p>
-            <h1>Mais Vendidos</h1>
-            <div class="row">
-              <div
-                class="col-lg-3 col-md-6"
-                v-for="produto in displayedProdutos"
-                :key="produto.id"
-              >
-                <cardProduto :produto="produto" />
-              </div>
-            </div>
-            <div class="pagination">
-              <button @click="previousPage" :disabled="currentPage === 1">
-                <i class="bi bi-chevron-left"></i>
-              </button>
-              <span>{{ currentPage }}</span>
-              <button @click="nextPage" :disabled="currentPage === totalPages">
-                <i class="bi bi-chevron-right"></i>
-              </button>
+      -->
+    </div>
+    <section id="section_3">
+      <div class="container">
+        <div class="content2">
+          <p>PRODUTOS</p>
+          <h1>Mais Vendidos</h1>
+          <div class="row">
+            <div
+              class="col-lg-3 col-md-6"
+              v-for="produto in displayedProdutos"
+              :key="produto.id"
+            >
+              <cardProduto :produto="produto" />
             </div>
           </div>
+          <div class="pagination">
+            <button @click="previousPage" :disabled="currentPage === 1">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <span>{{ currentPage }}</span>
+            <button @click="nextPage" :disabled="currentPage === totalPages">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
         </div>
-      </section>
-      <section id="section_4">
-        <div class="div_lienar_truck">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-8">
-                <div class="content_3">
-                  <div>
-                    <h2>QUEM SOMOS</h2>
-                    <h3>
-                      A Master é líder no mercado de peças agrícolas,
-                      simplificando a aquisição de componentes essenciais para o
-                      ciclo agrícola.
-                    </h3>
-                    <p>
-                      Oferecemos uma ampla gama de peças para plantadeiras,
-                      colheitadeiras, pulverizadores, plataformas, grades,
-                      pontas de pulverização, rolamentos, filtros, correntes e
-                      correias de diversas linhas e marcas. Nosso foco está em
-                      auxiliar nossos clientes a superar desafios, oferecendo
-                      preços justos e qualidade superior.
-                    </p>
-                  </div>
+      </div>
+    </section>
+    <section id="section_4">
+      <div class="div_lienar_truck">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="content_3">
+                <div>
+                  <h2>QUEM SOMOS</h2>
+                  <h3>
+                    A Master é líder no mercado de peças agrícolas,
+                    simplificando a aquisição de componentes essenciais para o
+                    ciclo agrícola.
+                  </h3>
+                  <p>
+                    Oferecemos uma ampla gama de peças para plantadeiras,
+                    colheitadeiras, pulverizadores, plataformas, grades, pontas
+                    de pulverização, rolamentos, filtros, correntes e correias
+                    de diversas linhas e marcas. Nosso foco está em auxiliar
+                    nossos clientes a superar desafios, oferecendo preços justos
+                    e qualidade superior.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-      <section class="backgroud_sec_8">
-        <div class="container">
-          <div class="content_sec_8">
-            <h1>Perguntas Frequentes</h1>
-            <p>
-              Navegue por esta seção informativa para encontrar soluções rápidas
-              e claras para as perguntas mais comuns.
-            </p>
-          </div>
-          <!--
+      </div>
+    </section>
+    <section class="backgroud_sec_8">
+      <div class="container">
+        <div class="content_sec_8">
+          <h1>Perguntas Frequentes</h1>
+          <p>
+            Navegue por esta seção informativa para encontrar soluções rápidas e
+            claras para as perguntas mais comuns.
+          </p>
+        </div>
+        <!--
         <div class="container mt-5 pb-12">
           <div @click="toggleSection(0)" class="question-answer">
             <h5 class="question">
@@ -261,71 +265,70 @@
           </div>
         </div>
 -->
-        </div>
-      </section>
-      <section id="section_form">
-        <div class="div_img">
-          <img src="@/public/images/site/back_form.png" alt="back_form" />
-        </div>
-        <div class="form-container">
-          <form>
-            <div class="form-title">
-              <h2>FICOU COM DÚVIDA?</h2>
-              <p>Preencha os campos a seguir e nos envie sua mensagem</p>
+      </div>
+    </section>
+    <section id="section_form">
+      <div class="div_img">
+        <img src="@/public/images/site/back_form.png" alt="back_form" />
+      </div>
+      <div class="form-container">
+        <form>
+          <div class="form-title">
+            <h2>FICOU COM DÚVIDA?</h2>
+            <p>Preencha os campos a seguir e nos envie sua mensagem</p>
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome completo"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="mensagem">Mensagem</label>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows="4"
+              placeholder="Digite sua mensagem"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit">ENVIAR</button>
+          </div>
+        </form>
+      </div>
+    </section>
+    <div class="banner_news">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="content_news">
+              <h1>fique por dentro</h1>
+              <h3>das <span style="color: #3ccf4e">novidades!</span></h3>
+              <p>Cadastre seu email para ficar atualizado.</p>
             </div>
-            <div class="form-group">
-              <label for="nome">Nome</label>
+          </div>
+          <div class="col-md-8">
+            <div class="div_input_news">
               <input
                 type="text"
-                id="nome"
-                name="nome"
-                placeholder="Digite seu nome completo"
+                class="input_news"
+                placeholder="SEU E-MAIL"
+                v-model="state.newsletter.email"
               />
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Digite seu email"
-              />
-            </div>
-            <div class="form-group">
-              <label for="mensagem">Mensagem</label>
-              <textarea
-                id="mensagem"
-                name="mensagem"
-                rows="4"
-                placeholder="Digite sua mensagem"
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <button type="submit">ENVIAR</button>
-            </div>
-          </form>
-        </div>
-      </section>
-      <div class="banner_news">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="content_news">
-                <h1>fique por dentro</h1>
-                <h3>das <span style="color: #3ccf4e">novidades!</span></h3>
-                <p>Cadastre seu email para ficar atualizado.</p>
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="div_input_news">
-                <input
-                  type="text"
-                  class="input_news"
-                  placeholder="SEU E-MAIL"
-                  v-model="state.newsletter.email"
-                />
-                <button type="button" @click="envNews()">Cadastrar</button>
-              </div>
+              <button type="button" @click="envNews()">Cadastrar</button>
             </div>
           </div>
         </div>
@@ -333,6 +336,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, computed } from "vue";
 import { asyncServices } from "./../services/fetch";
@@ -402,7 +406,7 @@ async function fetchEmpresa() {
 async function fetchCat() {
   try {
     const { data } = await axios.categoria.getAllSite();
-    state.categorias = data;
+    state.categorias_destaque = data;
     console.log(data);
   } catch (error) {
     console.log(error);

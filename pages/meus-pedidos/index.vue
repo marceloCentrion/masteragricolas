@@ -1,23 +1,37 @@
 <template>
-  <div style="background: #fcfcfc">
+  <div>
+    <top :tela="'ecommerce'" />
     <div class="container">
       <div class="title mt-4 mb-4">
         <h2>Pedidos</h2>
       </div>
       <div class="row" v-if="state.pedidos.length > 0">
-        <div class="col-lg-8 col-md-10 mb-5" v-for="pedido in state.pedidos" :key="pedido.id">
+        <div v-if="state.pedidos.length <= 0">
+          <h4>Você ainda não possui pedidos</h4>
+        </div>
+        <div
+          class="col-lg-8 col-md-10 mb-5"
+          v-for="pedido in state.pedidos"
+          :key="pedido.id"
+        >
           <div class="quad">
             <div class="row">
               <div class="col-lg-3 col-md-3">
                 <div class="div_img">
-                  <img id="img_pedido" :src="pedido.produtos[0].imagens[0].imagem" />
+                  <img
+                    id="img_pedido"
+                    :src="pedido.produtos[0].imagens[0].imagem"
+                  />
                 </div>
               </div>
               <div class="col-lg-6 col-md-5">
                 <span :class="state.arrayStatus[pedido.status]">
                   {{ pedido.status }}
                 </span>
-                <div v-for="(produto, index) in pedido.produtos" :key="produto.id">
+                <div
+                  v-for="(produto, index) in pedido.produtos"
+                  :key="produto.id"
+                >
                   <div class="div_nome" v-if="index <= 4">
                     <p>{{ produto.nome }}</p>
                   </div>
@@ -34,10 +48,19 @@
       </div>
       <div class="row" v-else>
         <div class="col-md-10 offset-md-1">
-          <h2 style="font-weight: bolder">Parece que você não possuí pedidos!</h2>
+          <h2 style="font-weight: bolder">
+            Parece que você não possuí pedidos!
+          </h2>
           <div class="mb-5 mt-5">
-            <a href="/" class="btn btn-secondary mr-3">Voltar para a página inicial</a>
-            <a href="/produtos" class="btn" style="background-color: #e13229; color: white">Voltar para os produtos</a>
+            <a href="/" class="btn btn-secondary mr-3"
+              >Voltar para a página inicial</a
+            >
+            <a
+              href="/produtos"
+              class="btn"
+              style="background-color: #e13229; color: white"
+              >Voltar para os produtos</a
+            >
           </div>
         </div>
       </div>
@@ -78,7 +101,7 @@ export default {
           id: client_id.value,
         });
         state.pedidos = data;
-        console.log(state.pedidos.length)
+        console.log(state.pedidos.length);
       } catch (error) {
         console.log(error);
       }
@@ -134,18 +157,18 @@ export default {
 
 .btn_gold {
   margin-top: 45px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   border-radius: 4px;
-  border: 1px solid #CFB14E;
+  border: 1px solid #cfb14e;
   background: transparent;
-  color: #CFB14E;
+  color: #cfb14e;
   width: 200px;
   padding: 4px;
   transition: 0.5s;
 }
 
 .btn_gold:hover {
-  background: #CFB14E;
+  background: #cfb14e;
   color: #000;
 }
 

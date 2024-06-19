@@ -2,7 +2,11 @@
   <div class="card-card">
     <div id="card">
       <div id="div_img" v-if="produto.imagens.length <= 0">
-        <!--<img id="img" src="./../images/fundo-sem-imagem.png" />-->
+        <img
+          id="img"
+          src="/images/site/produto-sem-imagem-fundo.webp"
+          style="padding: 10%"
+        />
       </div>
       <div id="div_img" v-else>
         <img id="img" :src="produto.imagens[0].imagem" />
@@ -30,13 +34,15 @@ export default {
     const valorTotal = computed(() => {
       const precoNumerico = parseFloat(props.produto.preco);
 
-      if (!isNaN(precoNumerico) && typeof props.produto.parcelas === 'number') {
-
+      if (!isNaN(precoNumerico) && typeof props.produto.parcelas === "number") {
         const resultado = precoNumerico / props.produto.parcelas;
 
-        return resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        return resultado.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
       } else {
-        return 'R$ 0,00';
+        return "R$ 0,00";
       }
     });
 
@@ -68,8 +74,8 @@ hr {
   line-height: 24px;
   letter-spacing: 0px;
   text-align: left;
-  color: #FFFFFF;
-  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
 }
 
 #img {
@@ -90,15 +96,16 @@ hr {
 }
 
 .btn_details {
-  background: #3CCF4E;
+  background: #3ccf4e;
   color: rgba(255, 255, 255, 1);
   width: 100%;
   padding: 8px;
   font-weight: 700;
   border-radius: 4px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   transition: 0.5s;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-top: 10px;
 }
 
@@ -107,14 +114,12 @@ hr {
 }
 
 #preco {
-  color: #3CCF4E;
-  font-family: 'Poppins', sans-serif;
+  color: #3ccf4e;
+  font-family: "Poppins", sans-serif;
   font-weight: bold;
   font-size: 16pt;
   margin-bottom: 0;
-
 }
-
 
 @media (min-width: 992px) and (max-width: 1200px) {
   #img {
@@ -136,7 +141,8 @@ hr {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .card-card {}
+  .card-card {
+  }
 
   #img {
     width: 300px;

@@ -1,8 +1,8 @@
 <template>
   <div>
+    <top :tela="'ecommerce'" />
     <div class="container" v-if="!state.notFound">
-      <div class="container mt-12">
-      </div>
+      <div class="container mt-12"></div>
       <div class="row">
         <div class="col-md-8">
           <!-- <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
@@ -25,14 +25,23 @@
           </nav> -->
         </div>
       </div>
+
       <div class="row mt-8">
         <div class="col-md-8">
           <div class="row">
             <div class="col-md-2">
               <div class="div-flex">
-                <div class="div_margin" v-for="imagem in state.produto.imagens" :key="imagem.id">
+                <div
+                  class="div_margin"
+                  v-for="imagem in state.produto.imagens"
+                  :key="imagem.id"
+                >
                   <div
-                    :class="{ 'card-select': state.img_select === imagem.id, 'card-list': state.img_select !== imagem.id }">
+                    :class="{
+                      'card-select': state.img_select === imagem.id,
+                      'card-list': state.img_select !== imagem.id,
+                    }"
+                  >
                     <a type="button" @click="verImg(imagem.id)">
                       <img class="imgs-produtos" :src="imagem.imagem" />
                     </a>
@@ -41,7 +50,16 @@
               </div>
             </div>
             <div class="col-md-9 offset-sm-1">
-              <img class="img-principal" :src="state.img_principal" />
+              <img
+                class="img-principal"
+                :src="state.img_principal"
+                v-if="state.img_principal"
+              />
+              <img
+                class="img-sem"
+                src="/images/site/produto-sem-imagem.webp"
+                v-else
+              />
             </div>
           </div>
         </div>
@@ -53,11 +71,21 @@
           <hr />
           <div>
             <h2 id="preco">
-              R$ {{ state.produto.preco.toLocaleString("pt-br", { style: "currency", currency: "BRL", }) }}
+              R$
+              {{
+                state.produto.preco.toLocaleString("pt-br", {
+                  style: "currency",
+                  currency: "BRL",
+                })
+              }}
             </h2>
             <div class="div-preco">
-              <p id="parcelas">ou <span class="spn-parcelas">{{ state.produto.parcelas }}x</span> de <span
-                  class="valor-parcela"> {{ valorTotal }} </span> sem juros</p>
+              <p id="parcelas">
+                ou
+                <span class="spn-parcelas">{{ state.produto.parcelas }}x</span>
+                de <span class="valor-parcela"> {{ valorTotal }} </span> sem
+                juros
+              </p>
             </div>
           </div>
           <div class="">
@@ -66,7 +94,12 @@
               }}</span><a @click="addQtd" class="btn_qtd"><i class="bi bi-plus"></i></a>
             </div> -->
             <div>
-              <button type="button" class="btn btn_comprar" title="Comprar" @click="addProduto()">
+              <button
+                type="button"
+                class="btn btn_comprar"
+                title="Comprar"
+                @click="addProduto()"
+              >
                 <strong>COMPRAR</strong>
               </button>
             </div>
@@ -87,8 +120,11 @@
       <hr />
       <div class="row">
         <h2 class="h2-relacionados">Produtos em Lançamentos</h2>
-        <div class="col-lg-3 col-md-6" v-for="(produto, index) in state.produtos_lancamento.destaque1"
-          :key="produto.id">
+        <div
+          class="col-lg-3 col-md-6"
+          v-for="(produto, index) in state.produtos_lancamento.destaque1"
+          :key="produto.id"
+        >
           <cardDia v-if="index <= 3" :produto="produto" />
         </div>
       </div>
@@ -106,7 +142,7 @@
 <script>
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { asyncServices } from "../../services/fetch"
+import { asyncServices } from "../../services/fetch";
 import services from "@/services/axios";
 export default {
   setup() {
@@ -130,20 +166,23 @@ export default {
       },
       qtd: 1,
       notFound: false,
-      img_principal: '',
-      img_select: '',
+      img_principal: "",
+      img_select: "",
       produtos_lancamento: [],
     });
-    onMounted(() => { });
+    onMounted(() => {});
     fetchProduto();
 
     const valorTotal = computed(() => {
       const precoNumerico = parseFloat(state.produto.preco);
-      if (!isNaN(precoNumerico) && typeof state.produto.parcelas === 'number') {
+      if (!isNaN(precoNumerico) && typeof state.produto.parcelas === "number") {
         const resultado = precoNumerico / state.produto.parcelas;
-        return resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        return resultado.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
       } else {
-        return 'R$ 0,00';
+        return "R$ 0,00";
       }
     });
 
@@ -153,12 +192,13 @@ export default {
           urn: router.currentRoute._value.params.urn,
         });
         if (!data.value.id) {
-          console.log('Produto não encontrado');
+          console.log("Produto não encontrado");
         }
         state.produto = data;
-        state.img_select = data.value.imagens[0].id
-        state.img_principal = state.produto.imagens[0].imagem;
-
+        if (data.value.imagens.length > 0) {
+          state.img_select = data.value.imagens[0].id;
+          state.img_principal = state.produto.imagens[0].imagem;
+        }
       } catch (error) {
         state.notFound = true;
       }
@@ -202,8 +242,10 @@ export default {
     }
 
     function verImg(imagem_id) {
-      state.img_select = imagem_id
-      const imagemSelecionada = state.produto.imagens.find(imagem => imagem.id === imagem_id);
+      state.img_select = imagem_id;
+      const imagemSelecionada = state.produto.imagens.find(
+        (imagem) => imagem.id === imagem_id
+      );
       if (imagemSelecionada) {
         state.img_principal = imagemSelecionada.imagem;
       }
@@ -243,22 +285,22 @@ export default {
 
 #parcelas {
   color: #737373;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 11pt;
 }
 
 #parcelas .spn-parcelas {
   color: #00c21a;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 0;
   font-weight: 400;
   font-size: 11pt;
 }
 
 #parcelas .valor-parcela {
-  color: #252B42;
-  font-family: 'Poppins', sans-serif;
+  color: #252b42;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 0;
   font-weight: 700;
   font-size: 11pt;
@@ -279,8 +321,8 @@ export default {
   margin-bottom: 0;
   font-weight: 600;
   font-size: 14px;
-  color: #252B42;
-  font-family: 'Montserrat';
+  color: #252b42;
+  font-family: "Montserrat";
 }
 
 .content_i span {
@@ -288,7 +330,7 @@ export default {
   font-weight: 400;
   font-size: 12px;
   color: #737373;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
 }
 
 .div_line {
@@ -296,7 +338,7 @@ export default {
 }
 
 .div_top {
-  background: #334B35;
+  background: #334b35;
   margin-bottom: 2rem;
 }
 
@@ -305,7 +347,6 @@ export default {
   justify-content: center;
   display: flex;
   height: 40px;
-
 }
 
 .div_line_icon i {
@@ -319,18 +360,16 @@ export default {
   justify-content: center;
   display: flex;
   height: 40px;
-
 }
 
 .div_local i {
-  color: #F7C35F;
+  color: #f7c35f;
   font-size: 12pt;
   margin-right: 1rem;
-
 }
 
 .div_local span {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 12pt;
 }
 
@@ -359,7 +398,6 @@ ol {
 
 .a-bread:hover {
   color: #016938;
-
 }
 
 .div-code {
@@ -377,7 +415,7 @@ ol {
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0em;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
 }
 
 .div-h1-descricao {
@@ -390,13 +428,13 @@ ol {
   line-height: 1;
   letter-spacing: 0em;
   text-align: left;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
   color: #737373;
 }
 
 .tamanho {
-  background: #F0EEED;
-  background: #F0EEED;
+  background: #f0eeed;
+  background: #f0eeed;
   border-radius: 100px;
   width: 35px;
   height: 35px;
@@ -406,42 +444,38 @@ ol {
 }
 
 .tamanho p {
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0em;
 }
 
 .title-produto h3 {
-  color: #252B42;
+  color: #252b42;
   font-weight: 700;
   font-size: 32px;
-  font-family: 'Livvic', sans-serif;
-
-
+  font-family: "Livvic", sans-serif;
 }
 
 .cat_garantia span {
   color: #737373;
   font-weight: 400;
   font-size: 16px;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
 }
 
 .genero h3 {
   color: #737373;
   font-weight: 600;
   font-size: 16px;
-  font-family: 'Livvic', sans-serif;
-
+  font-family: "Livvic", sans-serif;
 }
 
 .genero p {
   color: #737373;
   font-weight: 400;
   font-size: 16px;
-  font-family: 'Livvic', sans-serif;
-
+  font-family: "Livvic", sans-serif;
 }
 
 #preco {
@@ -475,7 +509,7 @@ ol {
   width: 100%;
   height: auto;
   padding: 10px;
-  border: solid 2px #1F1F1F;
+  border: solid 2px #1f1f1f;
   border-radius: 10px;
 }
 
@@ -498,6 +532,12 @@ ol {
   height: 400px;
   object-fit: contain;
   margin-top: 1em;
+}
+
+.img-sem {
+  object-fit: contain;
+  margin-top: 1em;
+  width: 30%;
 }
 
 .div_btn_qtd {
@@ -524,7 +564,6 @@ ol {
   border: solid 1px gray;
 }
 
-
 #pix {
   color: #011627;
   font-size: 16px;
@@ -536,17 +575,16 @@ ol {
 }
 
 .h2-relacionados {
-  color: #252B42;
+  color: #252b42;
   font-weight: 600;
   font-size: 24px;
-  font-family: 'Livvic', sans-serif;
+  font-family: "Livvic", sans-serif;
 }
 
 .color-preview {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-
 }
 
 .div_cor {
@@ -554,7 +592,7 @@ ol {
 }
 
 .quad_desc {
-  background: #252B420A;
+  background: #252b420a;
   padding: 24px;
   margin-top: 2rem;
 }
