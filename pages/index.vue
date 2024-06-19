@@ -1,6 +1,14 @@
 <template>
   <div>
-    <section id="section_1">
+    <section id="section_1" style="position: relative">
+      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div v-for="(banner, index) in state.banner_topo" :key="banner.id"
+            :class="['carousel-item', { active: index === 0 }]">
+            <img id="imagem-banner" :src="banner.imagem" :alt="'Imagem Banner Número ' + index" class="d-block w-100" />
+          </div>
+        </div>
+      </div>
       <div class="div_linear_gradiant">
         <top />
         <div class="container">
@@ -14,19 +22,10 @@
                 otimizar seu desempenho agrícola.
               </p>
               <div class="mt-12">
-                <a class="btn-explorar" href="/produtos"
-                  ><i class="bi bi-search"></i>EXPLORE AGORA</a
-                >
-                <a
-                  class="btn-orcamento"
-                  target="_blank"
-                  :href="
-                    'https://wa.me/55' +
-                    state.empresa.telefone +
-                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
-                  "
-                  ><i class="bi bi-whatsapp"></i> TIRE SUAS DÚVIDAS
-                </a>
+                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i>EXPLORE AGORA</a>
+                <a class="btn-orcamento" target="_blank"
+                  :href="'https://wa.me/55' + state.empresa.telefone + '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'"><i
+                    class="bi bi-whatsapp"></i> TIRE SUAS DÚVIDAS </a>
               </div>
             </div>
           </div>
@@ -112,21 +111,18 @@
         <p>PRODUTOS</p>
         <h1>Navegue por Subcategoria</h1>
         <div class="row">
-          <div
-            class="col-md-3 col-sm-4 col-6"
-            v-for="grupo in state.categorias_destaque"
-            :key="grupo.id"
-          >
+          <div class="col-md-3 col-sm-4 col-6" v-for="grupo in state.categorias_destaque" :key="grupo.id">
             <div class="quad_cat">
-              <img
-                :src="grupo.imagem"
-                alt="Imagem Categoria"
-                style="max-height: 150px; width: auto; margin-bottom: 10px"
-              />
+              <img :src="grupo.imagem" alt="Imagem Categoria"
+                style="max-height: 150px; width: auto; margin-bottom: 10px" />
               <h4>{{ grupo.nome }}</h4>
             </div>
-          </div>
-        </div>
+          </slide>
+          <template #addons>
+            <navigation />
+            <pagination />
+          </template>
+        </carousel>
       </div>
     </div>
     <section id="section_3">
@@ -310,6 +306,9 @@ import { ref, computed } from "vue";
 import { asyncServices } from "./../services/fetch";
 import axios from "~/services/axios";
 import { Collapse } from "vue-collapsed";
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css'
+
 
 const currentPage = ref(1);
 const itemsPerPage = 4;
@@ -341,16 +340,7 @@ fetchBannerMeio();
 fetchGrupo1();
 fetchEmpresa();
 fetchCat();
-fetchCategoriaDestaque();
 
-async function fetchCategoriaDestaque() {
-  try {
-    const { data } = await axios.categoria.getDestaque();
-    state.categorias_destaque = data;
-  } catch (error) {
-    console.log(error);
-  }
-}
 async function fetchGrupo1() {
   try {
     const { data } = await axios.grupos.getGrupoUm();
@@ -382,6 +372,7 @@ async function fetchCat() {
   try {
     const { data } = await axios.categoria.getAllSite();
     state.categorias = data;
+    console.log(data)
   } catch (error) {
     console.log(error);
   }
@@ -484,13 +475,24 @@ function previousPage() {
   background-position: center;
   position: relative;
   background-size: cover;
-  background-image: url("/public/images/site/back.png");
+  background-image: url('/public/images/site/back.png');
 }
 
 .div_linear_gradiant {
-  background: linear-gradient(#263c28, #263c281c);
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#imagem-banner {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
 }
 
 .content_1 {
@@ -499,6 +501,7 @@ function previousPage() {
   align-items: center;
   height: 80vh;
 }
+
 
 .content_1 h1 {
   color: #3ccf4e;
@@ -651,16 +654,18 @@ function previousPage() {
   color: #263c28;
 }
 
+.imagem_categoria {
+  max-height: 150px;
+  width: auto;
+  margin-bottom: 10px;
+}
+
 .quad_cat {
   background: rgba(76, 76, 76, 1);
   text-align: center;
   border-radius: 15px;
   width: 100%;
   padding: 20px;
-}
-
-.quad_cat img {
-  width: 100%;
 }
 
 .quad_cat h4 {
@@ -1210,17 +1215,18 @@ hr {
   .content_sec_8 h1 {
     font-size: 30px;
   }
-  .question {
+  .question{
     font-size: 10pt;
   }
 
   .form-container {
     width: 90%;
   }
+
   .content_news h1 {
     font-size: 30px;
   }
-  .div_input_news button {
+  .div_input_news button{
     margin-left: 1rem;
     padding: 10px 10px;
   }
