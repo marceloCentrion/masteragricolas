@@ -2,4 +2,7 @@
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 
-nuxtApp.vueApp.use(Toast);
+
+export default defineNuxtPlugin((nuxtApp) => {
+    nuxtApp.vueApp.use(Toast)
+})
