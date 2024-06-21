@@ -2,44 +2,37 @@
   <div>
     <div class="card">
       <div class="card-header">
-        <h4>Cadastrar Produto</h4>
+        <h3>Cadastrar Produto</h3>
       </div>
 
       <div class="card-body">
+        <div>
+          <input type="radio" id="produto_com_preco" v-model="state.sob_consulta" value="NAO" />
+          <label for="produto_com_preco" style="margin-right: 10px">Produto com preço</label>
+          <input type="radio" id="produto_sob_consulta" v-model="state.sob_consulta" value="SIM"
+            @change="limparPreco()" />
+          <label for="produto_sob_consulta">Preço sob consulta</label><br />
+        </div>
         <div class="row">
           <div class="col-md-2">
             <label for="nome">REF</label>
-            <input
-              id="nome"
-              type="text"
-              class="form-control"
-              v-model="state.ref.value"
-            />
-            <span
-              v-if="state.ref.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <input id="nome" type="text" class="form-control" v-model="state.ref.value" />
+            <span v-if="state.ref.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <label for="status">Categoria</label>
             <select v-model="state.categoria.value" class="form-select">
-              <option
-                v-for="categoria in state.categorias"
-                :key="categoria.id"
-                :value="categoria.id"
-              >
+              <option v-for="categoria in state.categorias" :key="categoria.id" :value="categoria.id">
                 {{ categoria.nome }}
               </option>
             </select>
-            <span
-              v-if="state.categoria.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <span v-if="state.categoria.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
+          <!--
           <div class="col-md-2">
             <label for="status">Marca</label>
             <select v-model="state.marca.value" class="form-select">
@@ -58,73 +51,75 @@
               Preencha este campo
             </span>
           </div>
+          -->
           <div class="col-md-4">
             <label for="nome">Nome</label>
-            <input
-              id="nome"
-              type="text"
-              class="form-control"
-              v-model="state.nome.value"
-            />
-            <span
-              v-if="state.nome.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <input id="nome" type="text" class="form-control" @blur="carregarURN($event.target.value)"
+              v-model="state.nome.value" />
+            <span v-if="state.nome.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <label for="urn">URN</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.urn.value"
-            />
-            <span
-              v-if="state.urn.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <input id="urn" type="text" class="form-control" v-model="state.urn.value" />
+            <span v-if="state.urn.errorMessage" class="block font-medium txt_vermelho">
+              Preencha este campo
+            </span>
+          </div>
+        </div>
+        <h4>Preços Praticados</h4>
+        <div>
+          <br />
+          <input @change="
+              if ($event.target.checked) {
+            state.tem_desconto = 'SIM';
+            state.preco_desconto.value = '';
+          } else state.tem_desconto = 'NAO';
+            " type="checkbox" id="tem_desconto" v-model="state.check_tem_desconto" /><label for="tem_desconto">Produto
+            com desconto.
+            <button title="Marque se o produto tiver desconto." for="tem_desconto">
+              (?)
+            </button></label>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <label for="urn">Preço
+              <button title="Preço normal do produto.">(?)</button></label>
+            <input id="urn" type="text" class="form-control" v-model="state.preco.value" v-maska
+              :readonly="state.sob_consulta == 'SIM'" :class="state.sob_consulta == 'SIM' ? 'cor_desabled' : ''"
+              data-maska="0,99" data-maska-tokens="0:\d:multiple|9:\d:optional" />
+            <span v-if="state.preco.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
           <div class="col-md-3">
-            <label for="urn">Preço</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.preco.value"
-            />
-            <span
-              v-if="state.preco.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <label for="urn">Preço Desconto
+              <button title="Preço do produto com desconto.">(?)</button></label>
+            <input id="urn" type="text" class="form-control" v-model="state.preco_desconto.value"
+              :class="state.sob_consulta == 'SIM' ? 'cor_desabled' : ''" v-maska data-maska="0,99"
+              data-maska-tokens="0:\d:multiple|9:\d:optional" :disabled="state.sob_consulta == 'SIM' || !state.check_tem_desconto
+                " />
+            <span v-if="state.preco_desconto.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
-          <div class="col-md-3">
-            <label for="urn">Preço Desconto</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.preco_desconto.value"
-            />
-            <span
-              v-if="state.preco_desconto.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
-              Preencha este campo
-            </span>
-          </div>
+          <!--
           <div class="col-md-2">
-            <label for="urn">Preço Pix</label>
+            <label for="urn"
+              >Preço Pix
+              <button title="Preço do produto no Pix.">(?)</button></label
+            >
             <input
               id="urn"
               type="text"
               class="form-control"
+              :class="state.sob_consulta == 'SIM' ? 'cor_desabled' : ''"
               v-model="state.preco_pix.value"
+              :readonly="state.sob_consulta == 'SIM'"
+              v-maska
+              data-maska="0,99"
+              data-maska-tokens="0:\d:multiple|9:\d:optional"
             />
             <span
               v-if="state.preco_pix.errorMessage"
@@ -133,23 +128,14 @@
               Preencha este campo
             </span>
           </div>
+
           <div class="col-md-2">
-            <label for="urn">Preço Desconto Pix</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.preco_desconto_pix.value"
-            />
-            <span
-              v-if="state.preco_desconto_pix.errorMessage"
-              class="block font-medium txt_vermelho"
+            <label for="status"
+              >Parcelas
+              <button title="Quantidade de parcelas aceitas no cartão.">
+                (?)
+              </button></label
             >
-              Preencha este campo
-            </span>
-          </div>
-          <div class="col-md-2">
-            <label for="status">Parcelas</label>
             <select v-model="state.parcelas" class="form-select">
               <option value="1">1</option>
               <option value="2">2</option>
@@ -158,78 +144,45 @@
               <option value="5">5</option>
               <option value="6">6</option>
             </select>
-          </div>
+          </div>          -->
+        </div>
+        <h4>Medidas</h4>
+        <div class="row">
           <div class="col-md-3">
-            <label for="urn">Peso</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.peso.value"
-            />
-            <span
-              v-if="state.peso.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <label for="urn">Peso (kg)</label>
+            <input id="urn" type="text" class="form-control" v-model="state.peso.value" />
+            <span v-if="state.peso.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
           <div class="col-md-3">
-            <label for="urn">Altura</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.medida_altura.value"
-            />
-            <span
-              v-if="state.medida_altura.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <label for="urn">Altura (cm)</label>
+            <input id="urn" type="text" class="form-control" v-model="state.medida_altura.value" />
+            <span v-if="state.medida_altura.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
           <div class="col-md-3">
-            <label for="urn">Largura</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.medida_largura.value"
-            />
-            <span
-              v-if="state.medida_largura.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <label for="urn">Largura (cm)</label>
+            <input id="urn" type="text" class="form-control" v-model="state.medida_largura.value" />
+            <span v-if="state.medida_largura.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
           <div class="col-md-3">
-            <label for="urn">Profundidade</label>
-            <input
-              id="urn"
-              type="text"
-              class="form-control"
-              v-model="state.medida_profundidade.value"
-            />
-            <span
-              v-if="state.medida_profundidade.errorMessage"
-              class="block font-medium txt_vermelho"
-            >
+            <label for="urn">Profundidade (cm)</label>
+            <input id="urn" type="text" class="form-control" v-model="state.medida_profundidade.value" />
+            <span v-if="state.medida_profundidade.errorMessage" class="block font-medium txt_vermelho">
               Preencha este campo
             </span>
           </div>
-          <div class="col-md-12">
-            <label for="status">Descrição</label>
-            <textarea
-              class="form-control"
-              style="width: 100%"
-              v-model="state.descricao"
-            ></textarea>
+          <div class="col-md-12 mt-10">
+            <label for="">Descrição</label>
+            <editor v-model="state.descricao" />
           </div>
           <div class="col-md-2">
             <label for="status">Status</label>
-            <select v-model="state.status" class="form-select">
+            <select v-model="state.status" class="form-select ">
               <option value="ATIVO">Ativo</option>
               <option value="INATIVO">Inativo</option>
             </select>
@@ -258,24 +211,13 @@
           <div class="col-md-4">
             <div class="input_img">
               <label>Imagem</label>
-              <input
-                type="file"
-                class="form-control"
-                @change="adicionarImagens"
-              />
-              <span v-if="state.erro_imagem" class="text-danger"
-                >Este campo é obrigatório</span
-              >
+              <input type="file" class="form-control" @change="adicionarImagens" />
+              <span v-if="state.erro_imagem" class="text-danger">Este campo é obrigatório</span>
             </div>
           </div>
           <div class="col-md-12" v-if="state.imagens.length > 0">
             <div class="row">
-              <div
-                class="col-md-2"
-                v-for="(objImagem, index) in state.imagens"
-                :key="objImagem"
-                style="display: flex"
-              >
+              <div class="col-md-2" v-for="(objImagem, index) in state.imagens" :key="objImagem" style="display: flex">
                 <img :src="objImagem.imagem" class="imagem" />
                 <div class="div_btn_x mt-4">
                   <button class="btn_remover" @click="removerImagem(index)">
@@ -287,18 +229,13 @@
           </div>
         </div>
         <div class="text-right mt-10">
-          <button
-            type="button"
-            @click="salvarProduto"
-            class="btn btn-success mr-1"
-          >
+          <button type="button" @click="salvarProduto" class="btn btn-success mr-1">
             Salvar
           </button>
           <router-link to="/admin/produtos">
             <button type="button" class="btn btn-danger">
               Cancelar
-            </button></router-link
-          >
+            </button></router-link>
         </div>
       </div>
     </div>
@@ -316,10 +253,6 @@ export default {
     const authStore = useAuthStore();
     const token = authStore.token;
     const state = reactive({
-      marca: {
-        value: "",
-        errorMessage: false,
-      },
       categoria: {
         value: "",
         errorMessage: false,
@@ -347,7 +280,7 @@ export default {
       preco_desconto: {
         value: "",
         errorMessage: false,
-      },
+      } /*
       preco_pix: {
         value: "",
         errorMessage: false,
@@ -355,7 +288,7 @@ export default {
       preco_desconto_pix: {
         value: "",
         errorMessage: false,
-      },
+      },*/,
       medida_altura: {
         value: "",
         errorMessage: false,
@@ -368,11 +301,13 @@ export default {
         value: "",
         errorMessage: false,
       },
+      descricao: "",
       status: "ATIVO",
       destaque1: "NAO",
       destaque2: "NAO",
       destaque3: "NAO",
-
+      sob_consulta: "NAO",
+      tem_desconto: "NAO",
       imagem: {},
       imagens: [],
       imagens_deletar: [],
@@ -389,7 +324,16 @@ export default {
       fetchMarca();
     });
 
-    //FUNÇÕES CADASTRO PRODUTO
+    function carregarURN(nome) {
+      var urn = nome.replace(/\s/g, "-");
+      state.urn.value = urn.toLowerCase();
+    }
+    function limparPreco() {
+      state.preco.value = null;
+      state.preco_desconto.value = null;
+      //state.preco_pix.value = null;
+      state.preco_desconto_pix.value = null;
+    }
     async function fetchCategoria() {
       try {
         const { data } = await services.categoria.getAll({ token });
@@ -439,11 +383,6 @@ export default {
         erro = true;
       }
 
-      if (!state.marca.value) {
-        state.marca.errorMessage = true;
-        erro = true;
-      }
-
       if (!state.nome.value) {
         state.nome.errorMessage = true;
         erro = true;
@@ -453,23 +392,22 @@ export default {
         state.urn.errorMessage = true;
         erro = true;
       }
-      if (!state.preco.value) {
-        state.preco.errorMessage = true;
-        erro = true;
-      }
-      if (!state.preco_pix.value) {
-        state.preco_pix.errorMessage = true;
-        erro = true;
-      }
 
-      if (!state.preco_desconto.value) {
-        state.preco_desconto.errorMessage = true;
-        erro = true;
-      }
-
-      if (!state.preco_desconto_pix.value) {
-        state.preco_desconto_pix.errorMessage = true;
-        erro = true;
+      if (state.sob_consulta == "NAO") {
+        if (!state.preco.value) {
+          state.preco.errorMessage = true;
+          erro = true;
+        }
+        /* if (!state.preco_pix.value) {
+          state.preco_pix.errorMessage = true;
+          erro = true;
+        }*/
+        if (state.tem_desconto == "SIM") {
+          if (!state.preco_desconto.value) {
+            state.preco_desconto.errorMessage = true;
+            erro = true;
+          }
+        }
       }
       /*
       if (!state.parcelas.value) {
@@ -496,20 +434,18 @@ export default {
         state.medida_profundidade.errorMessage = true;
         erro = true;
       }
-
       if (erro) return;
 
       var produto_req = {};
       produto_req.ref = state.ref.value;
       produto_req.categoria_id = state.categoria.value;
-      produto_req.marca_id = state.marca.value;
+      produto_req.marca_id = 1;
       produto_req.nome = state.nome.value;
       produto_req.urn = state.urn.value;
       produto_req.preco = state.preco.value;
       produto_req.preco_desconto = state.preco_desconto.value;
-      produto_req.preco_pix = state.preco_pix.value;
-      produto_req.preco_desconto_pix = state.preco_desconto_pix.value;
-      produto_req.parcelas = state.parcelas;
+      produto_req.preco_pix = state.preco.value; //state.preco_pix.value;
+      produto_req.parcelas = 1; //state.parcelas;
       produto_req.peso = state.peso.value;
       produto_req.medida_altura = state.medida_altura.value;
       produto_req.medida_largura = state.medida_largura.value;
@@ -521,15 +457,16 @@ export default {
       produto_req.destaque3 = state.destaque3;
       produto_req.ncm = state.ncm;
       produto_req.ean = state.ean;
+      produto_req.sob_consulta = state.sob_consulta;
+      produto_req.tem_desconto = state.tem_desconto;
 
       services.produtos
         .save({ produto: produto_req, token })
         .then((data_produto) => {
           for (let i = 0; i < state.imagens.length; i++) {
             var formImagem = new FormData();
-            console.log(data_produto.data.id);
-            state.produto_id = data_produto.data.id;
-            formImagem.append("produto_id", data_produto.data.id);
+            state.produto_id = data_produto.data.produto.id;
+            formImagem.append("produto_id", data_produto.data.produto.id);
             formImagem.append("imagem", state.imagens[i].file);
             services.produtos
               .salvarImagem({ formImagem, token })
@@ -544,7 +481,7 @@ export default {
           var valores = Object.values(error.response.data.errors);
           valores.forEach((element) => {
             element.forEach((element2) => {
-              console.log(element2);
+              alert(element2);
             });
           });
         });
@@ -561,7 +498,6 @@ export default {
         router.push({ name: "atributos-tab" });
       }
     }
-
     //FUNÇÕES ADD ATRIBUTOS
     // async function addTributo() {
     //   var atributo = {};
@@ -625,7 +561,6 @@ export default {
     //     alert(valores);
     //   })
     // }
-
     return {
       salvarProduto,
       adicionarImagens,
@@ -633,6 +568,8 @@ export default {
       router,
       state,
       verficaProdutoId,
+      carregarURN,
+      limparPreco,
     };
   },
 };
@@ -644,16 +581,22 @@ export default {
   color: #cfb14e;
   font-weight: 600;
 }
+
 .txt_vermelho {
   color: #dc3545;
 }
+
 .nav-tabs .nav-link {
   color: #000;
   font-weight: 600;
 }
 
 h4 {
-  color: #fff;
+  color: #000;
+}
+
+.cor_desabled {
+  background-color: #ccc;
 }
 
 .card-header {

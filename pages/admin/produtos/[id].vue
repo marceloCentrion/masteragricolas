@@ -2,7 +2,7 @@
   <div>
     <div class="card">
       <div class="card-header">
-        <h5>Alterar Produto</h5>
+        <h3>Alterar Produto</h3>
       </div>
 
       <div class="card-body">
@@ -126,6 +126,54 @@
               v-model="state.produto.preco_desconto"
             />
           </div>
+          <!--
+          <div class="col-md-2">
+                      
+            <label for="urn"
+              >Preço Pix
+              <button title="Preço do produto no Pix.">(?)</button></label
+            >
+            <input
+              :disabled="state.produto.sob_consulta == 'SIM'"
+              id="urn"
+              type="text"
+              class="form-control"
+              v-maska
+              data-maska="0,99"
+              data-maska-tokens="0:\d:multiple|9:\d:optional"
+              v-model="state.produto.preco_pix"
+            />
+          </div>
+
+          <div class="col-md-2">
+            <label for="urn">Preço Desconto Pix</label>
+            <input
+              :disabled="state.produto.sob_consulta == 'SIM'"
+              id="urn"
+              type="text"
+              class="form-control"
+              v-maska
+              data-maska="0,99"
+              data-maska-tokens="0:\d:multiple|9:\d:optional"
+              v-model="state.produto.preco_desconto_pix"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="status"
+              >Parcelas
+              <button title="Quantidade de parcelas aceitas no cartão.">
+                (?)
+              </button></label
+            >
+            <select v-model="state.produto.parcelas" class="form-select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="2">3</option>
+              <option value="3">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+          </div>-->
         </div>
         <h4>Preços praticados</h4>
         <div class="row">
@@ -165,13 +213,9 @@
               v-model="state.produto.medida_profundidade"
             />
           </div>
-          <div class="col-md-12">
-            <label for="status">Descrição</label>
-            <textarea
-              class="form-control"
-              style="width: 100%"
-              v-model="state.produto.descricao"
-            ></textarea>
+          <div class="col-md-12 mt-10">
+            <label for="">Descrição</label>
+            <editor v-model="state.produto.descricao" />
           </div>
           <div class="col-md-2">
             <label for="status">Status</label>
@@ -321,8 +365,12 @@ export default {
           id: router.currentRoute._value.params.id,
           token,
         });
-        state.produto = data.id;
         state.produto = data;
+        //  state.produto.check_tem_desconto = true;
+        if (data && data.tem_desconto == "SIM") {
+          state.produto.check_tem_desconto = true;
+        }
+
         state.array_atributo = data.atributos;
         state.imagens = data.imagens;
       } catch (error) {
@@ -330,6 +378,8 @@ export default {
       }
     }
     async function salvarProduto() {
+      state.produto.parcelas = 1;
+      state.produto.preco_pix = state.produto.preco;
       console.log(
         "Qtd de imagens para deletar: " + state.imagens_deletar.length
       );
@@ -354,7 +404,7 @@ export default {
               state.imagens[i].file != null
             ) {
               var formImagem = new FormData();
-              formImagem.append("produto_id", data_produto.data.id);
+              formImagem.append("produto_id", state.produto.id);
               formImagem.append("imagem", state.imagens[i].file);
               services.produtos
                 .salvarImagem({ formImagem, token })
@@ -453,10 +503,6 @@ export default {
 
 h4 {
   color: #000;
-}
-
-h5 {
-  color: #fff;
 }
 
 .card-header {
