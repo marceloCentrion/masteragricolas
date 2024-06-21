@@ -19,13 +19,25 @@
             <input id="nome" type="text" class="form-control" v-model="state.banner.nome" />
           </div>
           <div class="col-md-4">
-            <label>Imagem</label>
+            <label>Banner</label>
             <input type="file" class="form-control" @change="adicionarImagem" />
           </div>
           <div style="display: flex" class="col-md-6 offset-md-3 mt-4" v-if="state.imagem.imagem">
             <img :src="state.imagem.imagem" class="imagem" />
             <div class="div_btn_x">
               <button class="btn_remover" @click="removerImagem">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label>Banner para celular</label>
+            <input type="file" class="form-control" @change="adicionarImagemCel" />
+          </div>
+          <div style="display: flex" class="col-md-6 offset-md-3 mt-4" v-if="state.img_cel.imagem">
+            <img :src="state.img_cel.imagem" class="imagem" />
+            <div class="div_btn_x">
+              <button class="btn_remover" @click="removerImagemCel">
                 <i class="bi bi-x-lg"></i>
               </button>
             </div>
@@ -56,6 +68,7 @@ export default {
         dimensoes: "",
       },
       imagem: {},
+      img_cel: {},
     });
     const authStore = useAuthStore();
     const token = authStore.token;
@@ -78,6 +91,9 @@ export default {
         if (data.imagem != null) {
           state.imagem.imagem = data.imagem;
         }
+        if (data.imagem_cel != null) {
+          state.img_cel.imagem = data.imagem_cel;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -99,6 +115,10 @@ export default {
       if (state.imagem.file != null) {
         dados.append("imagem", state.imagem.file);
       }
+      if (state.img_cel.file != null) {
+        console.log(state.img_cel.file);
+        dados.append("imagem_cel", state.img_cel.file);
+      }
       dados.append("id", state.banner.id);
       dados.append("_method", "PATCH");
       if (state.imagem.imagem == undefined) {
@@ -111,6 +131,7 @@ export default {
           console.log(error);
         }
       }
+      console.log(dados);
       try {
         await services.banners.update(dados, token);
         router.push("/admin/banners");
@@ -129,10 +150,23 @@ export default {
       state.imagem = {};
       document.querySelector('input[type="file"]').value = null;
     }
+    async function adicionarImagemCel(event) {
+      var img_cel = event.target.files[0];
+      var objImagemCel = new Object();
+      objImagemCel.file = img_cel;
+      objImagemCel.imagem = URL.createObjectURL(img_cel);
+      state.img_cel = objImagemCel;
+    }
+    async function removerImagemCel() {
+      state.img_cel = {};
+      document.querySelector('input[type="file"]').value = null;
+    }
     return {
       salvarBanner,
       removerImagem,
       adicionarImagem,
+      adicionarImagemCel,
+      removerImagemCel,
       router,
       state,
     };
@@ -171,7 +205,7 @@ select {
 
 .card-header {
   border-radius: 0px;
-  background-color: #000;
+  background-color: #181818;
   color: #fff;
 }
 
@@ -192,9 +226,11 @@ select {
   transform: translateY(5px);
   box-shadow: 0px 0px 0px 0px #f57171;
 }
-.imagem{
+
+.imagem {
   width: 100%;
 }
+
 .div_btn_x {
   margin-left: 10px;
 }

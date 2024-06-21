@@ -19,13 +19,25 @@
             <input id="nome" type="text" class="form-control" v-model="state.banner.nome" />
           </div>
           <div class="col-md-4">
-            <label>Imagem</label>
+            <label>Banner</label>
             <input type="file" class="form-control" @change="adicionarImagem" />
           </div>
           <div style="display: flex" class="col-md-6 offset-md-3 mt-4" v-if="state.imagem.imagem">
             <img :src="state.imagem.imagem" class="imagem" />
             <div class="div_btn_x">
               <button class="btn_remover" @click="removerImagem">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label>Banner para celular</label>
+            <input type="file" class="form-control" @change="adicionarImagemCel" />
+          </div>
+          <div style="display: flex" class="col-md-6 offset-md-3 mt-4" v-if="state.img_cel.imagem">
+            <img :src="state.img_cel.imagem" class="imagem" />
+            <div class="div_btn_x">
+              <button class="btn_remover" @click="removerImagemCel">
                 <i class="bi bi-x-lg"></i>
               </button>
             </div>
@@ -53,9 +65,9 @@ export default {
         id: "",
         categoria_id: "",
         nome: "",
-        dimensoes: "",
       },
       imagem: {},
+      img_cel: {},
     });
     const authStore = useAuthStore();
     const token = authStore.token;
@@ -95,6 +107,9 @@ export default {
       if (state.imagem.file != null) {
         dados.append("imagem", state.imagem.file);
       }
+      if (state.img_cel.file != null) {
+        dados.append("imagem_cel", state.img_cel.file);
+      }
       dados.append("id", state.banner.id);
       dados.append("_method", "POST");
       if (state.imagem.imagem == undefined) {
@@ -125,12 +140,25 @@ export default {
       state.imagem = {};
       document.querySelector('input[type="file"]').value = null;
     }
+    async function adicionarImagemCel(event) {
+      var img_cel = event.target.files[0];
+      var objImagemCel = new Object();
+      objImagemCel.file = img_cel;
+      objImagemCel.imagem = URL.createObjectURL(img_cel);
+      state.img_cel = objImagemCel;
+    }
+    async function removerImagemCel() {
+      state.img_cel = {};
+      document.querySelector('input[type="file"]').value = null;
+    }
     return {
       salvarBanner,
       removerImagem,
       adicionarImagem,
       router,
       state,
+      adicionarImagemCel,
+      removerImagemCel,
     };
   },
 };
@@ -167,7 +195,7 @@ select {
 
 .card-header {
   border-radius: 0px;
-  background-color: #2f4538;
+  background-color: #000;
   color: #fff;
 }
 
@@ -192,7 +220,8 @@ select {
 .div_btn_x {
   margin-left: 10px;
 }
-img{
+
+img {
   width: 100%;
 }
 </style>

@@ -12,9 +12,9 @@
                 <div class="col-7">
                   <NuxtLink to="">
                     <div style="text-align: right">
-                      <!-- <NuxtLink to="/admin/criar-produto">
+                      <NuxtLink to="/admin/banners/criar-banner">
                         <button type="button" class="btn btn-outline-light">Novo Banner</button>
-                      </NuxtLink> -->
+                      </NuxtLink>
                     </div>
                   </NuxtLink>
                 </div>
