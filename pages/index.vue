@@ -1,8 +1,20 @@
 <template>
   <div>
-    <section id="section_1" class="d-none d-lg-block" style="position: relative">
-      <carousel :items-to-show="1" :items-to-scroll="1" :snap-align="'start'" :autoplay="6000" :transition="4000"
-        :wrapAround="true" @mouseover="stopAutoplay" @mouseleave="startAutoplay">
+    <section
+      id="section_1"
+      class="d-none d-lg-block"
+      style="position: relative"
+    >
+      <carousel
+        :items-to-show="1"
+        :items-to-scroll="1"
+        :snap-align="'start'"
+        :autoplay="6000"
+        :transition="4000"
+        :wrapAround="true"
+        @mouseover="stopAutoplay"
+        @mouseleave="startAutoplay"
+      >
         <slide v-for="banner in state.banner_topo" :key="banner.id">
           <img id="imagem-banner" :src="banner.imagem" class="d-block w-100" />
         </slide>
@@ -12,18 +24,27 @@
         <div class="container">
           <div class="content_1">
             <div class="text-center">
-              <h1>Aumente a Eficiência da sua Operação!</h1>
+              <h1>MASTER PEÇAS AGRÍCOLAS!</h1>
               <p>
-                Descubra como nossas peças de alta qualidade podem impulsionar
-                sua produção. Encontre soluções para plantadeiras,
-                colheitadeiras e pulverizadores aqui!
+                Explore nossa vasta gama de peças agrícolas para manter suas
+                operações no campo funcionando sem problemas. Desde tratores até
+                implementos especializados, temos tudo o que você precisa para
+                otimizar seu desempenho agrícola.
               </p>
               <div class="mt-12">
-                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i> Explorar Agora</a>
-                <a class="btn-orcamento" target="_blank" :href="'https://wa.me/55' +
-                  state.empresa.telefone +
-                  '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
-                  "><i class="bi bi-whatsapp"></i> Orçamento Rápido</a>
+                <a class="btn-explorar" href="/produtos"
+                  ><i class="bi bi-search"></i> Explorar Agora</a
+                >
+                <a
+                  class="btn-orcamento"
+                  target="_blank"
+                  :href="
+                    'https://wa.me/55' +
+                    state.empresa.telefone +
+                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
+                  "
+                  ><i class="bi bi-whatsapp"></i> Orçamento Rápido</a
+                >
               </div>
             </div>
           </div>
@@ -93,7 +114,11 @@
           <p>LINHA COMPLETA</p>
           <h1>Semeadeiras</h1>
           <div class="row">
-            <div class="col-lg-3 col-md-6" v-for="produto in displayedProdutos" :key="produto.id">
+            <div
+              class="col-lg-3 col-md-6"
+              v-for="produto in displayedProdutos"
+              :key="produto.id"
+            >
               <cardLinha :produto="produto" />
             </div>
           </div>
@@ -138,7 +163,11 @@
           <p>PRODUTOS</p>
           <h1>Mais Vendidos</h1>
           <div class="row">
-            <div class="col-lg-3 col-md-6" v-for="produto in displayedProdutos" :key="produto.id">
+            <div
+              class="col-lg-3 col-md-6"
+              v-for="produto in displayedProdutos"
+              :key="produto.id"
+            >
               <cardProduto :produto="produto" />
             </div>
           </div>
@@ -247,15 +276,30 @@
           </div>
           <div class="form-group">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" />
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome completo"
+            />
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Digite seu email" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Digite seu email"
+            />
           </div>
           <div class="form-group">
             <label for="mensagem">Mensagem</label>
-            <textarea id="mensagem" name="mensagem" rows="4" placeholder="Digite sua mensagem"></textarea>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows="4"
+              placeholder="Digite sua mensagem"
+            ></textarea>
           </div>
           <div class="form-group">
             <button type="submit">ENVIAR</button>
@@ -275,7 +319,12 @@
           </div>
           <div class="col-md-8">
             <div class="div_input_news">
-              <input type="text" class="input_news" placeholder="SEU E-MAIL" v-model="state.newsletter.email" />
+              <input
+                type="text"
+                class="input_news"
+                placeholder="SEU E-MAIL"
+                v-model="state.newsletter.email"
+              />
               <button type="button" @click="envNews()">Cadastrar</button>
             </div>
           </div>
