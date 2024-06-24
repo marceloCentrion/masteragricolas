@@ -20,7 +20,7 @@ useHead({
 });
 onMounted(() => {
   const script = document.createElement("script");
-  script.src = "//code.jivosite.com/widget/iDZorhmG53";
+  script.src = "//code.jivosite.com/widget/5l5xhBEl7k";
   script.async = true;
   document.head.appendChild(script);
 });
