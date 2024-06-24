@@ -71,7 +71,7 @@ hr {
 #titulo {
   font-size: 16px;
   font-weight: semibold;
-  line-height: 24px;
+  line-height: 1;
   letter-spacing: 0px;
   text-align: left;
   color: #ffffff;
@@ -90,7 +90,7 @@ hr {
 }
 
 #div-titulo {
-  height: 2em;
+  height: 2.2em;
   margin-bottom: 5px;
   margin-top: 10px;
 }

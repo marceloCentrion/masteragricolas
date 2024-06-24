@@ -18,11 +18,21 @@
             <h2 class="h2_side">Filtros de Pesquisa</h2>
             <hr />
             <ul>
-              <li class="item-nav" v-for="categoria in state.categorias" :key="categoria.id">
+              <li
+                class="item-nav"
+                v-for="categoria in state.categorias"
+                :key="categoria.id"
+              >
                 <!-- <span class="">{{ categoria.nome }}</span> -->
                 <!-- <input type="checkbox" /> -->
-                <a @click="filtrados(categoria.urn)" style="cursor: pointer" class="nav-link px-0"
-                  :class="{ 'nav-link-selected': categoria.urn == state.categoria_urn, }">
+                <a
+                  @click="filtrados(categoria.urn)"
+                  style="cursor: pointer"
+                  class="nav-link px-0"
+                  :class="{
+                    'nav-link-selected': categoria.urn == state.categoria_urn,
+                  }"
+                >
                   <span class="">{{ categoria.nome }}</span>
                 </a>
                 <!-- <hr /> -->
@@ -40,16 +50,31 @@
             <div class="row mb-6">
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MIN" v-model="state.preco_inicial" />
+                <input
+                  class="input_valor"
+                  type="text"
+                  placeholder="MIN"
+                  v-model="state.preco_inicial"
+                />
               </div>
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input class="input_valor" type="text" placeholder="MÁX" v-model="state.preco_final" />
+                <input
+                  class="input_valor"
+                  type="text"
+                  placeholder="MÁX"
+                  v-model="state.preco_final"
+                />
               </div>
             </div>
             <div class="col-md-2">
               <div>
-                <button class="btn_transparent" type="button" @click="filtraPorPreco()" title="Aplicar Faixa de Preço">
+                <button
+                  class="btn_transparent"
+                  type="button"
+                  @click="filtraPorPreco()"
+                  title="Aplicar Faixa de Preço"
+                >
                   Aplicar
                 </button>
               </div>
@@ -67,7 +92,12 @@
               </li>
             </ul> -->
             <div class="div-btn-trash">
-              <button @click="fetchAllProdutos" title="Limpar Filtro" type="button" class="btn-trash">
+              <button
+                @click="fetchAllProdutos"
+                title="Limpar Filtro"
+                type="button"
+                class="btn-trash"
+              >
                 <i class="bi bi-trash3"></i>
               </button>
             </div>
@@ -80,31 +110,22 @@
                 <p v-if="state.buscando" class="buscando">
                   Buscando por: {{ state.buscando }}
                 </p>
-                <p v-else class="buscando">
-                  Buscando por: Todos
-                </p>
+                <p v-else class="buscando">Buscando por: Todos</p>
               </div>
               <div class="col-md-6">
                 <p class="qtd">Exebindo todos os {{ state.qtd }} resultados</p>
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-4 offset-lg-0 py-2" v-for="produto in state.produtos" :key="produto.id">
+              <div
+                class="col-lg-4 offset-lg-0 py-2"
+                v-for="produto in state.produtos"
+                :key="produto.id"
+              >
                 <cardAllProdutos :produto="produto" />
               </div>
             </div>
           </div>
-          <nav class="nav-pagination" aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="#"><i class="bi bi-arrow-left-short"></i> Anterior </a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Próximo <i class="bi bi-arrow-right-short"></i> </a>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
     </div>
@@ -116,13 +137,13 @@ import { useRouter } from "vue-router";
 import { reactive } from "vue";
 import services from "../../services/axios";
 import { asyncServices } from "../../services/fetch";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 export default {
   setup() {
-    const checkboxState = ref('todos');
+    const checkboxState = ref("todos");
     const handleCheckbox = (value) => {
-      if (value === 'todos') {
+      if (value === "todos") {
         // Se 'todos' já estiver selecionado e for clicado novamente, desmarca 'todos'
         state.checkbox = [];
       } else {
@@ -135,7 +156,7 @@ export default {
     });
     onMounted(() => {
       fetchEmpresa();
-      checkboxState.value = 'todos';
+      checkboxState.value = "todos";
     });
 
     const router = useRouter();
@@ -144,7 +165,7 @@ export default {
       busca: "",
       empresa: {},
       categoria_urn: "",
-      checkbox: ['todos'],
+      checkbox: ["todos"],
       preco_final: "",
       preco_inicial: "",
     });
@@ -153,11 +174,11 @@ export default {
     if (router.currentRoute._value.params.urn != undefined) {
       state.categoria_urn = router.currentRoute._value.params.urn;
       filtrados(state.categoria_urn);
-    } if (router.currentRoute._value.params.urn != undefined) {
+    }
+    if (router.currentRoute._value.params.urn != undefined) {
       state.element_busca = router.currentRoute._value.params.urn;
       fetchBusca(state.element_busca);
-    }
-    else {
+    } else {
       fetchAllProdutos();
     }
 
@@ -202,17 +223,17 @@ export default {
     }
 
     function menuShow() {
-      let menuMobile = document.querySelector('.div_cores');
-      let divTdsCores = document.getElementById('div_tds_cores');
-      let caretIcon = document.getElementById('caret-icon');
-      if (menuMobile.classList.contains('open')) {
-        menuMobile.classList.remove('open');
-        divTdsCores.style.display = 'none';
-        caretIcon.classList.replace('bi-caret-down', 'bi-caret-up');
+      let menuMobile = document.querySelector(".div_cores");
+      let divTdsCores = document.getElementById("div_tds_cores");
+      let caretIcon = document.getElementById("caret-icon");
+      if (menuMobile.classList.contains("open")) {
+        menuMobile.classList.remove("open");
+        divTdsCores.style.display = "none";
+        caretIcon.classList.replace("bi-caret-down", "bi-caret-up");
       } else {
-        menuMobile.classList.add('open');
-        divTdsCores.style.display = 'block';
-        caretIcon.classList.replace('bi-caret-up', 'bi-caret-down');
+        menuMobile.classList.add("open");
+        divTdsCores.style.display = "block";
+        caretIcon.classList.replace("bi-caret-up", "bi-caret-down");
       }
     }
 
@@ -226,15 +247,13 @@ export default {
     }
 
     async function fetchBusca(busca) {
-      await services.produtos
-        .buscarProduto({ nome: busca })
-        .then((res) => {
-          state.produtos = res.data;
-          var qtd = state.produtos;
-          state.qtd = qtd.length;
-          state.buscando = busca;
-          history.pushState({}, "", "/produtos/" + busca);
-        });
+      await services.produtos.buscarProduto({ nome: busca }).then((res) => {
+        state.produtos = res.data;
+        var qtd = state.produtos;
+        state.qtd = qtd.length;
+        state.buscando = busca;
+        history.pushState({}, "", "/produtos/" + busca);
+      });
     }
 
     async function filtraPorPreco() {
@@ -265,28 +284,27 @@ export default {
 <style scoped>
 .btn_transparent {
   background: transparent;
-  border: solid 2px #334B35;
-  font-family: 'Livvic', sans-serif;
-  color: #334B35;
+  border: solid 2px #334b35;
+  font-family: "Livvic", sans-serif;
+  color: #334b35;
   font-weight: 600;
   padding: 5px 20px;
   border-radius: 5px;
 }
 
 .nav-link {
-  color: #252B42;
+  color: #252b42;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin-bottom: 1rem;
-
 }
 
 .nav-link:hover {
-  color: #3CCF4E !important;
+  color: #3ccf4e !important;
 }
 
 .nav-link-selected {
-  color: #3CCF4E !important;
+  color: #3ccf4e !important;
 }
 
 .div_line {
@@ -294,39 +312,36 @@ export default {
 }
 
 .div_top {
-  background: #334B35;
+  background: #334b35;
   margin-bottom: 2rem;
 }
 
 ol {
   background: transparent;
-  font-family: 'Livvic', sans-serif;
-
+  font-family: "Livvic", sans-serif;
 }
 
 .a-bread {
   color: #525259;
   text-decoration: none;
-  font-family: 'Livvic', sans-serif;
-
+  font-family: "Livvic", sans-serif;
 }
 
 .a-bread:hover {
-  color: #3CCF4E;
+  color: #3ccf4e;
 }
 
 .h2_side {
   color: #fff;
   font-size: 18px;
-  background: #263C28;
+  background: #263c28;
   padding: 8px 12px;
 }
-
 
 hr {
   width: 100%;
   height: 1px;
-  background: #E4E4EB;
+  background: #e4e4eb;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
@@ -338,7 +353,6 @@ hr {
 ul {
   padding-left: 0;
 }
-
 
 .qtd {
   color: var(--Color-text-2, #525259);
@@ -398,11 +412,10 @@ ul {
 }
 
 .h2-cores {
-  color: #252B42;
+  color: #252b42;
   font-weight: 400;
   font-size: 22px;
-  font-family: 'Livvic', sans-serif;
-
+  font-family: "Livvic", sans-serif;
 }
 
 .div_tds_cores {
@@ -424,14 +437,14 @@ ul {
   color: #737373;
 }
 
-.div_line {}
+.div_line {
+}
 
 .div_line_icon {
   align-items: center;
   justify-content: center;
   display: flex;
   height: 40px;
-
 }
 
 .div_line_icon i {
@@ -445,34 +458,32 @@ ul {
   justify-content: center;
   display: flex;
   height: 40px;
-
 }
 
 .div_local i {
-  color: #F7C35F;
+  color: #f7c35f;
   font-size: 12pt;
   margin-right: 1rem;
-
 }
 
 .div_local span {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 12pt;
 }
 
 .label_valor {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
   text-align: left;
-  color: #252B42;
+  color: #252b42;
 }
 
 .input_valor {
-  background: #E4E4EB;
+  background: #e4e4eb;
   width: 100%;
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-size: 14px;
   font-weight: 400;
   padding: 10px;
@@ -480,7 +491,6 @@ ul {
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
-
   .h2_side,
   .h2-cores {
     font-size: 13pt;
@@ -504,7 +514,6 @@ ul {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-
   .h2_side,
   .h2-cores {
     font-size: 12pt;

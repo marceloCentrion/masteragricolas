@@ -52,9 +52,9 @@ hr {
 }
 
 #titulo {
+  line-height: 1;
   font-size: 16px;
   font-weight: semibold;
-  line-height: 24px;
   letter-spacing: 0px;
   text-align: left;
   color: #ffffff;
@@ -73,7 +73,7 @@ hr {
 }
 
 #div-titulo {
-  height: 2em;
+  height: 2.2em;
   margin-bottom: 5px;
   margin-top: 10px;
 }
