@@ -7,9 +7,9 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-4">
-            <label for="status">Categoria</label>
+            <label readonly for="status">Categoria</label>
             <select @change="arrayPosition" v-model="state.banner.categoria_id" class="form-select">
-              <option v-for="cat in state.categorias" :key="cat.id" :value="cat.id">
+              <option disabled v-for="cat in state.categorias" :key="cat.id" :value="cat.id">
                 {{ cat.nome }}
               </option>
             </select>
