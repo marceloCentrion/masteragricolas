@@ -224,7 +224,7 @@
                       aria-hidden="true"
                     ></div>
                   </div>
-                  <span v-if="!state.loading">Finalizar Pedido</span>
+                  <span v-if="!state.loading">Continuar</span>
                 </button>
                 <a href="/produtos" v-else>
                   <button type="button" class="btn_pedido">
@@ -390,6 +390,34 @@ export default {
     }
     async function fazerPedido() {
       try {
+        if (!client_id.value) {
+          localStorage.setItem(
+            "destinoUrl",
+            router.currentRoute.value.fullPath
+          );
+          router.push("/login");
+        } else {
+          if (state.id_endereco) {
+            /*var qtd_parcelas = await services.pedido.verificarParcelas({
+              itens: state.carrinho,
+            });*/
+            router.push("/finalizar-pedido");
+          } else {
+            if (
+              confirm(
+                "Ops, vimos que não poussí endereço cadastrado, gostaria de adicionar um novo endereço?"
+              )
+            ) {
+              router.push("/criar-endereco/novo");
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      /*
+      try {
         if (state.dados.id) {
           state.loading = true;
           await services.clientes
@@ -432,7 +460,7 @@ export default {
           document.getElementById("errorToast")
         );
         errorToast.show();
-      }
+      }*/
     }
     return {
       fazerPedido,
