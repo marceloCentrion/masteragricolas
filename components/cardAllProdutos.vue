@@ -2,11 +2,7 @@
   <div class="card-card">
     <div id="card">
       <div id="div_img" v-if="produto.imagens.length <= 0">
-        <img
-          id="img"
-          src="/images/site/produto-sem-imagem-fundo.webp"
-          style="padding: 10%"
-        />
+        <img id="img" src="/images/site/produto-sem-imagem-fundo.webp" style="padding: 10%" />
       </div>
       <div id="div_img" v-else>
         <img id="img" :src="produto.imagens[0].imagem" />
@@ -15,9 +11,12 @@
         <p id="titulo">{{ produto.nome }}</p>
       </div>
       <hr />
-      <div class="div-preco">
+      <div class="div-preco" v-if="produto.sob_consulta !== 'NAO'">
         <p id="preco">R$ {{ produto.preco }}</p>
         <!-- <p id="parcelas">ou <span class="spn-parcelas">{{ produto.parcelas }}x</span> de <span class="valor-parcela"> {{ valorTotal }} </span> sem juros</p> -->
+      </div>
+      <div class="div-preco" v-else>
+        <p id="preco">SOB CONSULTA</p>
       </div>
       <a :href="'/produto/' + produto.urn">
         <button class="btn_details" type="button">COMPRAR</button>
@@ -32,7 +31,7 @@ export default {
   props: {
     produto: { type: Object, required: false },
   },
-  setup() {},
+  setup() { },
 };
 </script>
 
@@ -124,8 +123,7 @@ hr {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .card-card {
-  }
+  .card-card {}
 
   #img {
     width: 300px;
