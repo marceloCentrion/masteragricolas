@@ -113,7 +113,7 @@
                 <p v-else class="buscando">Buscando por: Todos</p>
               </div>
               <div class="col-md-6">
-                <p class="qtd">Exebindo todos os {{ state.qtd }} resultados</p>
+                <p class="qtd">Exibindo todos os {{ state.qtd }} resultados</p>
               </div>
             </div>
             <div class="row">
