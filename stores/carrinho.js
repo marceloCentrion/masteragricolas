@@ -16,6 +16,7 @@ export const useCarrinhoStore = defineStore("carrinho", {
       valor_frete: 0,
       metodo: "PAC"
     }),
+    valor_total: useLocalStorage("valor_total", 0),
   }),
   actions: {
     addItem(item) {
@@ -125,5 +126,10 @@ export const useCarrinhoStore = defineStore("carrinho", {
       total_pix: 0,
       total_desconto: 0
     });
+    state.pedido = useLocalStorage("pedido", {});
+    state.valor_total = useLocalStorage("valor_total", 0);
+    state.fretes = useLocalStorage("fretes", {});
+    state.obj_frete = useLocalStorage("obj_frete", {});
+    state.pedido = useLocalStorage("pedido", {});
   }
 })

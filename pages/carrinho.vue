@@ -118,13 +118,24 @@
                   OK
                 </button>
               </div>
+              <div v-if="state.frete" class="class_prazo">
+                <div>
+                  <p v-if="state.frete.fretes != undefined">
+                    Prazo de
+                    <span style="font-weight: bold" v-if="state.frete.fretes[0].preco">
+                      {{ state.frete.fretes[0].dias_entrega }} dias</span>
+                    <span style="font-weight: bold" v-else>
+                      {{ state.frete.fretes[1].dias_entrega }} dias</span>
+                  </p>
+                </div>
+              </div>
               <div v-if="state.frete">
                 <p>
                   <a style="
-                    font-size: 11px;
-                    font-weight: bold;
-                    text-decoration: underline;
-                  " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                      font-size: 11px;
+                      font-weight: bold;
+                      text-decoration: underline;
+                    " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                     aria-controls="collapseExample">
                     Ver outras opções de frete
                   </a>
@@ -138,13 +149,12 @@
                         @change="alterarFrete(state.frete.fretes[i])" />
                       <label :for="'radio_frete_' + i">
                         {{
-                          parseFloat(state.frete.fretes[i].preco).toLocaleString(
-                            "pt-br",
-                            {
-                              style: "currency",
-                              currency: "BRL",
-                            }
-                          )
+                          parseFloat(
+                            state.frete.fretes[i].preco
+                          ).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
                         }}
                         (<span v-if="state.frete.fretes[i].nome == '.Package'">JadLog</span>
                         <span v-else>{{ state.frete.fretes[i].nome }}</span>)</label>
@@ -164,12 +174,21 @@
                 </div>
                 <div style="text-align: right" class="col-6">
                   <div v-if="state.carrinho.length > 0">
-                    <div>
-                      <p style="font-weight: bold">Frete</p>
+                    <div v-if="state.frete">
+                      <p style="font-weight: bold">
+                        {{
+                          parseFloat(
+                            state.frete.fretes[1].preco
+                          ).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                      </p>
                     </div>
                     <p style="font-weight: bold">
                       {{
-                        state.carrinho.valor_total.toLocaleString("pt-br", {
+                        state.valor_total.toLocaleString("pt-br", {
                           style: "currency",
                           currency: "BRL",
                         })
@@ -255,7 +274,7 @@ export default {
 
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos, frete_selecionado, fretes, obj_frete } = storeToRefs(carrinhoStore);
+    const { itens, valores_produtos, frete_selecionado, fretes, valor_total, obj_frete } = storeToRefs(carrinhoStore);
     const { limparCarrinho, addQtd, removeQtd, setQtd, removeItem, adicionaFrete, freteSimples, limparFrete } = carrinhoStore;
     const authClienteStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(authClienteStore);
@@ -295,6 +314,7 @@ export default {
     state.carrinho.valor_total = valores_produtos.value.total + state.carrinho.valor_frete;
     state.produtos = itens;
     state.frete_selecionado = frete_selecionado;
+    state.valor_total = valor_total;
 
     onMounted(() => {
       fetchDataCliente(client_id.value, client_token.value);
