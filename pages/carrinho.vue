@@ -106,60 +106,70 @@
               <h2 style="font-weight: bold">Resumo</h2>
               <h4>Estimativa Frete</h4>
               <p>Coloque seu para estimativa de frete</p>
+              <label for="cep">CEP</label>
+              <div>
+                <input class="input_frete" type="text" id="cep" v-model="state.cep" v-maska data-maska="#####-###" />
+                <button type="button" @click="calcularFrete" style="
+                    width: 18%;
+                    border: #fff solid 1px;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-left: 6px ">
+                  OK
+                </button>
+              </div>
+              <div v-if="state.frete">
+                <p>
+                  <a style="
+                    font-size: 11px;
+                    font-weight: bold;
+                    text-decoration: underline;
+                  " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                    aria-controls="collapseExample">
+                    Ver outras opções de frete
+                  </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div class="card-transparent card-body" v-for="(tipo_frete, i) in state.frete.fretes"
+                    :key="tipo_frete.id">
+                    <div v-if="!state.frete.fretes[i].error">
+                      <input type="radio" class="radio_frete" :id="'radio_frete_' + i"
+                        v-model="state.tipo_frete_selecionado" :value="state.frete.fretes[i].id"
+                        @change="alterarFrete(state.frete.fretes[i])" />
+                      <label :for="'radio_frete_' + i">
+                        {{
+                          parseFloat(state.frete.fretes[i].preco).toLocaleString(
+                            "pt-br",
+                            {
+                              style: "currency",
+                              currency: "BRL",
+                            }
+                          )
+                        }}
+                        (<span v-if="state.frete.fretes[i].nome == '.Package'">JadLog</span>
+                        <span v-else>{{ state.frete.fretes[i].nome }}</span>)</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <hr />
               <div class="row">
                 <div class="col-6">
-                  <div>
-                    <p style="font-weight: bold">Subtotal</p>
-                  </div>
                   <div>
                     <p style="font-weight: bold">Frete</p>
                   </div>
                   <div>
                     <p style="font-weight: bold">Total</p>
                   </div>
-                  <div>
-                    <p style="font-weight: bold">Total Com Desconto</p>
-                  </div>
-                  <div>
-                    <p style="font-weight: bold">Total No Pix</p>
-                  </div>
                 </div>
                 <div style="text-align: right" class="col-6">
                   <div v-if="state.carrinho.length > 0">
-                    <p style="font-weight: bold">
-                      {{
-                        state.carrinho.valor_total.toLocaleString("pt-br", {
-                          style: "currency",
-                          currency: "BRL",
-                        })
-                      }}
-                    </p>
                     <div>
                       <p style="font-weight: bold">Frete</p>
                     </div>
                     <p style="font-weight: bold">
                       {{
                         state.carrinho.valor_total.toLocaleString("pt-br", {
-                          style: "currency",
-                          currency: "BRL",
-                        })
-                      }}
-                    </p>
-                    <p style="font-weight: bold">
-                      {{
-                        state.carrinho.valor_total_desconto.toLocaleString(
-                          "pt-br",
-                          {
-                            style: "currency",
-                            currency: "BRL",
-                          }
-                        )
-                      }}
-                    </p>
-                    <p style="font-weight: bold">
-                      {{
-                        state.carrinho.valor_total_pix.toLocaleString("pt-br", {
                           style: "currency",
                           currency: "BRL",
                         })
@@ -204,8 +214,6 @@
       Ocorreu um erro ao realizar o pedido. Por favor, tente novamente.
     </div>
   </div>
-
-  <!-- Modal -->
   <div class="modal modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -236,8 +244,6 @@
 import services from "../services/axios";
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
-import produtos from "~/services/axios/produtos";
-// import endereco from "~/services/axios/endereco";
 export default {
   setup() {
     definePageMeta({
@@ -249,12 +255,11 @@ export default {
 
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos } = storeToRefs(carrinhoStore);
-    const { limparCarrinho, addQtd, removeQtd, setQtd, removeItem } =
-      carrinhoStore;
-
+    const { itens, valores_produtos, frete_selecionado, fretes, obj_frete } = storeToRefs(carrinhoStore);
+    const { limparCarrinho, addQtd, removeQtd, setQtd, removeItem, adicionaFrete, freteSimples, limparFrete } = carrinhoStore;
     const authClienteStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(authClienteStore);
+
     const state = reactive({
       loading: false,
       carrinho: [],
@@ -270,31 +275,44 @@ export default {
         valor_total_pix: "",
         valor_frete: "",
         valor_produtos: "",
+        valor_frete: "",
       },
       dados: { enderecos: { cidade: { estado: {} } } },
       pedido: {},
       produtos: [],
+      frete: null,
+      tipo_frete_selecionado: null,
+      metodo_frete: null,
+      fretes: [],
     });
+
     state.carrinho = itens;
     state.valores_produtos = valores_produtos;
-
     state.carrinho.valor_frete = 0;
     state.carrinho.valor_total_desconto = valores_produtos.value.total_desconto;
     state.carrinho.valor_total_pix = valores_produtos.value.total_pix;
     state.carrinho.valor_produtos = valores_produtos.value.total;
-    state.carrinho.valor_total =
-      valores_produtos.value.total + state.carrinho.valor_frete;
-    //  console.log(state.carrinho.valor_total);
+    state.carrinho.valor_total = valores_produtos.value.total + state.carrinho.valor_frete;
     state.produtos = itens;
+    state.frete_selecionado = frete_selecionado;
 
     onMounted(() => {
       fetchDataCliente(client_id.value, client_token.value);
+      const isEmpty = (obj) => {
+        return Object.keys(obj).length === 0;
+      };
+      if (!isEmpty(fretes.value)) {
+        console.log("entrou aqui");
+        state.frete = fretes.value;
+        state.cep = state.frete.cep;
+      }
     });
 
     function checkNumberInput(itemId, qtd) {
       if (isNaN(qtd) || qtd < 1) qtd = 1;
       setQtd(itemId, qtd);
     }
+
     async function fetchDataCliente(id, token) {
       try {
         const { data } = await services.clientes.getDataCliente({
@@ -307,6 +325,7 @@ export default {
         console.log(error);
       }
     }
+
     async function cepAtributes() {
       var cep = state.dados.enderecos.cep;
       state.dados.enderecos.cep = cep.replace("-", "").replace(".", "");
@@ -319,6 +338,7 @@ export default {
         state.dados.enderecos.codigo_ibge = res.data.ibge;
       });
     }
+
     async function fazerPedido() {
       try {
         if (!client_id.value) {
@@ -329,9 +349,6 @@ export default {
           router.push("/login");
         } else {
           if (state.id_endereco) {
-            /*var qtd_parcelas = await services.pedido.verificarParcelas({
-              itens: state.carrinho,
-            });*/
             router.push("/finalizar-pedido");
           } else {
             if (
@@ -346,53 +363,61 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    }
 
-      /*
+    async function btnAlterarFrete() {
+      state.frete = null;
+      limparFrete();
+    }
+
+    async function alterarFrete(frete) {
+      limparFrete();
+      adicionaFrete(state.fretes, frete);
+      state.frete.preco = frete.preco;
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.tipo_frete_selecionado = frete.id;
+      state.prazo_frete = frete.dias_entrega;
+      console.log(frete);
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.prazo_frete = frete.dias_entrega;
+    }
+
+    async function calcularFrete() {
+      var produtos_req = [];
+      state.carrinho.forEach((item) => {
+        var produto = {};
+        produto.id = item.id;
+        produto.qtd = item.quantidade;
+        produtos_req.push(produto);
+      });
+
+      var cep_sem_traco = state.cep.replace('-', '');
       try {
-        if (state.dados.id) {
-          state.loading = true;
-          await services.clientes
-            .fazerPedido({
-              client_token: client_token.value,
-              pedido: {
-                cliente_id: state.dados.id,
-                endereco_id: state.id_endereco,
-                valor_total: state.carrinho.valor_total,
-                valor_frete: state.carrinho.valor_frete,
-                valor_total_desconto: state.carrinho.valor_total_desconto,
-                valor_total_pix: state.carrinho.valor_total_pix,
-                valor_produtos: state.carrinho.valor_produtos,
-                produtos: state.carrinho,
-              },
-            })
-            .then(() => {
-              limparCarrinho();
-              // Exibe o modal de sucesso
-              const myModal = new bootstrap.Modal(
-                document.getElementById("exampleModal")
-              );
-              myModal.show();
-            })
-            .finally(() => {
-              state.loading = false;
-            });
+        const { data } = await services.pedido.calcularFrete({
+          produtos_req,
+          cep_destinatario: cep_sem_traco,
+        });
+        state.frete = {};
+        if (data.fretes[0].error) {
+          adicionaFrete(data, data.fretes[1]);
+          state.frete.preco = data.fretes[1].preco;
+          state.frete.prazo_frete = data.fretes[1].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[1].id;
+          state.prazo_frete = data.fretes[1].dias_entrega;
         } else {
-          localStorage.setItem(
-            "destinoUrl",
-            router.currentRoute.value.fullPath
-          );
-          console.log(router.currentRoute.value.fullPath);
-          router.push("/login");
+          state.fretes = data.fretes;
+          adicionaFrete(data, data.fretes[0]);
+          state.frete.preco = data.fretes[0].preco;
+          state.frete.prazo_frete = data.fretes[0].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[0].id;
+          state.prazo_frete = data.fretes[0].dias_entrega;
         }
+        state.frete = data;
       } catch (error) {
         console.log(error);
-        // Exibe o toast de erro
-        const errorToast = new bootstrap.Toast(
-          document.getElementById("errorToast")
-        );
-        errorToast.show();
-      }*/
+      }
     }
+
     return {
       fazerPedido,
       state,
@@ -403,12 +428,29 @@ export default {
       removeItem,
       checkNumberInput,
       client_id,
+      btnAlterarFrete,
+      alterarFrete,
+      calcularFrete,
     };
   },
 };
 </script>
-
 <style scoped>
+.input_frete {
+  width: 80%;
+  background: transparent;
+  border-radius: 4px;
+  border: solid 1px rgba(110, 108, 108, 0.74);
+  color: #fff;
+  outline: none;
+  padding: 5px 5px;
+}
+
+.input_frete:focus {
+  border: solid 1px rgb(255, 255, 255);
+
+}
+
 #carrinho {
   min-height: 91vh;
 }

@@ -47,7 +47,6 @@ async function fetchEmpresa() {
   try {
     const { data } = await axios.empresa.getSite();
     state.empresa = data;
-    console.log(data)
   } catch (error) {
     console.log(error);
   }

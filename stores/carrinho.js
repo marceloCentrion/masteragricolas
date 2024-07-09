@@ -101,6 +101,22 @@ export const useCarrinhoStore = defineStore("carrinho", {
       this.fretes = {};
       this.obj_frete = {};
     },
+    adicionaFrete(fretes, frete) {
+      var valor_frete = frete.preco
+      var frete = {};
+      frete.valor_frete = valor_frete;
+      //  this.valores_produtos.total = this.valores_produtos.total + frete.valor_frete;
+
+      this.frete_selecionado = frete;
+      this.valores_produtos.total = parseFloat(this.valores_produtos.total) + parseFloat(valor_frete);
+      this.valores_produtos.total_pix = parseFloat(this.valores_produtos.total_pix) + parseFloat(valor_frete);
+      this.valores_produtos.total_desconto = parseFloat(this.valores_produtos.total_desconto) + parseFloat(valor_frete);
+      this.valor_total = parseFloat(this.valor_total) + parseFloat(valor_frete);
+      this.valor_total_desconto = parseFloat(this.valor_total_desconto) + parseFloat(valor_frete);
+      this.valor_total_pix = parseFloat(this.valor_total_pix) + parseFloat(valor_frete);
+      this.fretes = fretes;
+      this.obj_frete = frete;
+    },
   },
   hydrate(state, initialState) {
     state.itens = useLocalStorage("carrinho", []);

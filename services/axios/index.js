@@ -22,7 +22,9 @@ import representantesService from './representantes';
 import marcasService from './marcas';
 import variacoesService from './variacoes';
 import atributosService from './atributos';
+import pedidoService from './pedido';
 import cepService from './cep';
+
 const API_ENVS = {
   production: '',
   development: '',
@@ -35,6 +37,7 @@ const httpClient = axios.create({
 const httpCep = axios.create({
   baseURL: API_ENVS.cep
 })
+
 export default {
   auth: AuthService(httpClient),
   login: LoginService(httpClient),
@@ -60,4 +63,5 @@ export default {
   atributos: atributosService(httpClient),
   cep: cepService(httpCep),
   marcas: marcasService(httpClient),
+  pedido: pedidoService(httpClient),
 }
