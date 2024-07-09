@@ -29,24 +29,13 @@
                 <div class="row">
                   <div class="col-sm-12 mb-sm-4 col-md-5 d-flex">
                     <div class="img">
-                      <img
-                        :src="produto.imagem"
-                        id="img_produto"
-                        v-if="produto.imagem"
-                      />
-                      <img
-                        v-else
-                        id="img_produto"
-                        src="/images/site/produto-sem-imagem.webp"
-                        style="width: 100px"
-                      />
+                      <img :src="produto.imagem" id="img_produto" v-if="produto.imagem" />
+                      <img v-else id="img_produto" src="/images/site/produto-sem-imagem.webp" style="width: 100px" />
                       <p class="mt-3 w-75 ml-3">{{ produto.nome }}</p>
                     </div>
                   </div>
                   <div class="col-8 col-sm-8 col-md-2 d-flex">
-                    <div
-                      class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none"
-                    >
+                    <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
                       <p style="font-weight: bold">Preço:</p>
                     </div>
                     <div class="element_produto mt-md-3">
@@ -62,46 +51,25 @@
                   </div>
                   <div class="col-4 col-sm-4 col-md-2 mt-md-3">
                     <div class="div_qtd">
-                      <input
-                        class="qtd_text"
-                        type="text"
-                        @change="
-                          checkNumberInput(
-                            produto.produtos_id,
-                            $event.target.value
-                          )
-                        "
-                        :value="produto.quantidade"
-                      />
+                      <input class="qtd_text" type="text" @change="
+                        checkNumberInput(
+                          produto.produtos_id,
+                          $event.target.value
+                        )
+                        " :value="produto.quantidade" />
                       <div class="btns_qtd">
-                        <button
-                          type="button"
-                          @click="addQtd(produto.produtos_id)"
-                          class="btn_qtd"
-                        >
-                          <i
-                            class="bi bi-chevron-up"
-                            style="font-size: 14px"
-                          ></i>
+                        <button type="button" @click="addQtd(produto.produtos_id)" class="btn_qtd">
+                          <i class="bi bi-chevron-up" style="font-size: 14px"></i>
                         </button>
-                        <button
-                          type="button"
-                          @click="removeQtd(produto.produtos_id)"
-                          class="btn_qtd"
-                          :disabled="produto.quantidade === 1"
-                        >
-                          <i
-                            class="bi bi-chevron-down"
-                            style="font-size: 14px"
-                          ></i>
+                        <button type="button" @click="removeQtd(produto.produtos_id)" class="btn_qtd"
+                          :disabled="produto.quantidade === 1">
+                          <i class="bi bi-chevron-down" style="font-size: 14px"></i>
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="d-flex col-md-2">
-                    <div
-                      class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none"
-                    >
+                    <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
                       <p>Subtotal:</p>
                     </div>
                     <div class="element_produto mt-md-3">
@@ -116,10 +84,7 @@
                     </div>
                   </div>
                   <div class="d-flex col-md-1 icon_remove_div mt-2">
-                    <button
-                      id="btn_remove"
-                      @click="removeItem(produto.produtos_id)"
-                    >
+                    <button id="btn_remove" @click="removeItem(produto.produtos_id)">
                       <i id="trashicon" class="bi bi-trash"></i>
                     </button>
                   </div>
@@ -130,14 +95,8 @@
               <a href="/produtos">
                 <button title="Continuar Comprando" class="btn_transparent">
                   Continuar Comprando
-                </button></a
-              >
-              <button
-                title="Limpar Carrinho"
-                @click="limparCarrinho"
-                class="btn_gold"
-                v-if="state.carrinho.length > 0"
-              >
+                </button></a>
+              <button title="Limpar Carrinho" @click="limparCarrinho" class="btn_gold" v-if="state.carrinho.length > 0">
                 Limpar Carrinho
               </button>
             </div>
@@ -210,27 +169,18 @@
                 </div>
               </div>
               <div class="div_btn_quad">
-                <button
-                  type="button"
-                  @click="fazerPedido()"
-                  class="btn_pedido"
-                  v-if="state.carrinho.length > 0"
-                  :disabled="state.loading"
-                >
+                <button type="button" @click="fazerPedido()" class="btn_pedido" v-if="state.carrinho.length > 0"
+                  :disabled="state.loading">
                   <div class="d-flex align-items-center" v-if="state.loading">
                     <strong role="status">Carregando Pedido...</strong>
-                    <div
-                      class="spinner-border ms-auto"
-                      aria-hidden="true"
-                    ></div>
+                    <div class="spinner-border ms-auto" aria-hidden="true"></div>
                   </div>
                   <span v-if="!state.loading">Continuar</span>
                 </button>
                 <a href="/produtos" v-else>
                   <button type="button" class="btn_pedido">
                     Adicione algum produto
-                  </button> </a
-                ><!--
+                  </button> </a><!--
                 <a href="/ver-endereco">
                   <button type="button" class="btn_endereco" v-if="client_id">
                     Checar meu Endereço
@@ -243,23 +193,12 @@
       </div>
     </div>
   </section>
-  <div
-    class="toast toast-center"
-    id="errorToast"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
+  <div class="toast toast-center" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
       <i class="bi bi-exclamation-circle-fill"></i>
       <strong class="me-auto">Erro</strong>
       <small class="text-dark">Agora</small>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body">
       Ocorreu um erro ao realizar o pedido. Por favor, tente novamente.
@@ -267,13 +206,7 @@
   </div>
 
   <!-- Modal -->
-  <div
-    class="modal modal-lg"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -283,9 +216,7 @@
         </div>
         <div class="modal-body">
           Seu pedido foi
-          <strong class="text-success text-decoration-underline"
-            >finalizado com sucesso</strong
-          >
+          <strong class="text-success text-decoration-underline">finalizado com sucesso</strong>
           e foi encaminhado aos nossos consultores. Logo entraremos em contato
           via WhatsApp ou email.
         </div>
@@ -757,7 +688,7 @@ export default {
   outline: none;
 }
 
-.input:focus ~ .input-border {
+.input:focus~.input-border {
   width: 100%;
 }
 
