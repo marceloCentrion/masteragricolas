@@ -106,17 +106,71 @@
               <h2 style="font-weight: bold">Resumo</h2>
               <h4>Estimativa Frete</h4>
               <p>Coloque seu para estimativa de frete</p>
-              <label for="cep">CEP</label>
-              <div>
-                <input class="input_frete" type="text" id="cep" v-model="state.cep" v-maska data-maska="#####-###" />
-                <button type="button" @click="calcularFrete" style="
-                    width: 18%;
+              <div v-if="!state.frete">
+                <label>CEP</label>
+                <div>
+                  <input class="input_frete" type="text" id="cep" v-model="state.cep" />
+                  <button type="button" @click="calcularFrete" style="
+                    width: 20%;
                     border: #fff solid 1px;
-                    padding: 5px;
+                    padding: 7px;
                     border-radius: 5px;
-                    margin-left: 6px ">
-                  OK
-                </button>
+                  ">
+                    OK
+                  </button>
+                </div>
+              </div>
+              <hr />
+              <div style="display: flex; justify-content: space-between" v-if="state.frete">
+                <div>
+                  <p style="font-weight: bold; margin-bottom: 0">FRETE</p>
+                </div>
+                <div v-if="state.frete.fretes != undefined">
+                  <div style="font-weight: bold" v-if="state.frete.fretes[0].error">
+                    {{
+                      parseFloat(state.frete.fretes[1].preco).toLocaleString(
+                        "pt-br",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
+                    }}
+                  </div>
+                </div>
+                <div style="font-weight: bold" v-else>
+                  <div v-if="state.frete.fretes != undefined">
+                    {{
+                      parseFloat(state.frete.fretes[0].preco).toLocaleString(
+                        "pt-br",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
+                    }}
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between" v-if="state.frete">
+                <div>
+                  <p>
+                    Entrega em
+                    <span style="font-weight: bold">{{ state.frete.localidade }} - {{ state.frete.uf }}</span>
+                  </p>
+                </div>
+
+                <div>
+                  <button style="
+                    color: #fff;
+                    background: transparent;
+                    border: #fff solid 1px;
+                    border-radius: 5px;
+                    padding: 2px 10px;
+                  " @click="btnAlterarFrete">
+                    Alterar
+                  </button>
+                </div>
               </div>
               <div v-if="state.frete" class="class_prazo">
                 <div>
@@ -130,12 +184,19 @@
                 </div>
               </div>
               <div v-if="state.frete">
+                <!-- <button type="button" style="
+                  font-size: 11px;
+                  font-weight: bold;
+                  text-decoration: underline;
+                ">
+                Ver outras opções de frete
+              </button> -->
                 <p>
                   <a style="
-                      font-size: 11px;
-                      font-weight: bold;
-                      text-decoration: underline;
-                    " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                    font-size: 11px;
+                    font-weight: bold;
+                    text-decoration: underline;
+                  " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                     aria-controls="collapseExample">
                     Ver outras opções de frete
                   </a>
@@ -149,12 +210,13 @@
                         @change="alterarFrete(state.frete.fretes[i])" />
                       <label :for="'radio_frete_' + i">
                         {{
-                          parseFloat(
-                            state.frete.fretes[i].preco
-                          ).toLocaleString("pt-br", {
-                            style: "currency",
-                            currency: "BRL",
-                          })
+                          parseFloat(state.frete.fretes[i].preco).toLocaleString(
+                            "pt-br",
+                            {
+                              style: "currency",
+                              currency: "BRL",
+                            }
+                          )
                         }}
                         (<span v-if="state.frete.fretes[i].nome == '.Package'">JadLog</span>
                         <span v-else>{{ state.frete.fretes[i].nome }}</span>)</label>
