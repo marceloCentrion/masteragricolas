@@ -76,8 +76,7 @@
                   <strong>Estado:</strong>
                   {{ state.dados.enderecos[0].cidade.estado.nome }}
                 </p>
-                <a href=""
-                  ><button type="button" class="btn_gold mt-2">
+                <a href=""><button type="button" class="btn_gold mt-2">
                     Alterar Endereço
                   </button>
                 </a>
@@ -92,51 +91,28 @@
               </h5>
               <div class="card-body">
                 <div class="div_titulos_pagamento">
-                  <input
-                    type="radio"
-                    id="radio_cartao_credito"
-                    value="CARTAO"
-                    class="radio"
-                    v-model="state.tipo_pagamento"
-                  />
+                  <input type="radio" id="radio_cartao_credito" value="CARTAO" class="radio"
+                    v-model="state.tipo_pagamento" />
                   <label for="radio_cartao_credito">
                     <i class="bi bi-credit-card"></i>
-                    Cartão de Crédito</label
-                  >
+                    Cartão de Crédito</label>
                 </div>
-                <div
-                  class="card_tipo_pagamento"
-                  v-if="state.tipo_pagamento == 'CARTAO'"
-                >
+                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'CARTAO'">
                   <div>
                     <label for="nome">Quantidade de Parcelas</label>
                     <select class="form-select" v-model="state.parcelas">
-                      <option
-                        v-for="(month, index) in 12"
-                        :key="index"
-                        :value="month"
-                      >
+                      <option v-for="(month, index) in 12" :key="index" :value="month">
                         {{ month }}
                       </option>
                     </select>
                   </div>
                   <div>
                     <label for="nome">Número do Cartão</label>
-                    <input
-                      type="text"
-                      id="numero_cartao"
-                      class="form-control"
-                      v-model="state.cartao.numero.value"
-                    />
+                    <input type="text" id="numero_cartao" class="form-control" v-model="state.cartao.numero.value" />
                   </div>
                   <div>
                     <label for="nome">Nome no Cartão</label>
-                    <input
-                      type="text"
-                      id="nome_cartao"
-                      class="form-control"
-                      v-model="state.cartao.nome.value"
-                    />
+                    <input type="text" id="nome_cartao" class="form-control" v-model="state.cartao.nome.value" />
                   </div>
 
                   <div>
@@ -147,26 +123,15 @@
                             <label for="nome">Validade</label>
                             <div class="row">
                               <div class="col-sm-6" style="padding-right: 0px">
-                                <select
-                                  class="form-select"
-                                  v-model="state.cartao.mes.value"
-                                >
+                                <select class="form-select" v-model="state.cartao.mes.value">
                                   <option selected value="">Mes</option>
-                                  <option
-                                    v-for="(month, index) in 12"
-                                    :key="index"
-                                    :value="index"
-                                  >
+                                  <option v-for="(month, index) in 12" :key="index" :value="index">
                                     {{ month }}
                                   </option>
                                 </select>
                               </div>
                               <div class="col-sm-6">
-                                <input
-                                  type="number"
-                                  class="form-control"
-                                  v-model="state.cartao.ano.value"
-                                />
+                                <input type="number" class="form-control" v-model="state.cartao.ano.value" />
                               </div>
                             </div>
                           </div>
@@ -174,41 +139,22 @@
                       </div>
                       <div class="col-sm-6">
                         <label>Código de Segurança</label>
-                        <input
-                          type="text"
-                          id="nome_cartao"
-                          class="form-control"
-                          v-model="state.cartao.cvv.value"
-                        />
+                        <input type="text" id="nome_cartao" class="form-control" v-model="state.cartao.cvv.value" />
                       </div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    class="btn_comprar mt-2"
-                    @click="fazerPedido('CARTAO')"
-                  >
+                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('CARTAO')">
                     Finalizar Compra
                   </button>
                 </div>
                 <hr />
                 <div class="div_titulos_pagamento">
-                  <input
-                    type="radio"
-                    id="radio_pix"
-                    class="radio"
-                    value="PIX"
-                    v-model="state.tipo_pagamento"
-                  />
+                  <input type="radio" id="radio_pix" class="radio" value="PIX" v-model="state.tipo_pagamento" />
                   <label for="radio_pix">
                     <img src="/images/site/pix_icon.png" style="width: 15px" />
-                    Pix</label
-                  >
+                    Pix</label>
                 </div>
-                <div
-                  class="card_tipo_pagamento"
-                  v-if="state.tipo_pagamento == 'PIX'"
-                >
+                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'PIX'">
                   <p>
                     Pagamento via PIX:
                     <span class="bold">{{
@@ -239,36 +185,19 @@
                     internet banking usando o QRCode ou a opção de "Copia e
                     Cola" disponibilizados no App!
                   </p>
-                  <button
-                    type="button"
-                    class="btn_comprar mt-2"
-                    @click="fazerPedido('PIX')"
-                  >
+                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('PIX')">
                     Finalizar Compra
                   </button>
                 </div>
                 <hr />
                 <div class="div_titulos_pagamento">
-                  <input
-                    type="radio"
-                    id="radio_boleto"
-                    value="BOLETO"
-                    class="radio"
-                    v-model="state.tipo_pagamento"
-                  />
+                  <input type="radio" id="radio_boleto" value="BOLETO" class="radio" v-model="state.tipo_pagamento" />
                   <label for="radio_boleto">
-                    <img
-                      src="/images/site/boleto_icon.png"
-                      style="width: 25px"
-                    />
-                    Boleto Bancário</label
-                  >
+                    <img src="/images/site/boleto_icon.png" style="width: 25px" />
+                    Boleto Bancário</label>
                 </div>
 
-                <div
-                  class="card_tipo_pagamento"
-                  v-if="state.tipo_pagamento == 'BOLETO'"
-                >
+                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'BOLETO'">
                   <p>
                     Pagamento no boleto bancário:
                     <span class="bold">{{
@@ -292,11 +221,7 @@
                     bancos, lotéricas e correios, apresentando o boleto
                     impresso.
                   </p>
-                  <button
-                    type="button"
-                    class="btn_comprar mt-2"
-                    @click="fazerPedido('BOLETO')"
-                  >
+                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('BOLETO')">
                     Finalizar Compra
                   </button>
                 </div>
@@ -309,12 +234,24 @@
                 Resumo do Pedido <i class="bi bi-box2"></i>
               </h5>
               <div class="card-body">
-                <p
-                  class="card-text"
-                  v-for="produto in state.produtos"
-                  :key="produto.id"
-                >
-                  <strong>Produto:</strong> {{ produto.nome }}
+                <p class="card-text">
+                  <strong>Produtos:</strong>
+                  <carousel :items-to-show="1">
+                    <slide v-for="produto in state.produtos" :key="produto.id">
+                      <div class="div_produto">
+                        <img id="img" src="/images/site/produto-sem-imagem-fundo.webp" style="width: 100%; height: 200px; background-color: gray; object-fit: contain;" v-if="produto.imagem == null || produto.imagem == undefined || produto.imagem.length < 0"/>
+                        <img :src="produto.imagem" style="width: 100%; height: 200px; object-fit: contain;" v-else/>
+
+                        <div>
+                          {{ produto.nome }}
+                        </div>
+                      </div>
+                    </slide>
+                    <template #addons>
+                      <navigation />
+                      <pagination />
+                    </template>
+                  </carousel>
                 </p>
                 <p class="card-text">
                   <strong>Total no Pix:</strong>
@@ -328,13 +265,10 @@
                     )
                   }}
                 </p>
-                <p
-                  class="card-text"
-                  v-if="
-                    state.carrinho.valor_total_desconto != null ||
-                    state.carrinho.valor_total_desconto != undefined
-                  "
-                >
+                <p class="card-text" v-if="
+                  state.carrinho.valor_total_desconto != null ||
+                  state.carrinho.valor_total_desconto != undefined
+                ">
                   <strong>Total com Desconto:</strong>
                   {{
                     state.carrinho.valor_total_desconto.toLocaleString(
@@ -377,7 +311,17 @@
 import { reactive, onMounted } from "vue";
 import services from "../services/axios";
 import { useRouter } from "vue-router";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+
 export default {
+  components: {
+    Carousel,
+    Slide,
+    Pagination,
+    Navigation,
+  },
+
   setup() {
     definePageMeta({
       layout: "blank",
@@ -460,12 +404,10 @@ export default {
       getEstados();
       fetchDataCliente();
       state.carrinho.valor_frete = 0;
-      state.carrinho.valor_total_desconto =
-        valores_produtos.value.total_desconto;
+      state.carrinho.valor_total_desconto = valores_produtos.value.total_desconto;
       state.carrinho.valor_total_pix = valores_produtos.value.total_pix;
       state.carrinho.valor_produtos = valores_produtos.value.total;
-      state.carrinho.valor_total =
-        valores_produtos.value.total + state.carrinho.valor_frete;
+      state.carrinho.valor_total = valores_produtos.value.total + state.carrinho.valor_frete;
       state.produtos = itens;
     });
 
@@ -478,19 +420,10 @@ export default {
         state.dados = data;
         state.id_endereco = data.enderecos[0].id;
         var data_nascimento = data.data_nascimento;
-        // formatarData(data_nascimento);
-        // var estado_id = data.endereco.cidade.estado_id;
-        // getCidade(estado_id);
       } catch (error) {
         console.log(error);
       }
     }
-
-    // function formatarData(data_nascimento) {
-    //   let data_americana = data_nascimento;
-    //   let data_brasileira = data_americana.split("-").reverse().join("/");
-    //   state.dados.data_nascimento = data_brasileira;
-    // }
 
     async function fazerPedido() {
       try {
@@ -535,6 +468,7 @@ export default {
       }
       state.modalOpen = false;
     }
+
     async function cepAtributes() {
       var cep = state.dados.endereco.cep;
       state.dados.endereco.cep = cep.replace("-", "").replace(".", "");
@@ -546,12 +480,7 @@ export default {
       });
       getCityByCode(state.dados.endereco.codigo_ibge);
     }
-    function abrirModal() {
-      state.modalOpen = true;
-    }
-    function fecharModal() {
-      state.modalOpen = false;
-    }
+
     async function getEstados() {
       try {
         const { data } = await services.endereco.getEstados();
@@ -561,6 +490,7 @@ export default {
         console.log("aqui:" + error);
       }
     }
+
     async function getCidade(estado_id) {
       try {
         const { data } = await services.endereco.getCidade(estado_id);
@@ -570,6 +500,7 @@ export default {
         console.log("aqui:" + error);
       }
     }
+
     async function getCityByCode(cod_ibge) {
       try {
         const { data } = await services.endereco.getCityByCode(cod_ibge);
@@ -581,15 +512,19 @@ export default {
         console.log("aqui:" + error);
       }
     }
+
     return {
       getCidade,
       getEstados,
       fazerPedido,
       upEndereco,
       cepAtributes,
-      fecharModal,
-      abrirModal,
       state,
+      Carousel,
+      Slide,
+      Pagination,
+      Navigation,
+
     };
   },
 };
@@ -598,6 +533,7 @@ export default {
 .card_endereco {
   margin-top: 1rem;
 }
+
 .btn_save {
   padding: 5px;
   width: 100px;
@@ -693,7 +629,7 @@ export default {
   outline: none;
 }
 
-.input:focus ~ .input-border {
+.input:focus~.input-border {
   width: 100%;
 }
 
@@ -706,6 +642,7 @@ export default {
 .div_btn {
   text-align: right;
 }
+
 .card_tipo_pagamento p {
   margin-bottom: 0.2rem;
 }
@@ -728,6 +665,7 @@ export default {
   background: #263c28;
   border-bottom: solid 5px #00a000;
 }
+
 .btn_transparent:hover {
   background: #263c28;
   color: #fff;
@@ -770,6 +708,7 @@ export default {
   left: 0;
   transition: 0.3s;
 }
+
 .btn_comprar {
   font-family: "Poppins", sans-serif;
   border-radius: 4px;
@@ -781,6 +720,7 @@ export default {
   transition: 0.5s;
   font-weight: 500;
 }
+
 /* Hover on Input */
 .input:hover {
   background: var(--input-hovered-color);
@@ -790,7 +730,7 @@ export default {
   outline: none;
 }
 
-.input:focus ~ .input-border {
+.input:focus~.input-border {
   width: 100%;
 }
 
