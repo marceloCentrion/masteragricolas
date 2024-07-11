@@ -74,60 +74,83 @@
         </div>
       </div>
     </div>
+    <div id="toast" class="toast">Erro ao fazer login</div>
   </section>
 </template>
 
-
 <script setup>
-import services from '../services/axios'
-// const toast = useToast()
+import { reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import services from '../services/axios';
+
 const authStorage = useAuthStore();
+
 definePageMeta({
   layout: "blank",
 });
+
 onMounted(() => {
   if (authStorage.system_token) router.push("/admin");
 });
+
 const router = useRouter();
 const state = reactive({
   email: "",
   senha: "",
 });
+
 async function logar() {
-  await services.login
-    .logarSistema({
+  try {
+    const results = await services.login.logarSistema({
       email: state.email,
       senha: state.senha,
-    })
-    .then((results) => {
-      if (results) {
-        //window.localStorage.setItem('token', data.jwt)
-        authStorage.token = results.data.token;
-        authStorage.id = results.data.id;
-        authStorage.nome = results.data.nome;
-        //window.localStorage.setItem('colaborador_id', data.funcionario_id)
-        router.push("/admin/dashboard");
-      }
-    })
-    .catch((error) => {
-      var menssage = error;
-      console.log(menssage)
-      alert(menssage)
-      // toast.add({
-      //   id: menssage,
-      //   title: menssage,
-      //   description: 'Por favor digite novamente seu email e senha!',
-      //   icon: "i-heroicons-exclamation-triangle-16-solid",
-      //   color: "red",
-      //   timeout: 4000,
-      //   position: 'top',
-      // })
-      return;
     });
+
+    if (results) {
+      authStorage.token = results.data.token;
+      authStorage.id = results.data.id;
+      authStorage.nome = results.data.nome;
+      router.push("/admin/dashboard");
+    }
+  } catch (error) {
+    console.log(error.response.data.erro);
+    showToast(error.response.data.erro);
+  }
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
 }
 </script>
 
+
 <style scoped>
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 10000;
+  font-weight: 700;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #erro {
   background: none;
   position: fixed;
@@ -150,14 +173,6 @@ section {
   min-height: 100vh;
   background: #000;
 }
-
-/* .btn_login {
-  padding: 5px;
-  background: #01bd9e;
-  border: solid 1px #01bd9e;
-  color: #000;
-  margin-top: 2rem;
-} */
 
 section {
   position: absolute;
