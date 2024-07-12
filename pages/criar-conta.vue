@@ -32,25 +32,27 @@
                         </div>
                         <div class="col-lg-6">
                           <span class="input-span">
-                            <label for="tel" class="label">Telefone Principal <span style="color: red;">*</span></label>
-                            <input required type="text" name="tel" id="tel"
-                              v-model="state.nova_conta.telefone_principal" v-maska 
-                              data-maska="[ '(##) ####-####','(##) # ####-####' ]" /></span>
+                            <label for="nome_mae" class="label">Nome da mãe
+                              <span style="color: red">*</span></label>
+                            <input required type="text" name="nome_mae" id="nome_mae"
+                              v-model="state.nova_conta.nome_mae" /></span>
                         </div>
                         <div class="col-lg-6">
+                          <span class="input-span">
+                            <label for="tel" class="label">Telefone Principal <span style="color: red;">*</span></label>
+                            <input required type="text" name="tel" id="tel"
+                              v-model="state.nova_conta.telefone_principal" v-maska
+                              data-maska="[ '(##) ####-####','(##) # ####-####' ]" /></span>
+                        </div>
+                        <!-- <div class="col-lg-6">
                           <span class="input-span">
                             <label for="telefone_alternativo" class="label">Telefone Alternativo <span
                                 style="color: red;">*</span></label>
                             <input required type="text" name="telefone_alternativo" id="telefone_alternativo"
                               v-model="state.nova_conta.telefone_alternativo" v-maska
                               data-maska="['(##) ####-####', '(##) # ####-####' ]" /></span>
-                        </div>
-                        <div class="col-lg-6">
-                          <span class="input-span">
-                            <label for="email" class="label">E-mail <span style="color: red;">*</span></label>
-                            <input required type="email" name="email" id="email"
-                              v-model="state.nova_conta.email" /></span>
-                        </div>
+                        </div> -->
+
                         <div class="col-lg-6">
                           <span class="input-span">
                             <label for="nascimento" class="label">Data de Nascimento <span
@@ -81,10 +83,63 @@
                         </div>
                         <div class="col-lg-6">
                           <span class="input-span">
+                            <label for="email" class="label">E-mail <span style="color: red;">*</span></label>
+                            <input required type="email" name="email" id="email"
+                              v-model="state.nova_conta.email" /></span>
+                        </div>
+                        <div class="col-lg-6">
+                          <span class="input-span">
                             <label for="senha" class="label">Senha <span style="color: red;">*</span></label>
                             <input required type="password" name="senha" id="senha"
                               v-model="state.nova_conta.password" /></span>
                         </div>
+                        <div class="col-lg-5">
+                          <span class="input-span">
+                            <label for="cep" class="label">CEP <span style="color: red">*</span></label>
+                            <input @blur="cepAtributes(state.nova_conta.endereco.cep)" v-maska data-maska="#####-###"
+                              required type="text" name="cep" id="cep" v-model="state.nova_conta.endereco.cep" /></span>
+                        </div>
+                        <div class="col-md-7">
+                          <span class="input-span">
+                            <label for="logradouro" class="label">Logradouro
+                              <span style="color: red">*</span></label>
+                            <input required type="text" name="logradouro" id="logradouro"
+                              v-model="state.nova_conta.endereco.logradouro" /></span>
+                        </div>
+                        <div class="col-md-4">
+                          <span class="input-span">
+                            <label for="num" class="label">Número <span style="color: red">*</span></label>
+                            <input required type="text" name="num" id="num"
+                              v-model="state.nova_conta.endereco.numero" /></span>
+                        </div>
+                        <div class="col-md-8">
+                          <span class="input-span">
+                            <label for="bairro" class="label">Bairro <span style="color: red">*</span></label>
+                            <input required type="text" name="bairro" id="bairro"
+                              v-model="state.nova_conta.endereco.bairro" /></span>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="input-span">
+                            <label for="estado" class="label">Estado <span style="color: red">*</span></label>
+                            <select v-model="state.nova_conta.endereco.estado_id"
+                              @change="getCidades($event.target.value)">
+                              <option v-for="estado in state.estados" :key="estado.id" :value="estado.id">
+                                {{ estado.nome }}
+                              </option>
+                            </select>
+                          </span>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="input-span">
+                            <label for="cidade" class="label">Cidade <span style="color: red">*</span></label>
+                            <select v-model="state.nova_conta.endereco.cidade_id">
+                              <option v-for="cidade in state.cidades" :key="cidade.id" :value="cidade.id">
+                                {{ cidade.nome }}
+                              </option>
+                            </select>
+                          </span>
+                        </div>
+
                       </div>
                       <button class="submit btn-entrar" type="button" title="Criar Conta" @click="novaConta()">
                         FINALIZAR CADASTRO
@@ -102,64 +157,123 @@
 </template>
 
 <script setup>
-
 import services from "~/services/axios";
 definePageMeta({
   layout: "site",
-})
+});
 const router = useRouter();
 const state = reactive({
   nova_conta: {
-    nome: '',
-    telefone_principal: '',
-    telefone_alternativo: '',
-    email: '',
-    cep: '',
-    logradouro: '',
-    numero: '',
-    bairro: '',
-    cidade: '',
-    estado: '',
-    password: '',
-    data_nascimento: '',
-    tipo_pessoa: 'FISICA',
-    cpf: '',
-    cnpj: '',
+    nome: "",
+    nome_mae: "",
+    telefone_principal: "",
+    telefone_alternativo: "",
+    email: "",
+    password: "",
+    data_nascimento: "",
+    tipo_pessoa: "FISICA",
+    cpf: "",
+    cnpj: "",
+    endereco: {
+      logradouro: null,
+      bairro: null,
+      cep: null,
+      cidade: null,
+      cidade_id: null,
+      estado: null,
+      estado_id: null,
+      uf: null,
+      ibge: null,
+    },
+  },
+});
+
+onMounted(() => {
+  getEstados();
+});
+
+async function cepAtributes(cep) {
+  if (typeof cep === 'string') {
+    cep = cep.replace("-", "").replace(".", "");
+  } else {
+    console.error("O valor do CEP não é uma string:", cep);
+    return;
   }
-})
+  try {
+    const res = await services.cep.apiCep(cep);
+    state.nova_conta.endereco.logradouro = res.data.logradouro;
+    state.nova_conta.endereco.bairro = res.data.bairro;
+    state.nova_conta.endereco.cidade = res.data.localidade;
+    state.nova_conta.endereco.uf = res.data.uf;
+    state.nova_conta.endereco.ibge = res.data.ibge;
 
-cepAtributes();
-
-async function cepAtributes() {
-  var cep = state.nova_conta.cep;
-  state.nova_conta.cep = cep.replace("-", "").replace(".", "");
-  await services.cep.apiCep(state.nova_conta.cep).then((res) => {
-    console.log(res.data);
-    state.nova_conta.logradouro = res.data.logradouro;
-    state.nova_conta.bairro = res.data.bairro;
-    state.nova_conta.cidade = res.data.localidade;
-    // state.nova_conta.uf = res.data.uf;
-    // state.nova_conta.codigo_ibge = res.data.ibge;
-  });
+    getCityByCode(state.nova_conta.endereco.ibge);
+  } catch (error) {
+    console.error("Erro ao buscar informações do CEP:", error);
+  }
+}
+async function getCidades(estado_id) {
+  try {
+    const { data } = await services.endereco.getCidade(estado_id);
+    state.cidades = data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 async function novaConta() {
   try {
     await services.clientes.novaConta(state.nova_conta);
-    router.push('/login')
+    router.push("/login");
   } catch (error) {
-    alert(error.response.data.message);
+    const errors = error.response.data.errors;
+    let errorMessages = [];
+
+    if (Array.isArray(errors)) {
+      errors.forEach(error => {
+        errorMessages.push(error);
+      });
+    } else if (typeof errors === 'object') {
+      for (const [field, messages] of Object.entries(errors)) {
+        messages.forEach(message => {
+          errorMessages.push(message);
+        });
+      }
+    } else {
+      errorMessages.push("Ocorreu um erro desconhecido.");
+    }
+
+    alert(errorMessages.join('\n'));
   }
 }
 
+async function getEstados() {
+  try {
+    const { data } = await services.endereco.getEstados();
+    state.estados = data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getCityByCode(cod_ibge) {
+  try {
+    const { data } = await services.endereco.getCityByCode(cod_ibge);
+    state.nova_conta.endereco.estado_id = data.estado_id;
+    state.nova_conta.endereco.cidade_id = data.id;
+    getCidades(state.nova_conta.endereco.estado_id);
+  } catch (error) {
+    console.log("aqui:" + error);
+  }
+}
 </script>
 
 <style scoped>
-#sct_1{
+#sct_1 {
   display: flex;
   justify-content: center;
   align-items: center;
 
 }
+
 .header-login {
   display: flex;
   justify-content: left;
@@ -189,7 +303,7 @@ async function novaConta() {
 #img_conta {
   width: 100%;
   object-fit: cover;
-  height: 36rem;
+  height: 60rem;
   border-radius: 5px 0px 0px 5px;
   filter: grayscale(50%);
 }

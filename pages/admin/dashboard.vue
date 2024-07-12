@@ -61,6 +61,7 @@ const token = authStore.token;
 definePageMeta({
   middleware: 'auth'
 });
+
 useServerHead({
   title: "Protecty Alarmes - Dashboard",
 });
