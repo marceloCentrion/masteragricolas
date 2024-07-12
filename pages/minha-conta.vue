@@ -1,69 +1,84 @@
 <template>
-  <div class="container">
-    <div class="title mt-4 mb-4">
-      <h2>Meus Dados</h2>
-    </div>
-    <div class="row mb-4">
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>Nome</label>
-        <div class="div_data mb-4">
-          <p>{{ state.dados.nome }}</p>
-        </div>
+  <top :tela="'ecommerce'" />
+  <section id="minha-conta">
+    <div class="container">
+      <div class="title mt-4 mb-4">
+        <h2>Meus Dados</h2>
       </div>
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>Email</label>
-        <div class="div_data mb-4">
-          <p>{{ state.dados.email }}</p>
+      <div class="row mb-4">
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label>Nome</label>
+          <div class="div_data mb-4">
+            <p>{{ state.dados.nome }}</p>
+          </div>
         </div>
-      </div>
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>CPF</label>
-        <div class="div_data mb-4">
-          <p>{{ state.dados.cpf }}</p>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label>Email</label>
+          <div class="div_data mb-4">
+            <p>{{ state.dados.email }}</p>
+          </div>
         </div>
-      </div>
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>Data de Nascimento</label>
-        <div class="div_data mb-4">
-          <p>{{ state.dados.data_nascimento }}</p>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div v-if="state.dados.tipo_pessoa == 'FISICA'">
+            <label>CPF</label>
+            <div class="div_data mb-4">
+              <p>{{ state.dados.cpf }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <label>CNPJ</label>
+            <div class="div_data mb-4">
+              <p>{{ state.dados.cnpj }}</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>Telefone Principal</label>
-        <div class="div_data mb-4">
-          <p>{{ state.dados.telefone_principal }}</p>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label>Data de Nascimento</label>
+          <div class="div_data mb-4">
+            <p>{{ state.dados.data_nascimento }}</p>
+          </div>
         </div>
-      </div>
-      <div class="col-xl-3 col-lg-4 col-md-6">
-        <label>Telefone Secundário</label>
-        <div class="div_data mb-md-4">
-          <p>{{ state.dados.telefone_alternativo }}</p>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label>Telefone Principal</label>
+          <div class="div_data mb-4">
+            <p>{{ state.dados.telefone_principal }}</p>
+          </div>
         </div>
-      </div>
-      <div class="col-xl-2 offset-xl-2 mt-xl-4 col-lg-3 offset-md-6 col-md-3 col-sm-4 offset-sm-3 mt-sm-2 mt-2">
-        <div class="div_edit">
-          <a href="/editar-meus-dados">
-            <button title="Editar Dados" class="btn_transparent" type="button">
-              Editar dados
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div v-if="state.dados.telefone_alternativo">
+            <label>Telefone Secundário</label>
+            <div class="div_data mb-md-4">
+              <p>{{ state.dados.telefone_alternativo }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 offset-xl-2 mt-xl-4 col-lg-3 offset-md-6 col-md-3 col-sm-4 offset-sm-3 mt-sm-2 mt-2">
+          <div class="div_edit">
+            <NuxtLink to="/editar-meus-dados">
+              <button title="Editar Dados" class="btn_transparent" type="button">
+                Editar dados
+              </button>
+            </NuxtLink>
+          </div>
+        </div>
+        <div class="col-xl-2 mt-xl-4 col-lg-3 col-md-3 col-sm-5 mt-sm-2 mt-2">
+          <div class="div_btn_endereco">
+            <button @click="irParaEnd()" title="Ver endereço" class="btn_transparent">
+              Meus Endereços
             </button>
-          </a>
+          </div>
         </div>
       </div>
-      <div class="col-xl-2 mt-xl-4 col-lg-3 col-md-3 col-sm-5 mt-sm-2 mt-2">
-        <div class="div_btn_endereco">
-          <button @click="verificarEndereco()" title="Ver endereço" class="btn_transparent">
-            Ver meu endereço
-          </button>
-        </div>
-      </div>
-      <div class="col-xl-2 mt-xl-1 col-md-2 col-sm-3 mt-sm-2 mt-2">
-        <div class="div_btn_endereco">
-          <a href="/">
-            <button title="Voltar" class="btn_transparent">Voltar</button></a>
+      <div class="row">
+        <div class="col-xl-2 mt-xl-1 col-md-2 col-sm-3 mt-sm-2 mt-2">
+          <div class="div_btn_endereco">
+            <NuxtLink to="/">
+              <button title="Voltar" class="btn_transparent">Voltar</button></NuxtLink>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 <script>
 import services from "../services/axios";
@@ -87,7 +102,6 @@ export default {
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
     onMounted(() => {
       fetchDataCliente();
-      getEstados();
     });
 
     async function fetchDataCliente() {
@@ -106,111 +120,18 @@ export default {
         console.log(error);
       }
     }
-    function verificarEndereco() {
-      console.log(state.id_endereco)
-      if (state.id_endereco == null || state.id_endereco == undefined || state.id_endereco == '') {
-        if (
-          confirm(
-            "Ops, vimos que não possuí endereço cadastrado, gostaria de adicionar um novo endereço?"
-          )
-        ) {
-          router.push("/criar-endereco");
-        }
-      } else {
-        router.push('/ver-endereco')
-      }
-      state.modalOpen = true;
+    function irParaEnd() {
+      router.push('/meus-enderecos')
     }
-    function fecharModal() {
-      state.modalOpen = false;
-      fetchDataCliente();
-    }
-    function upCliente() {
-      try {
-        services.clientes.upCliente({
-          dados: state.dados,
-          client_token: client_token.value,
-          client_id: client_id.value,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-      state.modalOpen = false;
-    }
-    function upEndereco() {
-      try {
-        services.clientes.upEndereco({
-          id_endereco: state.id_endereco,
-          endereco: state.dados.enderecos,
-          client_token: client_token.value,
-          client_id: client_id.value,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
+   
     function formatarData(data_nascimento) {
       let data_americana = data_nascimento;
       let data_brasileira = data_americana.split("-").reverse().join("/");
       state.dados.data_nascimento = data_brasileira;
     }
-    function revSenha() {
-      if (state.tipo_senha == "password") {
-        state.tipo_senha = "text";
-      } else {
-        state.tipo_senha = "password";
-      }
-    }
-    async function cepAtributes() {
-      var cep = state.dados.enderecos.cep;
-      state.dados.enderecos.cep = cep.replace("-", "").replace(".", "");
-      await services.cep.apiCep(state.dados.enderecos.cep).then((res) => {
-        console.log(res.data);
-        state.dados.enderecos.logradouro = res.data.logradouro;
-        state.dados.enderecos.bairro = res.data.bairro;
-        state.dados.enderecos.cidade.nome = res.data.localidade;
-        state.dados.enderecos.cidade.estado.uf = res.data.uf;
-        state.dados.enderecos.codigo_ibge = res.data.ibge;
-      });
-      getCityByCode(state.dados.enderecos.codigo_ibge);
-    }
-    async function getEstados() {
-      try {
-        const { data } = await services.endereco.getEstados();
-        state.estados = data;
-        console.log(state.estados);
-      } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
-    async function getCidade(estado_id) {
-      try {
-        const { data } = await services.endereco.getCidade(estado_id);
-        state.cidades = data;
-      } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
-    async function getCityByCode(cod_ibge) {
-      try {
-        const { data } = await services.endereco.getCityByCode(cod_ibge);
-        state.dados.enderecos.cidade.estado_id = data.estado_id;
-        state.dados.enderecos.cidade_id = data.id;
-        console.log("código IBGE:" + cod_ibge);
-        getCidade(state.dados.enderecos.cidade.estado_id);
-      } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
     return {
       state,
-      verificarEndereco,
-      fecharModal,
-      upCliente,
-      upEndereco,
-      revSenha,
-      cepAtributes,
-      getCidade,
+      irParaEnd,
     };
   },
 };
