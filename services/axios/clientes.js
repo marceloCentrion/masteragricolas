@@ -96,6 +96,20 @@ export default httpClient => ({
       data: response.data
     }
   },
+  createEndereco: async ({ endereco, client_token }) => {
+    const headers = { "Authorization": "Bearer " + client_token }
+    const response = await httpClient.post('/enderecos', endereco, { headers });
+    return {
+      data: response.data
+    }
+  },
+  deleteEnd: async ({ id_endereco, client_token }) => {
+    const headers = { "Authorization": "Bearer " + client_token, "Accept": "application/json" }
+    const response = await httpClient.delete('/enderecos/' + id_endereco, { headers });
+    return {
+      data: response
+    }
+  },
   sendEmailPassword: async ({ email }) => {
     const response = await httpClient.post('/clientes/esqueci-minha-senha', { email });
     return {
