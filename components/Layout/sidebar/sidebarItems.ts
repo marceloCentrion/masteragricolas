@@ -110,6 +110,11 @@ const sidebarItem: menu[] = [
     icon: BuildingBankIcon,
     to: "/admin/empresa",
   },
+      {
+    title: "Parcelas",
+    icon: BuildingBankIcon,
+    to: "/admin/parcelas",
+  },
   {
     title: "Usários",
     icon: UserIcon,

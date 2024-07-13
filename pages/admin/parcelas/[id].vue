@@ -2,35 +2,42 @@
   <div>
     <div class="card">
       <div class="card-header">
-        <h4>Cadastrar Usuário</h4>
+        <h4>Alterar Parcela</h4>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-3">
-            <label for="nome">Nome</label>
-            <input id="nome" type="text" class="form-control" placeholder="Digite um nome:" v-model="state.nome" />
+            <label for="parcelas">Parcelas</label>
+            <input
+              id="parcelas"
+              type="text"
+              class="form-control"
+              v-model="state.taxa.parcelas"
+            />
           </div>
           <div class="col-md-3">
-            <label for="email">Email</label>
-            <input id="email" type="email" class="form-control" placeholder="Digite um email:" v-model="state.email" />
-          </div>
-          <div class="col-md-3">
-            <label for="status">Status</label>
-            <select v-model="state.status" class="form-select">
-              <option value="ATIVO">Ativo</option>
-              <option value="INATIVO">Inativo</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label for="senha">Senha</label>
-            <input id="senha" type="password" class="form-control" placeholder="Digite uma senha:"
-              v-model="state.senha" />
+            <label for="taxas">Taxas</label>
+            <input
+              id="taxas"
+              type="text"
+              class="form-control"
+              v-model="state.taxa.taxas"
+            />
           </div>
         </div>
         <div class="text-right mt-10">
-          <button type="button" @click="salvarUsuario" class="btn btn-success mr-1">Salvar</button>
-          <router-link to="/admin/usuarios">
-            <button type="button" class="btn btn-danger">Cancelar</button></router-link>
+          <button
+            type="button"
+            @click="salvarTaxa"
+            class="btn btn-success mr-1"
+          >
+            Salvar
+          </button>
+          <router-link to="/admin/parcelas">
+            <button type="button" class="btn btn-danger">
+              Cancelar
+            </button></router-link
+          >
         </div>
       </div>
     </div>
@@ -43,40 +50,49 @@ import { useRouter } from "vue-router";
 import services from "../../services/axios";
 export default {
   setup() {
-    useServerHead({
-      title: "Protecty Alarmes - Cadastrar Usuário",
-    });
     definePageMeta({
       middleware: "auth",
+    });
+    const router = useRouter();
+    const state = reactive({
+      taxa: {},
     });
     const authStore = useAuthStore();
     const token = authStore.token;
 
-    const router = useRouter();
-    const state = reactive({
-      id: "",
-      nome: "",
-      email: "",
-      senha: "",
-      status: "ATIVO",
+    onMounted(() => {
+      if (router.currentRoute._value.params.id != undefined) {
+        fetchParcelas();
+      }
     });
-    onMounted(() => { });
-    async function salvarUsuario() {
-      let dados = {
-        nome: state.nome,
-        email: state.email,
-        senha: state.senha,
-        status: state.status,
-      };
+    async function fetchParcelas() {
       try {
-        await services.usuarios.save(dados, token);
-        router.push("/admin/usuarios");
+        const { data } = await services.parcelas.getById({
+          id: router.currentRoute._value.params.id,
+          token,
+        });
+        state.taxa.id = data.id;
+        state.taxa.parcelas = data.parcelas;
+        state.taxa.taxas = data.taxas;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    async function salvarTaxa() {
+      let dados = {};
+      dados.id = state.taxa.id;
+      dados.parcelas = state.taxa.parcelas;
+      dados.taxas = state.taxa.taxas;
+
+      try {
+        await services.parcelas.update(dados, token);
+        router.push("/admin/parcelas");
       } catch (error) {
         console.log(error);
       }
     }
     return {
-      salvarUsuario,
+      salvarTaxa,
       router,
       state,
     };
@@ -148,6 +164,5 @@ select {
 
 .div_btn_x {
   margin-left: 10px;
-  margin-top: 20px;
 }
 </style>

@@ -24,6 +24,7 @@ import variacoesService from './variacoes';
 import atributosService from './atributos';
 import pedidoService from './pedido';
 import cepService from './cep';
+import parcelasService from './parcelas';
 
 const API_ENVS = {
   production: '',
@@ -64,4 +65,5 @@ export default {
   cep: cepService(httpCep),
   marcas: marcasService(httpClient),
   pedido: pedidoService(httpClient),
+  parcelas: parcelasService(httpClient)
 }
