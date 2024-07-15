@@ -41,7 +41,7 @@
                   :href="
                     'https://wa.me/55' +
                     state.empresa.telefone +
-                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
+                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Master+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
                   "
                   ><i class="bi bi-whatsapp"></i> Orçamento Rápido</a
                 >
@@ -51,11 +51,27 @@
         </div>
       </div>
     </section>
-    <section id="section_1" class="d-md-block d-lg-none" style="position: relative">
-      <carousel :items-to-show="1" :items-to-scroll="1" :snap-align="'start'" :autoplay="6000" :transition="4000"
-        :wrapAround="true" @mouseover="stopAutoplay" @mouseleave="startAutoplay">
+    <section
+      id="section_1"
+      class="d-md-block d-lg-none"
+      style="position: relative"
+    >
+      <carousel
+        :items-to-show="1"
+        :items-to-scroll="1"
+        :snap-align="'start'"
+        :autoplay="6000"
+        :transition="4000"
+        :wrapAround="true"
+        @mouseover="stopAutoplay"
+        @mouseleave="startAutoplay"
+      >
         <slide v-for="banner in state.banner_topo" :key="banner.id">
-          <img id="imagem-banner" :src="banner.imagem_cel" class="d-block w-100" />
+          <img
+            id="imagem-banner"
+            :src="banner.imagem_cel"
+            class="d-block w-100"
+          />
         </slide>
       </carousel>
       <div class="div_linear_gradiant">
@@ -63,18 +79,27 @@
         <div class="container">
           <div class="content_1">
             <div class="text-center">
-              <h1>Aumente a Eficiência da sua Operação!</h1>
+              <h1>MASTER PEÇAS AGRÍCOLAS</h1>
               <p>
-                Descubra como nossas peças de alta qualidade podem impulsionar
-                sua produção. Encontre soluções para plantadeiras,
-                colheitadeiras e pulverizadores aqui!
+                Explore nossa vasta gama de peças agrícolas para manter suas
+                operações no campo funcionando sem problemas. Desde tratores até
+                implementos especializados, temos tudo o que você precisa para
+                otimizar seu desempenho agrícola.
               </p>
               <div class="mt-12">
-                <a class="btn-explorar" href="/produtos"><i class="bi bi-search"></i> Explorar Agora</a>
-                <a class="btn-orcamento" target="_blank" :href="'https://wa.me/55' +
-                  state.empresa.telefone +
-                  '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Comparts+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
-                  "><i class="bi bi-whatsapp"></i> Orçamento Rápido</a>
+                <a class="btn-explorar" href="/produtos"
+                  ><i class="bi bi-search"></i> Explorar Agora</a
+                >
+                <a
+                  class="btn-orcamento"
+                  target="_blank"
+                  :href="
+                    'https://wa.me/55' +
+                    state.empresa.telefone +
+                    '?text=Ol%C3%A1%21++Cheguei+at%C3%A9+aqui+atrav%C3%A9s+do+site+Master+e+estou+interessado+em+fazer+um+or%C3%A7amento.+Gostaria+de+saber+mais+sobre+os+servi%C3%A7os+oferecidos+e+os+pre%C3%A7os+praticados.'
+                  "
+                  ><i class="bi bi-whatsapp"></i> Orçamento Rápido</a
+                >
               </div>
             </div>
           </div>
