@@ -438,7 +438,7 @@ export default {
                 "Ops, vimos que não poussí endereço cadastrado, gostaria de adicionar um novo endereço?"
               )
             ) {
-              router.push("/criar-endereco/novo");
+              router.push("/meus-enderecos");
             }
           }
         }
