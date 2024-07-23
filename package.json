@@ -41,7 +41,9 @@
     "vue3-carousel": "^0.3.3",
     "vue3-perfect-scrollbar": "1.6.0",
     "vuetify": "3.3.19",
-    "yup": "0.32.11"
+    "yup": "0.32.11",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2"
   },
   "overrides": {
     "nth-check": "2.1.1"

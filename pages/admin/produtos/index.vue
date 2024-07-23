@@ -9,11 +9,15 @@
                 <div class="col-5">
                   <h5>Produtos</h5>
                 </div>
-                <div class="col-7">
+                <div class="col-2 offset-3 d-flex justify-content-end align-items-end">
+                  <button @click="generatePdf" class="btn btn-outline-light" type="button" title="Gerar PDF"
+                    :disabled="state.loading">Gerar Relatório</button>
+                </div>
+                <div class="col-2">
                   <NuxtLink to="">
                     <div style="text-align: right">
                       <NuxtLink to="/admin/produtos/cadastrar-produto">
-                        <button type="button" class="btn btn-outline-light">Novo Produto</button>
+                        <button style="width: 100%;" type="button" class="btn btn-outline-light">Novo Produto</button>
                       </NuxtLink>
                     </div>
                   </NuxtLink>
@@ -76,6 +80,9 @@
 
 <script>
 import services from "../../../services/axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 export default {
   setup() {
     useServerHead({
@@ -123,9 +130,52 @@ export default {
         }
       }
     }
+    function generatePdf() {
+      const doc = new jsPDF({ orientation: "portrait" });
+      const columns = [];
+      const rows = [];
+
+      columns.push("Código", "REF", "Nome", "Status", "Preço");
+      state.produtos.forEach(produto => {
+        const temp = [
+          produto.id,
+          produto.ref,
+          produto.nome,
+          produto.status,
+          produto.preco,
+        ];
+        rows.push(temp);
+      });
+
+      const headerStyles = {
+        fillColor: [60, 207, 78], // Cor de preenchimento do cabeçalho
+        textColor: [255, 255, 255], // Cor do texto do cabeçalho
+        fontStyle: 'bold', // Estilo da fonte do cabeçalho
+      };
+
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+        headStyles: headerStyles, // Estilos do cabeçalho
+        styles: {
+          fontSize: 8, // Tamanho da fonte das células
+          cellPadding: 2, // Padding das células
+        },
+        columnStyles: {
+          0: { cellWidth: 'auto' }, // Define a largura das colunas
+          1: { cellWidth: 'auto' },
+          2: { cellWidth: 'auto' },
+          3: { cellWidth: 'auto' }
+        },
+      });
+
+      doc.save(`Relatórios de Produtos Máster.pdf`);
+
+    }
     return {
       state,
       deletarProduto,
+      generatePdf,
     };
   },
 };
@@ -168,5 +218,21 @@ td {
 
 .btn {
   margin: 5px;
+}
+
+.btn_novo {
+  border-radius: 4px;
+  width: 100%;
+  height: 45px;
+  padding: 5px;
+  transition: 0.5s;
+  background-color: rgb(22, 82, 78);
+  border: solid 2px rgb(22, 82, 78);
+  color: #fff;
+}
+
+.btn_novo:hover {
+  background-color: rgb(40, 149, 146);
+  border: solid 2px rgb(40, 149, 146);
 }
 </style>
