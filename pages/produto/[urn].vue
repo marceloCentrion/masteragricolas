@@ -71,7 +71,6 @@
           <hr />
           <div>
             <h2 id="preco">
-              R$
               {{
                 state.produto.preco.toLocaleString("pt-br", {
                   style: "currency",
