@@ -56,10 +56,10 @@
                     <input class="form-check-input" type="radio" :id="'endereco_' + endereco.id" :value="endereco.id"
                       v-model="state.endereco_id" name="endereco" />
                     <label class="form-check-label" :for="'endereco_' + endereco.id">
-                      <p class="endereco_principal" v-if="endereco.principal === 'SIM'">
+                      <p class="endereco_principal mb-0" v-if="endereco.principal === 'SIM'">
                         Endereço Principal
                       </p>
-                      <p class="endereco_principal" v-if="endereco.principal === 'NAO'">
+                      <p class="endereco_principal mb-0" v-if="endereco.principal === 'NAO'">
                         Endereço Secundário
                       </p>
                       <strong>
@@ -293,6 +293,114 @@
           </div>
         </div>
       </div>
+      <div class="modal_endereco" tabindex="-1" v-if="state.isModalVisible">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" v-if="state.selectedEndereco.id">
+                Alterar Endereço <i class="bi bi-house-door"></i>
+              </h4>
+              <h4 class="modal-title" v-else>
+                Adicionar Endereço <i class="bi bi-house-door"></i>
+              </h4>
+            </div>
+            <div class="modal-body">
+              <form @submit.prevent="upEndereco">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="mb-3">
+                      <label for="nome" class="form-label">Quem irá Receber</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.nome" id="nome" />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="mb-3">
+                      <label for="tel" class="form-label">Telefone</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.telefone" id="tel" v-maska
+                        data-maska="[ '(##) ####-####','(##) # ####-####' ]" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="mb-3">
+                      <label for="cep" class="form-label">Cep</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.cep" id="cep" v-maska
+                        data-maska="#####-###" @blur="cepAtributes" />
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="mb-3">
+                      <label for="estado" class="form-label">Estado</label>
+                      <select class="form-select" @change="getCidade($event.target.value)"
+                        v-model="state.selectedEndereco.cidade.estado_id">
+                        <option v-for="estado in state.estados" :key="estado.id" :value="estado.id">
+                          {{ estado.nome }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="mb-3">
+                      <label for="cidade" class="form-label">Cidade</label>
+                      <select v-model="state.selectedEndereco.cidade_id" class="form-select">
+                        <option v-for="cidade in state.cidades" :key="cidade.id" :value="cidade.id">
+                          {{ cidade.nome }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-9">
+                    <div class="mb-3">
+                      <label for="logradouro" class="form-label">Logradouro</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.logradouro"
+                        id="logradouro" />
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="mb-3">
+                      <label for="numero" class="form-label">Número</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.numero" id="numero" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="mb-3">
+                      <label for="bairro" class="form-label">Bairro</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.bairro" id="bairro" />
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="mb-3">
+                      <label for="complemento" class="form-label">Complemento</label>
+                      <input type="text" class="form-control" v-model="state.selectedEndereco.complemento"
+                        id="complemento" />
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div>
+                    <input type="checkbox" id="check_principal" v-model="state.selectedEndereco.principal" />
+                    <label for="check_principal" class="lbl_end_principal">Endereço Principal</label>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn_transparent mr-1 w-auto" @click="closeModal">
+                Cancelar
+              </button>
+              <button type="submit" class="btn-gold" @click="upEndereco">
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <bot />
   </div>
@@ -514,40 +622,99 @@ export default {
         state.pedidoEmAndamento = false;
       }
     }
-
     async function upEndereco() {
       try {
-        await services.clientes.upEndereco({
-          id_endereco: state.id_endereco,
-          // endereco: state.dados.endereco,
-          client_token: client_token.value,
-        });
+        // Converte o valor booleano em string antes de enviar ao backend
+        const enderecoData = {
+          ...state.selectedEndereco,
+          principal: state.selectedEndereco.principal ? "SIM" : "NAO",
+        };
+
+        if (state.selectedEndereco.id) {
+          await services.clientes.upEndereco({
+            id_endereco: state.selectedEndereco.id,
+            endereco: enderecoData,
+            client_token: client_token.value,
+          });
+        } else {
+          enderecoData.cliente_id = client_id.value;
+          await services.clientes.createEndereco({
+            endereco: enderecoData,
+            client_token: client_token.value,
+            client_id: client_id.value,
+          });
+        }
         fetchDataCliente();
       } catch (error) {
         console.log(error);
       }
-      state.modalOpen = false;
+      state.isModalVisible = false;
+    }
+
+    function openModal(endereco = null) {
+      state.isModalVisible = true;
+      if (endereco) {
+        state.selectedEndereco = {
+          ...endereco,
+          principal: endereco.principal === "SIM", // Converte para booleano
+          cidade: endereco.cidade || { estado_id: null },
+          cidade_id: endereco.cidade ? endereco.cidade.id : null,
+        };
+      } else {
+        state.selectedEndereco = {
+          telefone: "",
+          cep: "",
+          logradouro: "",
+          numero: "",
+          bairro: "",
+          complemento: "",
+          principal: false,
+          cidade: {
+            estado_id: null,
+          },
+          cidade_id: null,
+        };
+      }
+    }
+
+    function closeModal() {
+      state.isModalVisible = false;
     }
 
     async function cepAtributes() {
-      var cep = state.dados.endereco.cep;
-      state.dados.endereco.cep = cep.replace("-", "").replace(".", "");
-      await services.cep.apiCep(state.dados.endereco.cep).then((res) => {
-        console.log(res.data);
-        state.dados.endereco.logradouro = res.data.logradouro;
-        state.dados.endereco.bairro = res.data.bairro;
-        state.dados.endereco.codigo_ibge = res.data.ibge;
-      });
-      getCityByCode(state.dados.endereco.codigo_ibge);
+      try {
+        const cep = state.selectedEndereco.cep
+          .replace("-", "")
+          .replace(".", "");
+        state.selectedEndereco.cep = cep;
+        const res = await services.cep.apiCep(cep);
+        state.selectedEndereco.logradouro = res.data.logradouro;
+        state.selectedEndereco.bairro = res.data.bairro;
+        state.selectedEndereco.codigo_ibge = res.data.ibge;
+        state.selectedEndereco.ibge = res.data.ibge;
+        getCityByCode(state.selectedEndereco.ibge);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function getCityByCode(cod_ibge) {
+      try {
+        const { data } = await services.endereco.getCityByCode(cod_ibge);
+        state.selectedEndereco.cidade.estado_id = data.estado_id;
+        state.selectedEndereco.cidade_id = data.id;
+        getCidade(state.selectedEndereco.cidade.estado_id);
+      } catch (error) {
+        console.log("aqui:" + error);
+      }
     }
 
     async function getEstados() {
       try {
         const { data } = await services.endereco.getEstados();
         state.estados = data;
-        console.log(state.estados);
       } catch (error) {
-        console.log("aqui:" + error);
+        console.log("Erro ao buscar estados:", error);
       }
     }
 
@@ -555,21 +722,8 @@ export default {
       try {
         const { data } = await services.endereco.getCidade(estado_id);
         state.cidades = data;
-        console.log(state.cidades);
       } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
-
-    async function getCityByCode(cod_ibge) {
-      try {
-        const { data } = await services.endereco.getCityByCode(cod_ibge);
-        await getCidade(data.estado_id);
-        state.dados.endereco.cidade.estado_id = data.estado_id;
-        state.dados.endereco.cidade_id = data.id;
-        console.log("código IBGE:" + cod_ibge);
-      } catch (error) {
-        console.log("aqui:" + error);
+        console.log("Erro ao buscar cidades:", error);
       }
     }
 
@@ -584,6 +738,8 @@ export default {
       Slide,
       Pagination,
       Navigation,
+      closeModal,
+      openModal,
     };
   },
 };
@@ -838,5 +994,156 @@ export default {
   padding: 8px;
   transition: 0.5s;
   font-weight: 500;
+}
+
+.modal_endereco {
+  display: flex;
+  /* Usa flexbox para centralização */
+  align-items: center;
+  /* Centraliza verticalmente */
+  justify-content: center;
+  /* Centraliza horizontalmente */
+  position: fixed;
+  /* Fixa a posição em relação à viewport */
+  top: 0;
+  /* Começa do topo */
+  left: 0;
+  /* Começa da esquerda */
+  width: 100%;
+  /* Ocupa toda a largura da viewport */
+  height: 100%;
+  /* Ocupa toda a altura da viewport */
+  background: rgba(0, 0, 0, 0.5);
+  /* Fundo semitransparente para o efeito de overlay */
+  z-index: 1050;
+  /* Coloca o modal acima de outros elementos */
+}
+
+.modal-dialog {
+  position: relative;
+  /* Posição relativa para conter o conteúdo do modal */
+  width: 100%;
+  /* Ajusta a largura automaticamente */
+  margin: 10px;
+  /* Margem para espaçamento */
+  pointer-events: none;
+  /* Desabilita interação com o conteúdo fora do modal */
+  max-width: 700px;
+  /* Limita a largura máxima do modal */
+}
+
+.modal-content {
+  position: relative;
+  /* Posição relativa para conter os elementos */
+  display: flex;
+  /* Flexbox para a disposição dos elementos */
+  flex-direction: column;
+  /* Disposição vertical */
+  width: 100%;
+  /* Ocupa toda a largura disponível */
+  pointer-events: auto;
+  /* Habilita interação com o conteúdo do modal */
+  background-color: #fff;
+  /* Cor de fundo branca */
+  background-clip: padding-box;
+  /* Ajusta o recorte de fundo */
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* Borda leve */
+  border-radius: 0.3rem;
+  /* Borda arredondada */
+  outline: 0;
+  /* Remove o contorno */
+}
+
+.modal-header {
+  display: flex;
+  /* Flexbox para a disposição dos elementos */
+  align-items: center;
+  /* Alinhamento vertical centralizado */
+  justify-content: space-between;
+  /* Espaço entre os elementos */
+  padding: 1rem;
+  /* Espaçamento interno */
+  border-bottom: 1px solid #dee2e6;
+  /* Linha divisória inferior */
+  border-top-left-radius: 0.3rem;
+  /* Bordas arredondadas nos cantos superiores */
+  border-top-right-radius: 0.3rem;
+}
+
+.modal-title {
+  margin-bottom: 0;
+  /* Remove a margem inferior */
+  line-height: 1.5;
+  /* Ajusta a altura da linha */
+}
+
+.btn-close {
+  padding: 0.5rem;
+  /* Espaçamento interno */
+  margin: -0.5rem -0.5rem -0.5rem auto;
+  /* Margens negativas para ajuste */
+}
+
+.modal-body {
+  position: relative;
+  /* Posição relativa para conter os elementos */
+  flex: 1 1 auto;
+  /* Flexbox para ajuste automático */
+  padding: 1rem;
+  /* Espaçamento interno */
+}
+
+.btn-end {
+  font-family: "Poppins", sans-serif;
+  background: transparent;
+  color: #000;
+  width: auto;
+  transition: 0.5s;
+  font-size: 10pt;
+}
+
+.btn-end:hover {
+  background: transparent;
+  color: #000000;
+  text-decoration: underline;
+}
+
+.btn-gold {
+  font-family: "Poppins", sans-serif;
+  border-radius: 4px;
+  border: 1px solid gray;
+  background: transparent;
+  color: gray;
+  width: auto;
+  padding: 5px 10px;
+  transition: 0.5s;
+}
+
+.btn-gold:hover {
+  background: gray;
+  color: #000;
+}
+
+.endereco_principal {
+  color: #000000;
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.modal-footer {
+  display: flex;
+  /* Flexbox para a disposição dos elementos */
+  align-items: center;
+  /* Alinhamento vertical centralizado */
+  justify-content: flex-end;
+  /* Alinhamento dos botões à direita */
+  padding: 0.75rem;
+  /* Espaçamento interno */
+  border-top: 1px solid #dee2e6;
+  /* Linha divisória superior */
+  border-bottom-right-radius: 0.3rem;
+  /* Bordas arredondadas nos cantos inferiores */
+  border-bottom-left-radius: 0.3rem;
 }
 </style>

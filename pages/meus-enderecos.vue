@@ -213,7 +213,7 @@ export default {
         console.log(endereco)
         state.selectedEndereco = {
           ...endereco,
-          principal: endereco.principal === "SIM", // Converte para booleano
+          principal: endereco.principal === "SIM",
           estado_id: endereco.cidade.estado_id || { estado_id: null },
           cidade_id: endereco.cidade ? endereco.cidade.id : null,
         };
@@ -256,7 +256,9 @@ export default {
           ...state.selectedEndereco,
           principal: state.selectedEndereco.principal ? "SIM" : "NAO",
         };
-
+        if (enderecoData.cidade) {
+          delete enderecoData.cidade;
+        }
         if (state.selectedEndereco.id) {
           await services.clientes.upEndereco({
             id_endereco: state.selectedEndereco.id,

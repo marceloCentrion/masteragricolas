@@ -22,13 +22,13 @@
           <div v-if="state.dados.tipo_pessoa == 'FISICA'">
             <label>CPF</label>
             <div class="div_data mb-4">
-              <p>{{ state.dados.cpf }}</p>
+              <input v-model="state.dados.cpf" v-maska data-maska="###.###.###-##" />
             </div>
           </div>
           <div v-else>
             <label>CNPJ</label>
             <div class="div_data mb-4">
-              <p>{{ state.dados.cnpj }}</p>
+              <input v-model="state.dados.cnpj" v-maska data-maska="##.###.###/####-##" />
             </div>
           </div>
         </div>
@@ -73,7 +73,8 @@
         <div class="col-xl-2 mt-xl-1 col-md-2 col-sm-3 mt-sm-2 mt-2">
           <div class="div_btn_endereco">
             <NuxtLink to="/">
-              <button title="Voltar" class="btn_transparent">Voltar</button></NuxtLink>
+              <button title="Voltar" class="btn_transparent">Voltar</button>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -123,7 +124,7 @@ export default {
     function irParaEnd() {
       router.push('/meus-enderecos')
     }
-   
+
     function formatarData(data_nascimento) {
       let data_americana = data_nascimento;
       let data_brasileira = data_americana.split("-").reverse().join("/");
@@ -154,7 +155,13 @@ export default {
   font-size: 16px;
   margin-bottom: 0;
   font-family: 'Poppins';
+}
 
+.div_data input {
+  color: #000;
+  font-size: 16px;
+  margin-bottom: 0;
+  font-family: 'Poppins';
 }
 
 label {
