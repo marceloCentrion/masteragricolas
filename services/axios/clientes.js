@@ -129,9 +129,9 @@ export default httpClient => ({
       data: response.data
     }
   },
-  fazerPedido: async ({ pedido, client_token }) => {
+  fazerPedido: async ({ dados, client_token }) => {
     const headers = { "Authorization": "Bearer " + client_token, "Accept": "application/json" }
-    const response = await httpClient.post('/fazer-pedido', pedido, { headers });
+    const response = await httpClient.post('/fazer-pedido', dados, { headers });
     return {
       data: response.data
     }
