@@ -408,6 +408,7 @@
           </div>
         </div>
       </div>
+      <loader :loader="state.loader" />
     </section>
     <bot />
   </div>
@@ -515,6 +516,7 @@ export default {
         },
         cidade_id: null,
       },
+      loader: false,
     });
 
     onMounted(() => {
@@ -553,6 +555,7 @@ export default {
     });
 
     async function fetchDataCliente() {
+      state.loader = true;
       try {
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
@@ -568,7 +571,10 @@ export default {
         } else if (state.enderecos.length > 0) {
           state.endereco_id = state.enderecos[0].id;
         }
+        state.loader = false;
+
       } catch (error) {
+        state.loader = false;
         console.log(error);
       }
     }
@@ -677,29 +683,33 @@ export default {
 
     async function upEndereco() {
       try {
-        // Converte o valor booleano em string antes de enviar ao backend
         const enderecoData = {
           ...state.selectedEndereco,
           principal: state.selectedEndereco.principal ? "SIM" : "NAO",
         };
 
         if (state.selectedEndereco.id) {
+          state.loader = true;
           await services.clientes.upEndereco({
             id_endereco: state.selectedEndereco.id,
             endereco: enderecoData,
             client_token: client_token.value,
           });
+          state.loader = false;
         } else {
+          state.loader = true;
           enderecoData.cliente_id = client_id.value;
           await services.clientes.createEndereco({
             endereco: enderecoData,
             client_token: client_token.value,
             client_id: client_id.value,
           });
+          state.loader = false;
         }
         state.isModalVisible = false;
         fetchDataCliente();
       } catch (error) {
+        state.loader = false;
         console.log(error);
       }
     }

@@ -158,10 +158,10 @@
           </div>
         </div>
       </div>
+      <loader :loader="state.loader" />
     </div>
   </div>
 </template>
-
 <script>
 import { reactive, onMounted } from "vue";
 import services from "../services/axios";
@@ -200,6 +200,7 @@ export default {
         estado_id: null,
         cidade_id: null,
       },
+      loader: false,
     });
 
     onMounted(() => {
@@ -210,7 +211,6 @@ export default {
     function openModal(endereco = null) {
       state.isModalVisible = true;
       if (endereco) {
-        console.log(endereco)
         state.selectedEndereco = {
           ...endereco,
           principal: endereco.principal === "SIM",
@@ -238,6 +238,7 @@ export default {
 
     async function fetchDataCliente() {
       try {
+        state.loader = true;
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
           client_id: client_id.value,
@@ -245,8 +246,12 @@ export default {
         state.data.enderecos = data.enderecos;
         state.estado_id = data.enderecos[0].cidade.estado_id;
         getCidade(state.estado_id);
+        state.loader = false;
+
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 
@@ -260,23 +265,30 @@ export default {
           delete enderecoData.cidade;
         }
         if (state.selectedEndereco.id) {
+          state.loader = true;
           await services.clientes.upEndereco({
             id_endereco: state.selectedEndereco.id,
             endereco: enderecoData,
             client_token: client_token.value,
           });
+          state.loader = false;
+
         } else {
           enderecoData.cliente_id = client_id.value;
+          state.loader = true;
           await services.clientes.createEndereco({
             endereco: enderecoData,
             client_token: client_token.value,
             client_id: client_id.value,
           });
+          state.loader = false;
         }
         state.isModalVisible = false;
         fetchDataCliente();
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 

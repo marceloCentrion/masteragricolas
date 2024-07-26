@@ -79,6 +79,7 @@
         </div>
       </div>
     </div>
+    <loader :loader="state.loader"/>
   </section>
 </template>
 <script>
@@ -96,6 +97,7 @@ export default {
       dados: { enderecos: { cidade_id: "" } },
       tipo_senha: "password",
       id_endereco: "",
+      loader: false,
     });
 
     const router = useRouter();
@@ -107,6 +109,7 @@ export default {
 
     async function fetchDataCliente() {
       try {
+        state.loader = true;
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
           client_id: client_id.value,
@@ -117,8 +120,13 @@ export default {
         formatarData(data_nascimento);
         // var estado_id = data.enderecos.cidade.estado_id;
         // getCidade(estado_id);
+        state.loader = false;
+
       } catch (error) {
         console.log(error);
+        state.loader = false;
+      } finally {
+        state.loader = false;
       }
     }
     function irParaEnd() {

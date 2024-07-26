@@ -1,4 +1,5 @@
 <template>
+  <top />
   <div class="container">
     <h2 class="title">Meus Dados</h2>
     <div class="row">
@@ -54,63 +55,6 @@
           <span class="input-border"></span>
         </div>
       </div>
-      <!-- <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Cep:</label>
-          <input class="input" type="text" v-mask-cep v-model="state.dados.endereco.cep" />
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Logradouro:</label>
-          <input class="input" type="text" v-model="state.dados.endereco.logradouro" />
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Estado:</label>
-          <select v-model="state.dados.endereco.cidade.estado_id" class="input" type="text">
-            <option v-for="estado in state.estados" :key="estado.id" :value="estado.id">
-              {{ estado.nome }}
-            </option>
-          </select>
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Cidade:</label>
-          <select v-model="state.dados.endereco.cidade_id" class="input" type="text">
-            <option v-for="cidade in state.cidades" :key="cidade.id" :value="cidade.id">
-              {{ cidade.nome }}
-            </option>
-          </select>
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Número:</label>
-          <input class="input" type="text" v-model="state.dados.endereco.numero" />
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Bairro:</label>
-          <input class="input" type="text" v-model="state.dados.endereco.bairro" />
-          <span class="input-border"></span>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
-        <div class="form">
-          <label>Complemento:</label>
-          <input class="input" type="text" v-model="state.dados.endereco.complemento" />
-          <span class="input-border"></span>
-        </div>
-      </div> -->
     </div>
     <div class="div_btn">
       <a href="/minha-conta"><button class="btn_transparent" type="button" title="Cancelar">
@@ -121,6 +65,7 @@
         Salvar
       </button>
     </div>
+    <loader :loader="state.loader" />
   </div>
 </template>
 <script>
@@ -143,21 +88,26 @@ export default {
       tipo_senha: "password",
       modal_type: "",
       id_endereco: "",
+      loader: false,
     });
 
     async function fetchDataCliente() {
+      state.loader = true;
       try {
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
           client_id: client_id.value,
         });
         state.dados = data;
-        // state.id_endereco = data.enderecos.id;
+        state.loader = false;
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
     function upCliente() {
+      state.loader = true;
       try {
         services.clientes.upCliente({
           dados: state.dados,
@@ -166,7 +116,10 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
+      state.loader = false;
       router.push('/minha-conta')
     }
     async function cepAtributes() {

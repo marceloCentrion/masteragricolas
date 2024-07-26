@@ -17,6 +17,7 @@
                   <img id="img_pedido" :src="pedido.produtos[0].imagens[0].imagem" />
                 </div>
               </div>
+              <loader :loader="state.loader" />
               <div class="col-lg-6 col-md-5">
                 <span :class="state.arrayStatus[pedido.status]">
                   {{ pedido.status }}
@@ -75,19 +76,24 @@ export default {
         CANCELADO: "classe_c",
         ENCERRADO: "classe_d",
       },
+      loader: false,
+      
     });
     onMounted(() => {
       fetchPedidos();
     });
     async function fetchPedidos() {
+      state.loader = true;
       try {
         const { data } = await services.clientes.getMeusPedidos({
           client_token: client_token.value,
           id: client_id.value,
         });
         state.pedidos = data;
-        console.log(state.pedidos.length);
+        state.loader = false;
+
       } catch (error) {
+        state.loader = false;
         console.log(error);
       }
     }

@@ -35,6 +35,7 @@
       </div>
       <div class="row">
         <table class="table table-striped">
+          <loader :loader="state.loader" />
           <thead>
             <tr>
               <th scope="col">Código</th>
@@ -56,7 +57,7 @@
         </table>
       </div>
       <div class="mt-3">
-      <NuxtLink to="/meus-pedidos"><button class="btn_transparent">Voltar</button></NuxtLink>
+        <NuxtLink to="/meus-pedidos"><button class="btn_transparent">Voltar</button></NuxtLink>
       </div>
     </div>
   </div>
@@ -80,18 +81,22 @@ export default {
         produtos: [{ imagens: [{ imagem: "" }], pivot: {} }],
         endereco: { cidade: {} },
       },
+      loader: false,
     });
     onMounted(() => {
       fetchPedidos();
     });
     async function fetchPedidos() {
+      state.loader = true;
       try {
         const { data } = await services.clientes.getPedidoSite({
           client_token: client_token.value,
           id: router.currentRoute._value.params.id,
         });
         state.pedido = data;
+        state.loader = false  ;
       } catch (error) {
+        state.loader = false;
         console.log(error);
       }
     }
