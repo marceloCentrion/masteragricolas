@@ -55,6 +55,13 @@
           <span class="input-border"></span>
         </div>
       </div>
+      <div class="col-xl-4 col-lg-6 mb-4 mt-4">
+        <div class="form">
+          <label>Senha:</label>
+          <input v-model="state.dados.password" class="input" type="password" />
+          <span class="input-border"></span>
+        </div>
+      </div>
     </div>
     <div class="div_btn">
       <a href="/minha-conta"><button class="btn_transparent" type="button" title="Cancelar">
@@ -85,7 +92,6 @@ export default {
     });
     const state = reactive({
       dados: { endereco: { estado: {}, cidade: {} } },
-      tipo_senha: "password",
       modal_type: "",
       id_endereco: "",
       loader: false,

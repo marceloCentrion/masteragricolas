@@ -18,21 +18,12 @@
             <h2 class="h2_side">Filtros de Pesquisa</h2>
             <hr />
             <ul>
-              <li
-                class="item-nav"
-                v-for="categoria in state.categorias"
-                :key="categoria.id"
-              >
+              <li class="item-nav" v-for="categoria in state.categorias" :key="categoria.id">
                 <!-- <span class="">{{ categoria.nome }}</span> -->
                 <!-- <input type="checkbox" /> -->
-                <a
-                  @click="filtrados(categoria.urn)"
-                  style="cursor: pointer"
-                  class="nav-link px-0"
-                  :class="{
-                    'nav-link-selected': categoria.urn == state.categoria_urn,
-                  }"
-                >
+                <a @click="filtrados(categoria.urn)" style="cursor: pointer" class="nav-link px-0" :class="{
+                  'nav-link-selected': categoria.urn == state.categoria_urn,
+                }">
                   <span class="">{{ categoria.nome }}</span>
                 </a>
                 <!-- <hr /> -->
@@ -50,31 +41,16 @@
             <div class="row mb-6">
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input
-                  class="input_valor"
-                  type="text"
-                  placeholder="MIN"
-                  v-model="state.preco_inicial"
-                />
+                <input class="input_valor" type="text" placeholder="MIN" v-model="state.preco_inicial" />
               </div>
               <div class="col-md-6">
                 <label class="label_valor">R$</label>
-                <input
-                  class="input_valor"
-                  type="text"
-                  placeholder="MÁX"
-                  v-model="state.preco_final"
-                />
+                <input class="input_valor" type="text" placeholder="MÁX" v-model="state.preco_final" />
               </div>
             </div>
             <div class="col-md-2">
               <div>
-                <button
-                  class="btn_transparent"
-                  type="button"
-                  @click="filtraPorPreco()"
-                  title="Aplicar Faixa de Preço"
-                >
+                <button class="btn_transparent" type="button" @click="filtraPorPreco()" title="Aplicar Faixa de Preço">
                   Aplicar
                 </button>
               </div>
@@ -92,12 +68,7 @@
               </li>
             </ul> -->
             <div class="div-btn-trash">
-              <button
-                @click="fetchAllProdutos"
-                title="Limpar Filtro"
-                type="button"
-                class="btn-trash"
-              >
+              <button @click="fetchAllProdutos" title="Limpar Filtro" type="button" class="btn-trash">
                 <i class="bi bi-trash3"></i>
               </button>
             </div>
@@ -117,11 +88,7 @@
               </div>
             </div>
             <div class="row">
-              <div
-                class="col-lg-4 offset-lg-0 py-2"
-                v-for="produto in state.produtos"
-                :key="produto.id"
-              >
+              <div class="col-lg-4 offset-lg-0 py-2" v-for="produto in state.produtos" :key="produto.id">
                 <cardAllProdutos :produto="produto" />
               </div>
             </div>
@@ -129,6 +96,8 @@
         </div>
       </div>
     </div>
+    <loader :loader="state.loader" />
+
   </div>
 </template>
 
@@ -168,6 +137,7 @@ export default {
       checkbox: ["todos"],
       preco_final: "",
       preco_inicial: "",
+      loader: false,
     });
 
     fetchCategoria();
@@ -193,7 +163,8 @@ export default {
 
     async function fetchAllProdutos() {
       try {
-        state.categoria_urn = null;
+        state.loader = true,
+          state.categoria_urn = null;
         const { data } = await asyncServices.produtos.getAllProduto();
         state.produtos = data;
         var qtd = state.produtos;
@@ -201,14 +172,18 @@ export default {
         history.pushState({}, "", "/produtos");
         state.buscando = "";
         state.busca = "";
+        state.loader = false
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false
       }
     }
 
     async function filtrados(categoria_urn) {
       state.categoria_urn = categoria_urn;
       try {
+        state.loader = true
         const { data } = await services.produtos.getAllProdutoCat(
           categoria_urn
         );
@@ -217,8 +192,11 @@ export default {
         state.qtd = qtd.length;
         history.pushState({}, "", "/produtos/" + categoria_urn);
         state.buscando = categoria_urn;
+        state.loader = false
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false
       }
     }
 
@@ -437,8 +415,7 @@ ul {
   color: #737373;
 }
 
-.div_line {
-}
+.div_line {}
 
 .div_line_icon {
   align-items: center;
@@ -491,6 +468,7 @@ ul {
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
+
   .h2_side,
   .h2-cores {
     font-size: 13pt;
@@ -514,6 +492,7 @@ ul {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
+
   .h2_side,
   .h2-cores {
     font-size: 12pt;
