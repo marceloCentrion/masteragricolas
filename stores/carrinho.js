@@ -35,6 +35,9 @@ export const useCarrinhoStore = defineStore("carrinho", {
       this.itens = this.itens.filter((i) => i.produtos_id !== itemId);
       this.sumTotal();
     },
+    adicionarPedido(pedido) {
+      this.pedido = pedido;
+    },
     removeQtd(itemId) {
       const item = this.itens.find((i) => i.produtos_id === itemId);
       if (!item) return;

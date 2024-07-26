@@ -9,38 +9,30 @@
         <div v-if="state.pedidos.length <= 0">
           <h4>Você ainda não possui pedidos</h4>
         </div>
-        <div
-          class="col-lg-8 col-md-10 mb-5"
-          v-for="pedido in state.pedidos"
-          :key="pedido.id"
-        >
+        <div class="col-lg-8 col-md-10 mb-5" v-for="pedido in state.pedidos" :key="pedido.id">
           <div class="quad">
             <div class="row">
               <div class="col-lg-3 col-md-3">
                 <div class="div_img">
-                  <img
-                    id="img_pedido"
-                    :src="pedido.produtos[0].imagens[0].imagem"
-                  />
+                  <img id="img_pedido" :src="pedido.produtos[0].imagens[0].imagem" />
                 </div>
               </div>
               <div class="col-lg-6 col-md-5">
                 <span :class="state.arrayStatus[pedido.status]">
                   {{ pedido.status }}
                 </span>
-                <div
-                  v-for="(produto, index) in pedido.produtos"
-                  :key="produto.id"
-                >
+                <div v-for="(produto, index) in pedido.produtos" :key="produto.id">
                   <div class="div_nome" v-if="index <= 4">
                     <p>{{ produto.nome }}</p>
                   </div>
                 </div>
               </div>
               <div class="col-lg-3 col-md-4">
-                <a :href="'/meus-pedidos/' + pedido.id">
-                  <button class="btn_gold">Ver Pedido</button>
-                </a>
+                <div class="div_btn">
+                  <a :href="'/meus-pedidos/' + pedido.id">
+                    <button class="btn_transparent">Ver Pedido</button>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -52,15 +44,8 @@
             Parece que você não possuí pedidos!
           </h2>
           <div class="mb-5 mt-5">
-            <a href="/" class="btn btn-secondary mr-3"
-              >Voltar para a página inicial</a
-            >
-            <a
-              href="/produtos"
-              class="btn"
-              style="background-color: #e13229; color: white"
-              >Voltar para os produtos</a
-            >
+            <a href="/" class="btn btn-secondary mr-3">Voltar para a página inicial</a>
+            <a href="/produtos" class="btn" style="background-color: #263c28; color: white">Voltar para os produtos</a>
           </div>
         </div>
       </div>
@@ -155,26 +140,32 @@ export default {
   margin-bottom: 0;
 }
 
-.btn_gold {
-  margin-top: 45px;
+.btn_transparent {
   font-family: "Poppins", sans-serif;
   border-radius: 4px;
-  border: 1px solid #cfb14e;
+  border: 1px solid #000;
   background: transparent;
-  color: #cfb14e;
-  width: 200px;
-  padding: 4px;
+  color: #000;
+  width: auto;
   transition: 0.5s;
+  padding: 5px 20px;
 }
 
-.btn_gold:hover {
-  background: #cfb14e;
-  color: #000;
+.btn_transparent:hover {
+  background: #000;
+  color: #fff;
 }
 
 .title h2 {
   color: #000;
   font-size: 32px;
+}
+
+.div_btn {
+  justify-content: end;
+  align-items: center;
+  display: flex;
+  height: 100%;
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
