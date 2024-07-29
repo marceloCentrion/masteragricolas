@@ -166,7 +166,7 @@
     </div>
     <section id="section_3">
       <div class="container">
-        <div class="content2">Q
+        <div class="content2">
           <p>PRODUTOS</p>
           <h1>Mais Vendidos</h1>
           <div class="row">
@@ -369,7 +369,6 @@ async function fetchGrupo1() {
     // // Limitar aos dois primeiros elementos
     // state.grupo_destaque_um = grupos.slice(0, 3);
     state.grupo_destaque_um = data;
-    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -378,7 +377,6 @@ async function fetchEmpresa() {
   try {
     const { data } = await axios.empresa.getSite();
     state.empresa = data;
-    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -500,7 +498,7 @@ function previousPage() {
   height: 100vh;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.603);
+  background: rgba(0, 0, 0, 0.274);
 }
 
 #imagem-banner {

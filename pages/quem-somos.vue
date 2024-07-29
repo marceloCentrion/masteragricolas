@@ -1,8 +1,7 @@
 <template>
   <top :tela="'ecommerce'" />
-
   <div class="container">
-    <div class="quem-somos">
+    <div class="quem-somos mt-5">
       <h1>Quem Somos</h1>
       <section class="introducao">
         <div class="row">
