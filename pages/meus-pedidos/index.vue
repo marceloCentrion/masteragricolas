@@ -9,12 +9,19 @@
         <div v-if="state.pedidos.length <= 0">
           <h4>Você ainda não possui pedidos</h4>
         </div>
-        <div class="col-lg-8 col-md-10 mb-5" v-for="pedido in state.pedidos" :key="pedido.id">
+        <div
+          class="col-lg-8 col-md-10 mb-5"
+          v-for="pedido in state.pedidos"
+          :key="pedido.id"
+        >
           <div class="quad">
             <div class="row">
               <div class="col-lg-3 col-md-3">
                 <div class="div_img">
-                  <img id="img_pedido" :src="pedido.produtos[0].imagens[0].imagem" />
+                  <img
+                    id="img_pedido"
+                    :src="pedido.produtos[0].imagens[0].imagem"
+                  />
                 </div>
               </div>
               <loader :loader="state.loader" />
@@ -22,7 +29,10 @@
                 <span :class="state.arrayStatus[pedido.status]">
                   {{ pedido.status }}
                 </span>
-                <div v-for="(produto, index) in pedido.produtos" :key="produto.id">
+                <div
+                  v-for="(produto, index) in pedido.produtos"
+                  :key="produto.id"
+                >
                   <div class="div_nome" v-if="index <= 4">
                     <p>{{ produto.nome }}</p>
                   </div>
@@ -42,11 +52,18 @@
       <div class="row" v-else>
         <div class="col-md-10 offset-md-1">
           <h2 style="font-weight: bolder">
-            Parece que você não possuí pedidos!
+            Parece que você não possui pedidos!
           </h2>
           <div class="mb-5 mt-5">
-            <a href="/" class="btn btn-secondary mr-3">Voltar para a página inicial</a>
-            <a href="/produtos" class="btn" style="background-color: #263c28; color: white">Voltar para os produtos</a>
+            <a href="/" class="btn btn-secondary mr-3"
+              >Voltar para a página inicial</a
+            >
+            <a
+              href="/produtos"
+              class="btn"
+              style="background-color: #263c28; color: white"
+              >Voltar para os produtos</a
+            >
           </div>
         </div>
       </div>
@@ -77,7 +94,6 @@ export default {
         ENCERRADO: "classe_d",
       },
       loader: false,
-      
     });
     onMounted(() => {
       fetchPedidos();
@@ -91,7 +107,6 @@ export default {
         });
         state.pedidos = data;
         state.loader = false;
-
       } catch (error) {
         state.loader = false;
         console.log(error);

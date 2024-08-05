@@ -26,7 +26,7 @@
                     <label for="password">Senha:</label>
                     <input type="password" id="password" v-model="state.password" required>
                   </div>
-                  <a href="/criar-conta">Não possuí conta?</a>
+                  <a href="/criar-conta">Não possui conta?</a>
                   <a href="/esqueci-minha-senha">Esqueci minha senha!</a>
                   <div>
                     <button class="btn-login" type="submit">ENTRE</button>
