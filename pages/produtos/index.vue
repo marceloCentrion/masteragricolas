@@ -158,7 +158,7 @@ export default {
     async function fetchAllProdutos() {
       try {
         state.loader = true,
-          state.categoria_urn = null;
+        state.categoria_urn = null;
         const { data } = await asyncServices.produtos.getAllProduto();
         state.produtos = data;
         var qtd = state.produtos;

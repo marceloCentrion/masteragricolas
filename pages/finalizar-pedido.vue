@@ -28,20 +28,8 @@
                   <strong>CPF:</strong> {{ state.dados.cpf }}
                 </p>
                 <p class="card-text">
-                  <strong>Data de Nascimento:</strong>
-                  {{ state.dados.data_nascimento }}
-                </p>
-                <p class="card-text">
                   <strong>E-mail:</strong>
                   {{ state.dados.email }}
-                </p>
-                <p class="card-text">
-                  <strong>Telefone Principal:</strong>
-                  {{ state.dados.telefone_principal }}
-                </p>
-                <p class="card-text">
-                  <strong>Telefone Alternativo:</strong>
-                  {{ state.dados.telefone_alternativo }}
                 </p>
               </div>
             </div>
@@ -56,28 +44,13 @@
                   :key="endereco.id"
                 >
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      :id="'endereco_' + endereco.id"
-                      :value="endereco.id"
-                      v-model="state.endereco_id"
-                      name="endereco"
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'endereco_' + endereco.id"
-                    >
-                      <p
-                        class="endereco_principal"
-                        v-if="endereco.principal === 'SIM'"
-                      >
+                    <input class="form-check-input" type="radio" :id="'endereco_' + endereco.id" :value="endereco.id"
+                      v-model="state.endereco_id" name="endereco" />
+                    <label class="form-check-label" :for="'endereco_' + endereco.id">
+                      <p class="endereco_principal" v-if="endereco.principal === 'SIM'">
                         Endereço Principal
                       </p>
-                      <p
-                        class="endereco_principal"
-                        v-if="endereco.principal === 'NAO'"
-                      >
+                      <p class="endereco_principal" v-if="endereco.principal === 'NAO'">
                         Endereço Secundário
                       </p>
                       <strong>
@@ -100,6 +73,73 @@
                 <button type="button" class="btn-end" @click="openModal()">
                   <i class="bi bi-house-add"></i> Adicionar Endereço
                 </button>
+              </div>
+            </div>
+            <div class="card card_endereco">
+              <h5 class="card-header"><i class="bi bi-truck"></i> Frete</h5>
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    Frete: {{ state.obj_frete.nome }} - entrega em
+                    {{ state.obj_frete.dias_entrega }} dias
+                  </div>
+
+                  <div>
+                    {{
+                      parseFloat(state.obj_frete.preco).toLocaleString(
+                        "pt-br",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
+                    }}
+                  </div>
+                </div>
+                <p>
+                  <a
+                    style="
+                      font-size: 11px;
+                      font-weight: bold;
+                      text-decoration: underline;
+                    "
+                    data-bs-toggle="collapse"
+                    href="#collapseExample"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="collapseExample"
+                  >
+                    Ver outras opções de frete
+                  </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div
+                    class=""
+                    v-for="(tipo_frete, i) in state.frete.fretes"
+                    :key="tipo_frete.id"
+                  >
+                    <div v-if="!state.frete.fretes[i].error">
+                      <input
+                        type="radio"
+                        class="radio_frete"
+                        :id="'radio_frete_' + i"
+                        v-model="state.tipo_frete_selecionado"
+                        :value="tipo_frete.id"
+                        @change="alterarFrete(tipo_frete)"
+                        style="margin-right: 5px"
+                      />
+                      <label :for="'radio_frete_' + i">
+                        {{
+                          parseFloat(tipo_frete.preco).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                        <span>{{ tipo_frete.nome }}</span></label
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -601,7 +641,7 @@ export default {
       layout: "blank",
     });
     useHead({
-      title: "Máster - Finalizar Pedido",
+      title: "Comparts - Finalizar Pedido",
       link: [
         {
           href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
@@ -622,11 +662,11 @@ export default {
     });
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos, frete_selecionado } =
-      storeToRefs(carrinhoStore);
+    const { itens, valores_produtos, frete_selecionado } = storeToRefs(carrinhoStore);
     const { limparCarrinho, adicionarPedido } = carrinhoStore;
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
+
     if (!client_id.value || !client_token.value || itens.value.length == 0) {
       router.push({ name: "index" });
     }
@@ -672,6 +712,11 @@ export default {
       endereco: { cliente: {} },
       endereco_id: null,
       enderecos: [],
+      fretes: [],
+      frete: {
+        fretes: [],
+      },
+      obj_frete: {},
       selectedEndereco: {
         nome: "",
         telefone: "",
@@ -686,7 +731,6 @@ export default {
         },
         cidade_id: null,
       },
-      loader: false,
     });
 
     onMounted(() => {
@@ -718,14 +762,25 @@ export default {
       const principal = state.enderecos.find(
         (endereco) => endereco.principal === "SIM"
       );
+      state.obj_frete = obj_frete;
+
+      state.tipo_frete_selecionado = obj_frete.value.id;
       console.log(principal);
       if (principal) {
         state.endereco_id = principal.id;
       }
+      //  state.fretes = fretes.value;
+
+      const isEmpty = (obj) => {
+        return Object.keys(obj).length === 0;
+      };
+      if (!isEmpty(fretes.value)) {
+        state.frete = fretes.value;
+        state.cep = state.frete.cep;
+      }
     });
 
     async function fetchDataCliente() {
-      state.loader = true;
       try {
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
@@ -738,12 +793,14 @@ export default {
         );
         if (principal) {
           state.endereco_id = principal.id;
+          calcularFrete(principal.cep);
         } else if (state.enderecos.length > 0) {
           state.endereco_id = state.enderecos[0].id;
+          calcularFrete(state.enderecos[0].cep);
         }
         state.loader = false;
+
       } catch (error) {
-        state.loader = false;
         console.log(error);
       }
     }
@@ -790,6 +847,84 @@ export default {
         console.log(error);
       }
     }
+
+    async function setEnderecoSelecionado(endereco) {
+      console.log(endereco.cep);
+      calcularFrete(endereco.cep);
+    }
+
+    async function alterarFrete(frete) {
+      limparFrete();
+      adicionaFrete(state.fretes, frete);
+      state.frete_selecionado = frete;
+      state.frete_selecionado.valor_frete = frete.preco;
+      state.frete.preco = frete.preco;
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.tipo_frete_selecionado = frete.id;
+      state.prazo_frete = frete.dias_entrega;
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.prazo_frete = frete.dias_entrega;
+      state.carrinho.valor_total = valores_produtos.value.total;
+
+      //  state.frete_selecionado.valor_frete = data.fretes[1].preco;
+    }
+
+    async function calcularFrete(cep) {
+      var produtos_req = [];
+      console.log(state.produtos);
+      state.produtos.forEach((item) => {
+        var produto = {};
+        produto.id = item.id;
+        produto.qtd = item.quantidade;
+        produtos_req.push(produto);
+      });
+      limparFrete();
+
+      var cep_sem_traco = cep.replace("-", "");
+      try {
+        state.loader = true;
+
+        const { data } = await services.pedido.calcularFrete({
+          produtos_req,
+          cep_destinatario: cep_sem_traco,
+        });
+        state.frete = {};
+        if (data.fretes[0].error) {
+          adicionaFrete(data, data.fretes[1]);
+          state.obj_frete_selecionado = data.fretes[1];
+          state.frete.preco = data.fretes[1].preco;
+          state.frete.prazo_frete = data.fretes[1].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[1].id;
+          state.prazo_frete = data.fretes[1].dias_entrega;
+          data.fretes = [data.fretes[1]];
+          state.frete_selecionado.valor_frete = data.fretes[1].preco;
+          // state.carrinho.valor_total =
+          //   valores_produtos.value.total// + parseFloat(data.fretes[1].preco);
+        } else {
+          state.fretes = data.fretes;
+          adicionaFrete(data, data.fretes[0]);
+          state.obj_frete_selecionado = data.fretes[0];
+          state.frete.preco = data.fretes[0].preco;
+          state.frete.prazo_frete = data.fretes[0].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[0].id;
+          state.prazo_frete = data.fretes[0].dias_entrega;
+          state.frete_selecionado.valor_frete = data.fretes[0].preco;
+          //    state.carrinho.valor_total =
+          //      valores_produtos.value.total;// + parseFloat(data.fretes[0].preco);
+        }
+        console.log(data.fretes);
+        //  state.tipo_frete_selecionado = data.fretes[0].nome;
+        state.loader = false;
+        state.frete = data;
+        state.frete.fretes = state.fretes;
+        state.carrinho.valor_total = valores_produtos.value.total;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        state.loader = false;
+      }
+    }
+
     async function fazerPedido(tipo_pagamento) {
       try {
         state.loader = true;
@@ -813,7 +948,8 @@ export default {
           const numberFormat = state.cartao.numero.value.replace(/\s+/g, "");
           const card = PagSeguro.encryptCard({
             publicKey:
-              "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+ZqgD892U9/HXsa7XqBZUayPquAfh9xx4iwUbTSUAvTlmiXFQNTp0Bvt/5vK2FhMj39qSv1zi2OuBjvW38q1E374nzx6NNBL5JosV0+SDINTlCG0cmigHuBOyWzYmjgca+mtQu4WczCaApNaSuVqgb8u7Bd9GCOL4YJotvV5+81frlSwQXralhwRzGhj/A57CGPgGKiuPT+AOGmykIGEZsSD9RKkyoKIoc0OS8CPIzdBOtTQCIwrLn2FxI83Clcg55W8gkFSOS6rWNbG5qFZWMll6yl02HtunalHmUlRUL66YeGXdMDC2PuRcmZbGO5a/2tbVppW6mfSWG3NPRpgwIDAQAB",
+              "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxemPaSDzCYiW159GGdaq/vg3Vc3ffBlvOznkEFfNkGMw991TzA9Cjj+X1EYABBp1BcOeG9DZZRVXOhDsK8jS48HxlQdhg4i43bbGY+MeLNM0RHCuu0sYuWjrn67h5JVAG0A/27yaAm80h0U6PW6tHZPwmZy2rAPOq9zKpn2o36jrAc0GbjMsOncLRU6vOaX1o5V6bFZsC8JP76LMmefZt8RJHTyPAJDBsNNPkrIz0BjCVhgc8ElNT2HTNa5mhE1NW6+md3/cLnJ5R/N3RdmPwBVsJQygCs75nflQUztAL5bGuth4cLhA/iSEL/4mow6Y+Bly0/VHCUwpNfVrRi2SAQIDAQAB",
+
             holder: state.cartao.nome.value,
             number: numberFormat,
             expMonth: state.cartao.mes.value,
@@ -822,7 +958,7 @@ export default {
           });
           //  (dados.parcela = state.parcela),
           //    (dados.encrypted = card.encryptedCard);
-
+          console.log(card.encryptedCard);
           dados.encrypted = card.encryptedCard;
           const hasErrors = card.hasErrors;
           const errors = card.errors;
@@ -838,12 +974,11 @@ export default {
           client_token: client_token.value,
           dados,
         });
-
         adicionarPedido(dataPedido.data);
         limparCarrinho();
         router.push("/pedido-realizado");
       } catch (error) {
-        console.log(error);
+        alert("Erro ao realizar o pedido, tente novamente");
       } finally {
         state.loader = false;
         state.pedidoEmAndamento = false;
@@ -852,11 +987,14 @@ export default {
 
     async function upEndereco() {
       try {
+        state.loader = true;
         const enderecoData = {
           ...state.selectedEndereco,
           principal: state.selectedEndereco.principal ? "SIM" : "NAO",
         };
-
+        if (enderecoData.cidade) {
+          delete enderecoData.cidade;
+        }
         if (state.selectedEndereco.id) {
           state.loader = true;
           await services.clientes.upEndereco({
@@ -875,11 +1013,13 @@ export default {
           });
           state.loader = false;
         }
+        calcularFrete(endereco.cep);
         state.isModalVisible = false;
         fetchDataCliente();
       } catch (error) {
-        state.loader = false;
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 
@@ -980,6 +1120,8 @@ export default {
       Slide,
       Pagination,
       Navigation,
+      setEnderecoSelecionado,
+      alterarFrete,
     };
   },
 };
