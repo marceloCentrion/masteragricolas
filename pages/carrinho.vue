@@ -19,9 +19,6 @@
               <div class="col-md-2 title_desc d-none d-md-block">
                 <p style="font-weight: bold">Qtd</p>
               </div>
-              <div class="col-md-2 title_desc d-none d-md-block">
-                <p style="font-weight: bold">Subtotal</p>
-              </div>
               <div class="col-md-1 title_desc d-none d-md-block"></div>
             </div>
             <div v-if="state.carrinho.length > 0">
@@ -30,7 +27,7 @@
                   <div class="col-sm-12 mb-sm-4 col-md-5 d-flex">
                     <div class="img">
                       <img :src="produto.imagem" id="img_produto" v-if="produto.imagem" />
-                      <img v-else id="img_produto" src="/images/site/produto-sem-imagem.webp" style="width: 100px" />
+                      <img v-else id="img_produto" :src="'/images/site/produto_sem_foto.png'" />
                       <p class="mt-3 w-75 ml-3">{{ produto.nome }}</p>
                     </div>
                   </div>
@@ -58,31 +55,17 @@
                         )
                         " :value="produto.quantidade" />
                       <div class="btns_qtd">
-                        <button type="button" @click="addQtd(produto.produtos_id)" class="btn_qtd">
+                        <button type="button" @click="adicionarQtd(produto.produtos_id)" class="btn_qtd">
                           <i class="bi bi-chevron-up" style="font-size: 14px"></i>
                         </button>
-                        <button type="button" @click="removeQtd(produto.produtos_id)" class="btn_qtd"
+                        <button type="button" @click="removerQtd(produto.produtos_id)" class="btn_qtd"
                           :disabled="produto.quantidade === 1">
                           <i class="bi bi-chevron-down" style="font-size: 14px"></i>
                         </button>
                       </div>
                     </div>
                   </div>
-                  <div class="d-flex col-md-2">
-                    <div class="col-md-2 title_desc d-block d-md-none d-lg-none d-xl-none">
-                      <p>Subtotal:</p>
-                    </div>
-                    <div class="element_produto mt-md-3">
-                      <p style="font-weight: bold">
-                        {{
-                          produto.subtotal.toLocaleString("pt-br", {
-                            style: "currency",
-                            currency: "BRL",
-                          })
-                        }}
-                      </p>
-                    </div>
-                  </div>
+                  <div class="col-md-2"></div>
                   <div class="d-flex col-md-1 icon_remove_div mt-2">
                     <button id="btn_remove" @click="removeItem(produto.produtos_id)">
                       <i id="trashicon" class="bi bi-trash"></i>
@@ -105,22 +88,23 @@
             <div class="quad">
               <h2 style="font-weight: bold">Resumo</h2>
               <h4>Estimativa Frete</h4>
-              <p>Coloque seu para estimativa de frete</p>
+              <p>Coloque cep seu para uma estimativa de frete</p>
               <div v-if="!state.frete">
                 <label>CEP</label>
                 <div>
                   <input class="input_frete" type="text" id="cep" v-model="state.cep" />
                   <button type="button" @click="calcularFrete" style="
-                    width: 20%;
-                    border: #fff solid 1px;
-                    padding: 7px;
-                    border-radius: 5px;
-                  ">
+                      width: 20%;
+                      border: #fff solid 1px;
+                      padding: 7px;
+                      border-radius: 5px;
+                    ">
                     OK
                   </button>
                 </div>
               </div>
               <hr />
+
               <div style="display: flex; justify-content: space-between" v-if="state.frete">
                 <div>
                   <p style="font-weight: bold; margin-bottom: 0">FRETE</p>
@@ -162,12 +146,12 @@
 
                 <div>
                   <button style="
-                    color: #fff;
-                    background: transparent;
-                    border: #fff solid 1px;
-                    border-radius: 5px;
-                    padding: 2px 10px;
-                  " @click="btnAlterarFrete">
+                      color: #fff;
+                      background: transparent;
+                      border: #fff solid 1px;
+                      border-radius: 5px;
+                      padding: 2px 10px;
+                    " @click="btnAlterarFrete">
                     Alterar
                   </button>
                 </div>
@@ -193,10 +177,10 @@
               </button> -->
                 <p>
                   <a style="
-                    font-size: 11px;
-                    font-weight: bold;
-                    text-decoration: underline;
-                  " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                      font-size: 11px;
+                      font-weight: bold;
+                      text-decoration: underline;
+                    " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
                     aria-controls="collapseExample">
                     Ver outras opções de frete
                   </a>
@@ -206,20 +190,17 @@
                     :key="tipo_frete.id">
                     <div v-if="!state.frete.fretes[i].error">
                       <input type="radio" class="radio_frete" :id="'radio_frete_' + i"
-                        v-model="state.tipo_frete_selecionado" :value="state.frete.fretes[i].id"
-                        @change="alterarFrete(state.frete.fretes[i])" />
+                        v-model="state.tipo_frete_selecionado" :value="tipo_frete.id"
+                        @change="alterarFrete(tipo_frete)" />
                       <label :for="'radio_frete_' + i">
                         {{
-                          parseFloat(state.frete.fretes[i].preco).toLocaleString(
-                            "pt-br",
-                            {
-                              style: "currency",
-                              currency: "BRL",
-                            }
-                          )
+                          parseFloat(tipo_frete.preco).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
                         }}
-                        (<span v-if="state.frete.fretes[i].nome == '.Package'">JadLog</span>
-                        <span v-else>{{ state.frete.fretes[i].nome }}</span>)</label>
+                        (<span v-if="tipo_frete.nome == '.Package'">JadLog</span>
+                        <span v-else>{{ tipo_frete.nome }}</span>)</label>
                     </div>
                   </div>
                 </div>
@@ -236,11 +217,11 @@
                 </div>
                 <div style="text-align: right" class="col-6">
                   <div v-if="state.carrinho.length > 0">
-                    <div v-if="state.frete">
-                      <p style="font-weight: bold">
+                    <div v-if="state.frete != undefined && state.frete != null">
+                      <p style="font-weight: bold" v-if="state.frete.fretes">
                         {{
                           parseFloat(
-                            state.frete.fretes[1].preco
+                            state.frete.fretes[0].preco
                           ).toLocaleString("pt-br", {
                             style: "currency",
                             currency: "BRL",
@@ -248,6 +229,7 @@
                         }}
                       </p>
                     </div>
+                    <div v-else>Calcule o frete</div>
                     <p style="font-weight: bold">
                       {{
                         state.valor_total.toLocaleString("pt-br", {
@@ -266,7 +248,7 @@
                     <strong role="status">Carregando Pedido...</strong>
                     <div class="spinner-border ms-auto" aria-hidden="true"></div>
                   </div>
-                  <span v-if="!state.loading">Continuar</span>
+                  <span v-if="!state.loading">Comprar</span>
                 </button>
                 <a href="/produtos" v-else>
                   <button type="button" class="btn_pedido">
@@ -283,6 +265,7 @@
         </div>
       </div>
     </div>
+    <loader :loader="state.loader" />
   </section>
   <div class="toast toast-center" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
@@ -295,6 +278,7 @@
       Ocorreu um erro ao realizar o pedido. Por favor, tente novamente.
     </div>
   </div>
+  <!-- Modal -->
   <div class="modal modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -320,24 +304,40 @@
     </div>
   </div>
 </template>
-
 <script>
 import services from "../services/axios";
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
+// import endereco from "~/services/axios/endereco";
 export default {
   setup() {
     definePageMeta({
       layout: "site",
     });
     useServerHead({
-      title: "MASTER - Carrinho",
+      title: "Protecty Alarmes - Carrinho",
     });
 
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos, frete_selecionado, fretes, valor_total, obj_frete } = storeToRefs(carrinhoStore);
-    const { limparCarrinho, addQtd, removeQtd, setQtd, removeItem, adicionaFrete, freteSimples, limparFrete } = carrinhoStore;
+    const {
+      itens,
+      valores_produtos,
+      frete_selecionado,
+      valor_total,
+      fretes,
+      obj_frete,
+    } = storeToRefs(carrinhoStore);
+    const {
+      limparCarrinho,
+      addQtd,
+      removeQtd,
+      setQtd,
+      removeItem,
+      adicionaFrete,
+      freteSimples,
+      limparFrete,
+    } = carrinhoStore;
     const authClienteStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(authClienteStore);
 
@@ -350,21 +350,20 @@ export default {
         total_desconto: 0,
       },
       carrinho: {
-        id: "",
         valor_total: "",
         valor_total_desconto: "",
         valor_total_pix: "",
         valor_frete: "",
         valor_produtos: "",
-        valor_frete: "",
       },
       dados: { enderecos: { cidade: { estado: {} } } },
+      obj_frete_selecionado: {},
       pedido: {},
-      produtos: [],
       frete: null,
       tipo_frete_selecionado: null,
       metodo_frete: null,
       fretes: [],
+      loader: false,
     });
 
     state.carrinho = itens;
@@ -373,10 +372,12 @@ export default {
     state.carrinho.valor_total_desconto = valores_produtos.value.total_desconto;
     state.carrinho.valor_total_pix = valores_produtos.value.total_pix;
     state.carrinho.valor_produtos = valores_produtos.value.total;
-    state.carrinho.valor_total = valores_produtos.value.total + state.carrinho.valor_frete;
-    state.produtos = itens;
+    state.carrinho.valor_total =
+      valores_produtos.value.total + state.carrinho.valor_frete;
     state.frete_selecionado = frete_selecionado;
     state.valor_total = valor_total;
+    //  console.log(state.carrinho.valor_total);
+    state.produtos = itens;
 
     onMounted(() => {
       fetchDataCliente(client_id.value, client_token.value);
@@ -395,16 +396,30 @@ export default {
       setQtd(itemId, qtd);
     }
 
+    function adicionarQtd(produto_id) {
+      addQtd(produto_id);
+      calcularFrete();
+    }
+
+    function removerQtd(produto_id) {
+      removeQtd(produto_id);
+      calcularFrete();
+    }
+
     async function fetchDataCliente(id, token) {
       try {
+        state.loader = true;
         const { data } = await services.clientes.getDataCliente({
           client_id: id,
           client_token: token,
         });
+        state.loader = false;
         state.dados = data;
         state.id_endereco = data.enderecos[0].id;
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 
@@ -423,6 +438,7 @@ export default {
 
     async function fazerPedido() {
       try {
+        state.loader = true;
         if (!client_id.value) {
           localStorage.setItem(
             "destinoUrl",
@@ -431,6 +447,9 @@ export default {
           router.push("/login");
         } else {
           if (state.id_endereco) {
+            /*var qtd_parcelas = await services.pedido.verificarParcelas({
+              itens: state.carrinho,
+            });*/
             router.push("/finalizar-pedido");
           } else {
             if (
@@ -438,13 +457,62 @@ export default {
                 "Ops, vimos que não poussí endereço cadastrado, gostaria de adicionar um novo endereço?"
               )
             ) {
-              router.push("/meus-enderecos");
+              router.push("/criar-endereco/novo");
             }
           }
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
+
+      /*
+      try {
+        if (state.dados.id) {
+          state.loading = true;
+          await services.clientes
+            .fazerPedido({
+              client_token: client_token.value,
+              pedido: {
+                cliente_id: state.dados.id,
+                endereco_id: state.id_endereco,
+                valor_total: state.carrinho.valor_total,
+                valor_frete: state.carrinho.valor_frete,
+                valor_total_desconto: state.carrinho.valor_total_desconto,
+                valor_total_pix: state.carrinho.valor_total_pix,
+                valor_produtos: state.carrinho.valor_produtos,
+                produtos: state.carrinho,
+              },
+            })
+            .then(() => {
+              limparCarrinho();
+              // Exibe o modal de sucesso
+              const myModal = new bootstrap.Modal(
+                document.getElementById("exampleModal")
+              );
+              myModal.show();
+            })
+            .finally(() => {
+              state.loading = false;
+            });
+        } else {
+          localStorage.setItem(
+            "destinoUrl",
+            router.currentRoute.value.fullPath
+          );
+          console.log(router.currentRoute.value.fullPath);
+          router.push("/login");
+        }
+      } catch (error) {
+        console.log(error);
+        // Exibe o toast de erro
+        const errorToast = new bootstrap.Toast(
+          document.getElementById("errorToast")
+        );
+        errorToast.show();
+      }
+      */
     }
 
     async function btnAlterarFrete() {
@@ -454,12 +522,12 @@ export default {
 
     async function alterarFrete(frete) {
       limparFrete();
+      state.obj_frete_selecionado = frete;
       adicionaFrete(state.fretes, frete);
       state.frete.preco = frete.preco;
       state.frete.prazo_frete = frete.dias_entrega;
       state.tipo_frete_selecionado = frete.id;
       state.prazo_frete = frete.dias_entrega;
-      console.log(frete);
       state.frete.prazo_frete = frete.dias_entrega;
       state.prazo_frete = frete.dias_entrega;
     }
@@ -473,8 +541,10 @@ export default {
         produtos_req.push(produto);
       });
 
-      var cep_sem_traco = state.cep.replace('-', '');
+      var cep_sem_traco = state.cep.replace("-", "");
       try {
+        state.loader = true;
+
         const { data } = await services.pedido.calcularFrete({
           produtos_req,
           cep_destinatario: cep_sem_traco,
@@ -482,21 +552,29 @@ export default {
         state.frete = {};
         if (data.fretes[0].error) {
           adicionaFrete(data, data.fretes[1]);
+          state.obj_frete_selecionado = data.fretes[1];
           state.frete.preco = data.fretes[1].preco;
           state.frete.prazo_frete = data.fretes[1].dias_entrega;
           state.tipo_frete_selecionado = data.fretes[1].id;
           state.prazo_frete = data.fretes[1].dias_entrega;
+          data.fretes = [data.fretes[1]];
         } else {
           state.fretes = data.fretes;
           adicionaFrete(data, data.fretes[0]);
+          state.obj_frete_selecionado = data.fretes[0];
           state.frete.preco = data.fretes[0].preco;
           state.frete.prazo_frete = data.fretes[0].dias_entrega;
           state.tipo_frete_selecionado = data.fretes[0].id;
           state.prazo_frete = data.fretes[0].dias_entrega;
         }
+        console.log(data.fretes);
+        //  state.tipo_frete_selecionado = data.fretes[0].nome;
+        state.loader = false;
         state.frete = data;
       } catch (error) {
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 
@@ -510,17 +588,20 @@ export default {
       removeItem,
       checkNumberInput,
       client_id,
+      calcularFrete,
       btnAlterarFrete,
       alterarFrete,
-      calcularFrete,
+      adicionarQtd,
+      removerQtd,
     };
   },
 };
 </script>
+
 <style scoped>
 .input_frete {
   width: 80%;
-  background: transparent;
+  background: rgba(110, 108, 108, 0.74);
   border-radius: 4px;
   border: solid 1px rgba(110, 108, 108, 0.74);
   color: #fff;
@@ -528,13 +609,8 @@ export default {
   padding: 5px 5px;
 }
 
-.input_frete:focus {
-  border: solid 1px rgb(255, 255, 255);
-
-}
-
 #carrinho {
-  min-height: 91vh;
+  min-height: 90vh;
 }
 
 #trashicon {
@@ -625,7 +701,7 @@ export default {
 }
 
 .div_qtd {
-  width: 70%;
+  width: 55%;
   border-radius: 5px;
   background: var(--Color---1, #f5f7ff);
   border: solid 2px #f5f7ff;
@@ -642,7 +718,7 @@ export default {
   appearance: textfield;
   -webkit-appearance: none;
   -moz-appearance: textfield;
-  width: 30px;
+  width: 17px;
   margin-left: 5px;
 }
 
@@ -696,7 +772,7 @@ export default {
 }
 
 .btn_gold:hover {
-  color: #3ccf4e;
+  color: #fff;
 }
 
 .btn_qtd {
@@ -719,13 +795,13 @@ export default {
 
 .quad {
   border-radius: 20px;
-  background: #000;
+  background: #0e130e;
   padding: 30px;
   color: #fff;
 }
 
 .quad h2 {
-  color: #3ccf4e;
+  color: rgb(60, 207, 78);
   font-size: 24px;
   font-family: "Poppins", sans-serif;
 }
@@ -764,62 +840,13 @@ export default {
 }
 
 .btn_pedido:hover {
-  color: #3ccf4e;
+  border: 1px solid rgb(122, 122, 122);
+  background: rgb(122, 122, 122);
 }
 
 .quad h4 {
-  color: #3ccf4e;
+  color: rgb(60, 207, 78);
   font-family: "Poppins", sans-serif;
-}
-
-.form {
-  --width-of-input: 100%;
-  --border-height: 1px;
-  --border-before-color: rgba(221, 221, 221, 0.39);
-  --border-after-color: rgb(255, 0, 0);
-  --input-hovered-color: #e049491f;
-  position: relative;
-  width: var(--width-of-input);
-}
-
-.input {
-  color: #000;
-  font-size: 12pt;
-  background-color: transparent;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 5px;
-  border: none;
-  border-bottom: var(--border-height) solid var(--border-before-color);
-}
-
-.input-border {
-  position: absolute;
-  background: var(--border-after-color);
-  width: 0%;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  transition: 0.3s;
-}
-
-/* Hover on Input */
-.input:hover {
-  background: var(--input-hovered-color);
-}
-
-.input:focus {
-  outline: none;
-}
-
-.input:focus~.input-border {
-  width: 100%;
-}
-
-.form label {
-  font-size: 14pt;
-  margin-bottom: 0;
-  color: #000;
 }
 
 .div_btn {
@@ -837,11 +864,6 @@ export default {
 
 .title_modal {
   color: red;
-}
-
-#togglePass {
-  background: transparent;
-  border: none;
 }
 
 .btn-ok {
@@ -912,18 +934,6 @@ export default {
     padding: 5px;
     margin-left: 0;
   }
-
-  .div_qtd {
-    width: 90%;
-    border-radius: 5px;
-    background: var(--Color---1, #f5f7ff);
-    border: solid 2px #f5f7ff;
-    border: none;
-    padding: 5px;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-  }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -934,10 +944,6 @@ export default {
 
   .icon_div {
     margin-top: 2rem;
-  }
-
-  .div_qtd {
-    width: 90%;
   }
 }
 
@@ -965,10 +971,6 @@ export default {
 
   #btn_remove {
     margin-bottom: 1rem;
-  }
-
-  .div_qtd {
-    width: 60%;
   }
 }
 
@@ -1013,10 +1015,6 @@ export default {
 
   #btn_remove {
     margin-bottom: 1rem;
-  }
-
-  .div_qtd {
-    width: 60%;
   }
 }
 

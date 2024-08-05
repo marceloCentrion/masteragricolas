@@ -17,14 +17,19 @@ export const useCarrinhoStore = defineStore("carrinho", {
       metodo: "PAC"
     }),
     valor_total: useLocalStorage("valor_total", 0),
+    metodo_frete: useLocalStorage("metodo_frete", "CORREIOS"),
   }),
   actions: {
-    addItem(item) {
+    addItem(item, fretes, frete){
       if (this.itemExists(item.produtos_id)) this.addQtd(item.produtos_id);
       else this.itens.push(item);
       this.sumTotal();
     },
-    addQtd(itemId) {
+    addQtd(itemId/*, fretes, frete*/) {
+   /*   console.log(frete);
+      this.limparFrete();
+      this.adicionaFrete(fretes, frete)
+*/
       const item = this.itens.find((i) => i.produtos_id === itemId);
       if (!item) return;
       item.quantidade++;
@@ -37,6 +42,36 @@ export const useCarrinhoStore = defineStore("carrinho", {
     },
     adicionarPedido(pedido) {
       this.pedido = pedido;
+    },
+    adicionaFrete(fretes, frete) {
+      this.obj_frete = frete;
+      var valor_frete = frete.preco;
+      var frete = {};
+      frete.valor_frete = valor_frete;
+      //  this.valores_produtos.total = this.valores_produtos.total + frete.valor_frete;
+      this.frete_selecionado = frete;
+      this.valores_produtos.total = parseFloat(this.valores_produtos.total) + parseFloat(valor_frete);
+      this.valor_total = parseFloat(this.valor_total) + parseFloat(valor_frete);
+      this.valor_total_desconto = parseFloat(this.valor_total_desconto) + parseFloat(valor_frete);
+      this.valor_total_pix = parseFloat(this.valor_total_pix) + parseFloat(valor_frete);
+      this.fretes = fretes;
+    },
+    freteSimples(frete, valor_frete) {
+      this.sumTotal();
+      this.fretes = {};
+      this.obj_frete = {};
+      var frete = {};
+      frete.valor_frete = valor_frete;
+      this.obj_frete = frete;
+      this.frete_selecionado = frete;
+      this.metodo_frete = frete;
+      this.valores_produtos.total = parseFloat(this.valores_produtos.total) + parseFloat(valor_frete);
+      this.valor_total = parseFloat(this.valor_total) + parseFloat(valor_frete);
+    },
+    limparFrete() {
+      this.sumTotal();
+      this.fretes = {};
+      this.obj_frete = {};
     },
     removeQtd(itemId) {
       const item = this.itens.find((i) => i.produtos_id === itemId);
@@ -72,55 +107,16 @@ export const useCarrinhoStore = defineStore("carrinho", {
         this.valores_produtos.total_pix += item.preco_pix * quantidade;
         this.valores_produtos.total_desconto += item.preco_desconto * quantidade;
       }
+      this.valor_total = this.valores_produtos.total;
     },
     itemExists(itemId) {
       return this.itens.find((i) => i.produtos_id === itemId);
     },
     limparCarrinho() {
       this.itens = [];
-      this.valores_produtos = {
-        total: 0,
-        total_pix: 0,
-        total_desconto: 0
-      };
-    },
-    freteSimples(frete, valor_frete) {
-      this.sumTotal();
-      this.fretes = {};
-      this.obj_frete = {};
-      var frete = {};
-      frete.valor_frete = valor_frete;
-      this.obj_frete = frete;
-      this.frete_selecionado = frete;
-      this.metodo_frete = frete;
-      this.valores_produtos.total = parseFloat(this.valores_produtos.total) + parseFloat(valor_frete);
-      this.valores_produtos.total_pix = parseFloat(this.valores_produtos.total_pix) + parseFloat(valor_frete);
-      this.valores_produtos.total_desconto = parseFloat(this.valores_produtos.total_desconto) + parseFloat(valor_frete);
-      this.valor_total = parseFloat(this.valor_total) + parseFloat(valor_frete);
-      this.valor_total_desconto = parseFloat(this.valor_total_desconto) + parseFloat(valor_frete);
-      this.valor_total_pix = parseFloat(this.valor_total_pix) + parseFloat(valor_frete);
-    },
-    limparFrete() {
-      this.sumTotal();
-      this.fretes = {};
-      this.obj_frete = {};
-    },
-    adicionaFrete(fretes, frete) {
-      var valor_frete = frete.preco
-      var frete = {};
-      frete.valor_frete = valor_frete;
-      //  this.valores_produtos.total = this.valores_produtos.total + frete.valor_frete;
-
-      this.frete_selecionado = frete;
-      this.valores_produtos.total = parseFloat(this.valores_produtos.total) + parseFloat(valor_frete);
-      this.valores_produtos.total_pix = parseFloat(this.valores_produtos.total_pix) + parseFloat(valor_frete);
-      this.valores_produtos.total_desconto = parseFloat(this.valores_produtos.total_desconto) + parseFloat(valor_frete);
-      this.valor_total = parseFloat(this.valor_total) + parseFloat(valor_frete);
-      this.valor_total_desconto = parseFloat(this.valor_total_desconto) + parseFloat(valor_frete);
-      this.valor_total_pix = parseFloat(this.valor_total_pix) + parseFloat(valor_frete);
-      this.fretes = fretes;
-      this.obj_frete = frete;
-    },
+      this.valores_produtos = null;
+      this.fretes = null
+    }
   },
   hydrate(state, initialState) {
     state.itens = useLocalStorage("carrinho", []);

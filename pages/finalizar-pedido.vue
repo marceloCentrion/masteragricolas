@@ -28,20 +28,8 @@
                   <strong>CPF:</strong> {{ state.dados.cpf }}
                 </p>
                 <p class="card-text">
-                  <strong>Data de Nascimento:</strong>
-                  {{ state.dados.data_nascimento }}
-                </p>
-                <p class="card-text">
                   <strong>E-mail:</strong>
                   {{ state.dados.email }}
-                </p>
-                <p class="card-text">
-                  <strong>Telefone Principal:</strong>
-                  {{ state.dados.telefone_principal }}
-                </p>
-                <p class="card-text">
-                  <strong>Telefone Alternativo:</strong>
-                  {{ state.dados.telefone_alternativo }}
                 </p>
               </div>
             </div>
@@ -50,21 +38,31 @@
                 <i class="bi bi-truck"></i> Endereço de Entrega
               </h5>
               <div class="card-body" v-if="state.enderecos.length > 0">
-                <div class="mb-2" v-for="endereco in state.enderecos" :key="endereco.id">
+                <div
+                  class="mb-2"
+                  v-for="endereco in state.enderecos"
+                  :key="endereco.id"
+                >
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" :id="'endereco_' + endereco.id" :value="endereco.id"
-                      v-model="state.endereco_id" name="endereco" />
-                    <label class="form-check-label" :for="'endereco_' + endereco.id">
-                      <p class="endereco_principal" v-if="endereco.principal === 'SIM'">
-                        Endereço Principal
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :id="'endereco_' + endereco.id"
+                      :value="endereco.id"
+                      v-model="state.endereco_id"
+                      name="endereco"
+                      @change="setEnderecoSelecionado(endereco)"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="'endereco_' + endereco.id"
+                    >
+                      <p class="endereco_principal">
+                        <strong>
+                          {{ endereco.nome }}
+                        </strong>
                       </p>
-                      <p class="endereco_principal" v-if="endereco.principal === 'NAO'">
-                        Endereço Secundário
-                      </p>
-                      <strong>
-                        {{ endereco.nome }}
-                      </strong>
-                      <br />
+
                       {{ endereco.logradouro }}, {{ endereco.numero }},
                       {{ endereco.complemento }}, {{ endereco.bairro }}
                       <br />
@@ -83,6 +81,73 @@
                 </button>
               </div>
             </div>
+            <div class="card card_endereco">
+              <h5 class="card-header"><i class="bi bi-truck"></i> Frete</h5>
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    Frete: {{ state.obj_frete.nome }} - entrega em
+                    {{ state.obj_frete.dias_entrega }} dias
+                  </div>
+
+                  <div>
+                    {{
+                      parseFloat(state.obj_frete.preco).toLocaleString(
+                        "pt-br",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
+                    }}
+                  </div>
+                </div>
+                <p>
+                  <a
+                    style="
+                      font-size: 11px;
+                      font-weight: bold;
+                      text-decoration: underline;
+                    "
+                    data-bs-toggle="collapse"
+                    href="#collapseExample"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="collapseExample"
+                  >
+                    Ver outras opções de frete
+                  </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div
+                    class=""
+                    v-for="(tipo_frete, i) in state.frete.fretes"
+                    :key="tipo_frete.id"
+                  >
+                    <div v-if="!state.frete.fretes[i].error">
+                      <input
+                        type="radio"
+                        class="radio_frete"
+                        :id="'radio_frete_' + i"
+                        v-model="state.tipo_frete_selecionado"
+                        :value="tipo_frete.id"
+                        @change="alterarFrete(tipo_frete)"
+                        style="margin-right: 5px"
+                      />
+                      <label :for="'radio_frete_' + i">
+                        {{
+                          parseFloat(tipo_frete.preco).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                        <span>{{ tipo_frete.nome }}</span></label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-xl-4 col-md-6 mt-4">
             <div class="card">
@@ -92,17 +157,30 @@
               </h5>
               <div class="card-body">
                 <div class="div_titulos_pagamento">
-                  <input type="radio" id="radio_cartao_credito" value="CARTAO" class="radio"
-                    v-model="state.tipo_pagamento" />
+                  <input
+                    type="radio"
+                    id="radio_cartao_credito"
+                    value="CARTAO"
+                    class="radio"
+                    v-model="state.tipo_pagamento"
+                  />
                   <label for="radio_cartao_credito">
                     <i class="bi bi-credit-card"></i>
-                    Cartão de Crédito</label>
+                    Cartão de Crédito</label
+                  >
                 </div>
-                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'CARTAO'">
+                <div
+                  class="card_tipo_pagamento"
+                  v-if="state.tipo_pagamento == 'CARTAO'"
+                >
                   <div>
                     <label for="nome">Quantidade de Parcelas</label>
                     <select class="form-select" v-model="state.parcela">
-                      <option v-for="(parcela, index) in state.parcelas" :key="index" :value="parcela.parcela">
+                      <option
+                        v-for="(parcela, index) in state.parcelas"
+                        :key="index"
+                        :value="parcela.parcela"
+                      >
                         {{ parcela.parcela }}x {{ parcela.juros }}
                         {{ parcela.valor }}
                       </option>
@@ -110,12 +188,24 @@
                   </div>
                   <div>
                     <label for="nome">Número do Cartão</label>
-                    <input type="text" id="numero_cartao" class="form-control" placeholder="0000 0000 0000 0000"
-                      v-model="state.cartao.numero.value" v-maska data-maska="#### #### #### ####" />
+                    <input
+                      type="text"
+                      id="numero_cartao"
+                      class="form-control"
+                      placeholder="0000 0000 0000 0000"
+                      v-model="state.cartao.numero.value"
+                      v-maska
+                      data-maska="#### #### #### ####"
+                    />
                   </div>
                   <div>
                     <label for="nome">Nome no Cartão</label>
-                    <input type="text" id="nome_cartao" class="form-control" v-model="state.cartao.nome.value" />
+                    <input
+                      type="text"
+                      id="nome_cartao"
+                      class="form-control"
+                      v-model="state.cartao.nome.value"
+                    />
                   </div>
                   <div>
                     <div class="row">
@@ -125,17 +215,31 @@
                             <label for="nome">Validade</label>
                             <div class="row">
                               <div class="col-sm-6" style="padding-right: 0px">
-                                <select class="form-select" v-model="state.cartao.mes.value">
+                                <select
+                                  class="form-select"
+                                  v-model="state.cartao.mes.value"
+                                >
                                   <option selected>Mês</option>
-                                  <option v-for="(month, index) in 12" :key="index" :value="index">
+                                  <option
+                                    v-for="(month, index) in 12"
+                                    :key="index"
+                                    :value="index"
+                                  >
                                     {{ month }}
                                   </option>
                                 </select>
                               </div>
                               <div class="col-sm-6">
-                                <select class="form-select" v-model="state.cartao.ano.value">
+                                <select
+                                  class="form-select"
+                                  v-model="state.cartao.ano.value"
+                                >
                                   <option value="">Ano</option>
-                                  <option v-for="(ano, index) in state.anos" :key="index" :value="ano.ano">
+                                  <option
+                                    v-for="(ano, index) in state.anos"
+                                    :key="index"
+                                    :value="ano.ano"
+                                  >
                                     {{ ano.anoResumido }}
                                   </option>
                                 </select>
@@ -146,23 +250,44 @@
                       </div>
                       <div class="col-sm-6">
                         <label>Código de Segurança</label>
-                        <input type="text" id="nome_cartao" class="form-control" v-model="state.cartao.cvv.value"
-                          v-maska data-maska="###" placeholder="cvv" />
+                        <input
+                          type="text"
+                          id="nome_cartao"
+                          class="form-control"
+                          v-model="state.cartao.cvv.value"
+                          v-maska
+                          data-maska="###"
+                          placeholder="cvv"
+                        />
                       </div>
                     </div>
                   </div>
-                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('CARTAO')">
+                  <button
+                    type="button"
+                    class="btn_comprar mt-2"
+                    @click="fazerPedido('CARTAO')"
+                  >
                     Finalizar Compra
                   </button>
                 </div>
                 <hr />
                 <div class="div_titulos_pagamento">
-                  <input type="radio" id="radio_pix" class="radio" value="PIX" v-model="state.tipo_pagamento" />
+                  <input
+                    type="radio"
+                    id="radio_pix"
+                    class="radio"
+                    value="PIX"
+                    v-model="state.tipo_pagamento"
+                  />
                   <label for="radio_pix">
                     <img src="/images/site/pix_icon.png" style="width: 15px" />
-                    Pix</label>
+                    Pix</label
+                  >
                 </div>
-                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'PIX'">
+                <div
+                  class="card_tipo_pagamento"
+                  v-if="state.tipo_pagamento == 'PIX'"
+                >
                   <p>
                     Pagamento via PIX:
                     <span class="bold">{{
@@ -193,19 +318,36 @@
                     internet banking usando o QRCode ou a opção de "Copia e
                     Cola" disponibilizados no App!
                   </p>
-                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('PIX')">
+                  <button
+                    type="button"
+                    class="btn_comprar mt-2"
+                    @click="fazerPedido('PIX')"
+                  >
                     Finalizar Compra
                   </button>
                 </div>
                 <hr />
                 <div class="div_titulos_pagamento">
-                  <input type="radio" id="radio_boleto" value="BOLETO" class="radio" v-model="state.tipo_pagamento" />
+                  <input
+                    type="radio"
+                    id="radio_boleto"
+                    value="BOLETO"
+                    class="radio"
+                    v-model="state.tipo_pagamento"
+                  />
                   <label for="radio_boleto">
-                    <img src="/images/site/boleto_icon.png" style="width: 25px" />
-                    Boleto Bancário</label>
+                    <img
+                      src="/images/site/boleto_icon.png"
+                      style="width: 25px"
+                    />
+                    Boleto Bancário</label
+                  >
                 </div>
 
-                <div class="card_tipo_pagamento" v-if="state.tipo_pagamento == 'BOLETO'">
+                <div
+                  class="card_tipo_pagamento"
+                  v-if="state.tipo_pagamento == 'BOLETO'"
+                >
                   <p>
                     Pagamento no boleto bancário:
                     <span class="bold">{{
@@ -226,7 +368,11 @@
                     bancos, lotéricas e correios, apresentando o boleto
                     impresso.
                   </p>
-                  <button type="button" class="btn_comprar mt-2" @click="fazerPedido('BOLETO')">
+                  <button
+                    type="button"
+                    class="btn_comprar mt-2"
+                    @click="fazerPedido('BOLETO')"
+                  >
                     Finalizar Compra
                   </button>
                 </div>
@@ -244,11 +390,14 @@
                   <carousel :items-to-show="1">
                     <slide v-for="produto in state.produtos" :key="produto.id">
                       <div class="div_produto">
-                        <img :src="produto.imagem" style="
+                        <img
+                          :src="produto.imagem"
+                          style="
                             width: 100%;
                             height: 200px;
                             object-fit: contain;
-                          " />
+                          "
+                        />
                         <div>
                           {{ produto.nome }}
                         </div>
@@ -315,15 +464,28 @@
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="mb-3">
-                        <label for="nome" class="form-label">Quem irá Receber</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.nome" id="nome" />
+                        <label for="nome" class="form-label"
+                          >Quem irá Receber</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.nome"
+                          id="nome"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="mb-3">
                         <label for="tel" class="form-label">Telefone</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.telefone" id="tel"
-                          v-maska data-maska="[ '(##) ####-####','(##) # ####-####' ]" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.telefone"
+                          id="tel"
+                          v-maska
+                          data-maska="[ '(##) ####-####','(##) # ####-####' ]"
+                        />
                       </div>
                     </div>
                   </div>
@@ -331,16 +493,30 @@
                     <div class="col-sm-4">
                       <div class="mb-3">
                         <label for="cep" class="form-label">Cep</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.cep" id="cep" v-maska
-                          data-maska="#####-###" @blur="cepAtributes" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.cep"
+                          id="cep"
+                          v-maska
+                          data-maska="#####-###"
+                          @blur="cepAtributes"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-4">
                       <div class="mb-3">
                         <label for="estado" class="form-label">Estado</label>
-                        <select class="form-select" @change="getCidade($event.target.value)"
-                          v-model="state.selectedEndereco.cidade.estado_id">
-                          <option v-for="estado in state.estados" :key="estado.id" :value="estado.id">
+                        <select
+                          class="form-select"
+                          @change="getCidade($event.target.value)"
+                          v-model="state.selectedEndereco.cidade.estado_id"
+                        >
+                          <option
+                            v-for="estado in state.estados"
+                            :key="estado.id"
+                            :value="estado.id"
+                          >
                             {{ estado.nome }}
                           </option>
                         </select>
@@ -349,8 +525,15 @@
                     <div class="col-sm-4">
                       <div class="mb-3">
                         <label for="cidade" class="form-label">Cidade</label>
-                        <select v-model="state.selectedEndereco.cidade_id" class="form-select">
-                          <option v-for="cidade in state.cidades" :key="cidade.id" :value="cidade.id">
+                        <select
+                          v-model="state.selectedEndereco.cidade_id"
+                          class="form-select"
+                        >
+                          <option
+                            v-for="cidade in state.cidades"
+                            :key="cidade.id"
+                            :value="cidade.id"
+                          >
                             {{ cidade.nome }}
                           </option>
                         </select>
@@ -361,15 +544,26 @@
                   <div class="row">
                     <div class="col-sm-9">
                       <div class="mb-3">
-                        <label for="logradouro" class="form-label">Logradouro</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.logradouro"
-                          id="logradouro" />
+                        <label for="logradouro" class="form-label"
+                          >Logradouro</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.logradouro"
+                          id="logradouro"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-3">
                       <div class="mb-3">
                         <label for="numero" class="form-label">Número</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.numero" id="numero" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.numero"
+                          id="numero"
+                        />
                       </div>
                     </div>
                   </div>
@@ -377,27 +571,48 @@
                     <div class="col-sm-6">
                       <div class="mb-3">
                         <label for="bairro" class="form-label">Bairro</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.bairro" id="bairro" />
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.bairro"
+                          id="bairro"
+                        />
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="mb-3">
-                        <label for="complemento" class="form-label">Complemento</label>
-                        <input type="text" class="form-control" v-model="state.selectedEndereco.complemento"
-                          id="complemento" />
+                        <label for="complemento" class="form-label"
+                          >Complemento</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          v-model="state.selectedEndereco.complemento"
+                          id="complemento"
+                        />
                       </div>
                     </div>
                   </div>
                   <div class="mb-3">
                     <div>
-                      <input type="checkbox" id="check_principal" v-model="state.selectedEndereco.principal" />
-                      <label for="check_principal" class="lbl_end_principal">Endereço Principal</label>
+                      <input
+                        type="checkbox"
+                        id="check_principal"
+                        v-model="state.selectedEndereco.principal"
+                      />
+                      <label for="check_principal" class="lbl_end_principal"
+                        >Endereço Principal</label
+                      >
                     </div>
                   </div>
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn_transparent mr-1 w-auto" @click="closeModal">
+                <button
+                  type="button"
+                  class="btn_transparent mr-1 w-auto"
+                  @click="closeModal"
+                >
                   Cancelar
                 </button>
                 <button type="submit" class="btn-gold" @click="upEndereco">
@@ -432,7 +647,7 @@ export default {
       layout: "blank",
     });
     useHead({
-      title: "Máster - Finalizar Pedido",
+      title: "Comparts - Finalizar Pedido",
       link: [
         {
           href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
@@ -453,10 +668,12 @@ export default {
     });
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos, frete_selecionado } = storeToRefs(carrinhoStore);
-    const { limparCarrinho, adicionarPedido } = carrinhoStore;
+    const { itens, valores_produtos, frete_selecionado, fretes, obj_frete } = storeToRefs(carrinhoStore);
+    const { limparCarrinho, adicionarPedido, adicionaFrete, limparFrete } =
+      carrinhoStore;
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
+
     if (!client_id.value || !client_token.value || itens.value.length == 0) {
       router.push({ name: "index" });
     }
@@ -502,6 +719,11 @@ export default {
       endereco: { cliente: {} },
       endereco_id: null,
       enderecos: [],
+      fretes: [],
+      frete: {
+        fretes: [],
+      },
+      obj_frete: {},
       selectedEndereco: {
         nome: "",
         telefone: "",
@@ -516,7 +738,6 @@ export default {
         },
         cidade_id: null,
       },
-      loader: false,
     });
 
     onMounted(() => {
@@ -548,14 +769,25 @@ export default {
       const principal = state.enderecos.find(
         (endereco) => endereco.principal === "SIM"
       );
+      state.obj_frete = obj_frete;
+
+      state.tipo_frete_selecionado = obj_frete.value.id;
       console.log(principal);
       if (principal) {
         state.endereco_id = principal.id;
       }
+      //  state.fretes = fretes.value;
+
+      const isEmpty = (obj) => {
+        return Object.keys(obj).length === 0;
+      };
+      if (!isEmpty(fretes.value)) {
+        state.frete = fretes.value;
+        state.cep = state.frete.cep;
+      }
     });
 
     async function fetchDataCliente() {
-      state.loader = true;
       try {
         const { data } = await services.clientes.getDataCliente({
           client_token: client_token.value,
@@ -568,13 +800,12 @@ export default {
         );
         if (principal) {
           state.endereco_id = principal.id;
+          calcularFrete(principal.cep);
         } else if (state.enderecos.length > 0) {
           state.endereco_id = state.enderecos[0].id;
+          calcularFrete(state.enderecos[0].cep);
         }
-        state.loader = false;
-
       } catch (error) {
-        state.loader = false;
         console.log(error);
       }
     }
@@ -621,6 +852,84 @@ export default {
         console.log(error);
       }
     }
+
+    async function setEnderecoSelecionado(endereco) {
+      console.log(endereco.cep);
+      calcularFrete(endereco.cep);
+    }
+
+    async function alterarFrete(frete) {
+      limparFrete();
+      adicionaFrete(state.fretes, frete);
+      state.frete_selecionado = frete;
+      state.frete_selecionado.valor_frete = frete.preco;
+      state.frete.preco = frete.preco;
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.tipo_frete_selecionado = frete.id;
+      state.prazo_frete = frete.dias_entrega;
+      state.frete.prazo_frete = frete.dias_entrega;
+      state.prazo_frete = frete.dias_entrega;
+      state.carrinho.valor_total = valores_produtos.value.total;
+
+      //  state.frete_selecionado.valor_frete = data.fretes[1].preco;
+    }
+
+    async function calcularFrete(cep) {
+      var produtos_req = [];
+      console.log(state.produtos);
+      state.produtos.forEach((item) => {
+        var produto = {};
+        produto.id = item.id;
+        produto.qtd = item.quantidade;
+        produtos_req.push(produto);
+      });
+      limparFrete();
+
+      var cep_sem_traco = cep.replace("-", "");
+      try {
+        state.loader = true;
+
+        const { data } = await services.pedido.calcularFrete({
+          produtos_req,
+          cep_destinatario: cep_sem_traco,
+        });
+        state.frete = {};
+        if (data.fretes[0].error) {
+          adicionaFrete(data, data.fretes[1]);
+          state.obj_frete_selecionado = data.fretes[1];
+          state.frete.preco = data.fretes[1].preco;
+          state.frete.prazo_frete = data.fretes[1].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[1].id;
+          state.prazo_frete = data.fretes[1].dias_entrega;
+          data.fretes = [data.fretes[1]];
+          state.frete_selecionado.valor_frete = data.fretes[1].preco;
+          // state.carrinho.valor_total =
+          //   valores_produtos.value.total// + parseFloat(data.fretes[1].preco);
+        } else {
+          state.fretes = data.fretes;
+          adicionaFrete(data, data.fretes[0]);
+          state.obj_frete_selecionado = data.fretes[0];
+          state.frete.preco = data.fretes[0].preco;
+          state.frete.prazo_frete = data.fretes[0].dias_entrega;
+          state.tipo_frete_selecionado = data.fretes[0].id;
+          state.prazo_frete = data.fretes[0].dias_entrega;
+          state.frete_selecionado.valor_frete = data.fretes[0].preco;
+          //    state.carrinho.valor_total =
+          //      valores_produtos.value.total;// + parseFloat(data.fretes[0].preco);
+        }
+        console.log(data.fretes);
+        //  state.tipo_frete_selecionado = data.fretes[0].nome;
+        state.loader = false;
+        state.frete = data;
+        state.frete.fretes = state.fretes;
+        state.carrinho.valor_total = valores_produtos.value.total;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        state.loader = false;
+      }
+    }
+
     async function fazerPedido(tipo_pagamento) {
       try {
         state.loader = true;
@@ -644,7 +953,8 @@ export default {
           const numberFormat = state.cartao.numero.value.replace(/\s+/g, "");
           const card = PagSeguro.encryptCard({
             publicKey:
-              "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr+ZqgD892U9/HXsa7XqBZUayPquAfh9xx4iwUbTSUAvTlmiXFQNTp0Bvt/5vK2FhMj39qSv1zi2OuBjvW38q1E374nzx6NNBL5JosV0+SDINTlCG0cmigHuBOyWzYmjgca+mtQu4WczCaApNaSuVqgb8u7Bd9GCOL4YJotvV5+81frlSwQXralhwRzGhj/A57CGPgGKiuPT+AOGmykIGEZsSD9RKkyoKIoc0OS8CPIzdBOtTQCIwrLn2FxI83Clcg55W8gkFSOS6rWNbG5qFZWMll6yl02HtunalHmUlRUL66YeGXdMDC2PuRcmZbGO5a/2tbVppW6mfSWG3NPRpgwIDAQAB",
+              "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxemPaSDzCYiW159GGdaq/vg3Vc3ffBlvOznkEFfNkGMw991TzA9Cjj+X1EYABBp1BcOeG9DZZRVXOhDsK8jS48HxlQdhg4i43bbGY+MeLNM0RHCuu0sYuWjrn67h5JVAG0A/27yaAm80h0U6PW6tHZPwmZy2rAPOq9zKpn2o36jrAc0GbjMsOncLRU6vOaX1o5V6bFZsC8JP76LMmefZt8RJHTyPAJDBsNNPkrIz0BjCVhgc8ElNT2HTNa5mhE1NW6+md3/cLnJ5R/N3RdmPwBVsJQygCs75nflQUztAL5bGuth4cLhA/iSEL/4mow6Y+Bly0/VHCUwpNfVrRi2SAQIDAQAB",
+
             holder: state.cartao.nome.value,
             number: numberFormat,
             expMonth: state.cartao.mes.value,
@@ -653,7 +963,7 @@ export default {
           });
           //  (dados.parcela = state.parcela),
           //    (dados.encrypted = card.encryptedCard);
-
+          console.log(card.encryptedCard);
           dados.encrypted = card.encryptedCard;
           const hasErrors = card.hasErrors;
           const errors = card.errors;
@@ -669,12 +979,11 @@ export default {
           client_token: client_token.value,
           dados,
         });
-
         adicionarPedido(dataPedido.data);
         limparCarrinho();
         router.push("/pedido-realizado");
       } catch (error) {
-        console.log(error);
+        alert("Erro ao realizar o pedido, tente novamente");
       } finally {
         state.loader = false;
         state.pedidoEmAndamento = false;
@@ -683,11 +992,14 @@ export default {
 
     async function upEndereco() {
       try {
+        state.loader = true;
         const enderecoData = {
           ...state.selectedEndereco,
           principal: state.selectedEndereco.principal ? "SIM" : "NAO",
         };
-
+        if (enderecoData.cidade) {
+          delete enderecoData.cidade;
+        }
         if (state.selectedEndereco.id) {
           state.loader = true;
           await services.clientes.upEndereco({
@@ -706,11 +1018,13 @@ export default {
           });
           state.loader = false;
         }
+        calcularFrete(endereco.cep);
         state.isModalVisible = false;
         fetchDataCliente();
       } catch (error) {
-        state.loader = false;
         console.log(error);
+      } finally {
+        state.loader = false;
       }
     }
 
@@ -811,6 +1125,8 @@ export default {
       Slide,
       Pagination,
       Navigation,
+      setEnderecoSelecionado,
+      alterarFrete,
     };
   },
 };
