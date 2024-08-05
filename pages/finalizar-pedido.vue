@@ -44,19 +44,25 @@
                   :key="endereco.id"
                 >
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" :id="'endereco_' + endereco.id" :value="endereco.id"
-                      v-model="state.endereco_id" name="endereco" />
-                    <label class="form-check-label" :for="'endereco_' + endereco.id">
-                      <p class="endereco_principal" v-if="endereco.principal === 'SIM'">
-                        Endereço Principal
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :id="'endereco_' + endereco.id"
+                      :value="endereco.id"
+                      v-model="state.endereco_id"
+                      name="endereco"
+                      @change="setEnderecoSelecionado(endereco)"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="'endereco_' + endereco.id"
+                    >
+                      <p class="endereco_principal">
+                        <strong>
+                          {{ endereco.nome }}
+                        </strong>
                       </p>
-                      <p class="endereco_principal" v-if="endereco.principal === 'NAO'">
-                        Endereço Secundário
-                      </p>
-                      <strong>
-                        {{ endereco.nome }}
-                      </strong>
-                      <br />
+
                       {{ endereco.logradouro }}, {{ endereco.numero }},
                       {{ endereco.complemento }}, {{ endereco.bairro }}
                       <br />
@@ -662,8 +668,9 @@ export default {
     });
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
-    const { itens, valores_produtos, frete_selecionado } = storeToRefs(carrinhoStore);
-    const { limparCarrinho, adicionarPedido } = carrinhoStore;
+    const { itens, valores_produtos, frete_selecionado, fretes, obj_frete } = storeToRefs(carrinhoStore);
+    const { limparCarrinho, adicionarPedido, adicionaFrete, limparFrete } =
+      carrinhoStore;
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
 
@@ -798,8 +805,6 @@ export default {
           state.endereco_id = state.enderecos[0].id;
           calcularFrete(state.enderecos[0].cep);
         }
-        state.loader = false;
-
       } catch (error) {
         console.log(error);
       }
