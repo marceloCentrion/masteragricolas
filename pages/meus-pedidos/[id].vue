@@ -71,6 +71,7 @@ export default {
     });
     definePageMeta({
       layout: "site",
+      middleware: 'client',
     });
     const router = useRouter();
     const clienteAuthStore = useClienteAuthStore();

@@ -464,6 +464,7 @@ export default {
   setup() {
     definePageMeta({
       layout: "blank",
+      middleware: 'client',
     });
     useHead({
       title: "Comparts - Finalizar Pedido",
@@ -492,9 +493,6 @@ export default {
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
 
-    if (!client_id.value || !client_token.value || itens.value.length == 0) {
-      router.push({ name: "index" });
-    }
     const state = reactive({
       cartao: {
         numero: {

@@ -81,118 +81,107 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { reactive, onMounted } from "vue";
 import services from "../services/axios";
 import { useRouter } from "vue-router";
-export default {
-  setup() {
-    definePageMeta({
-      layout: "site",
-    });
-    useHead({
-      title: "Mística - Ver Endereço",
-      link: [
-        {
-          href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
-          rel: "stylesheet",
-          integrity: "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN",
-          crossorigin: "anonymous"
-        }],
-      script: [
-        {
-          src: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
-          integrity: "sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL",
-          crossorigin: "anonymous"
-        }
-      ],
-    });
+definePageMeta({
+  layout: "site",
+});
+useHead({
+  title: "Mística - Ver Endereço",
+  link: [
+    {
+      href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+      rel: "stylesheet",
+      integrity: "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN",
+      crossorigin: "anonymous"
+    }],
+  script: [
+    {
+      src: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
+      integrity: "sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL",
+      crossorigin: "anonymous"
+    }
+  ],
+});
 
-    const router = useRouter();
-    const clienteAuthStore = useClienteAuthStore();
-    const { client_token, client_id } = storeToRefs(clienteAuthStore);
-    if (!client_id.value || !client_token.value) {
-      router.push({ name: "index" });
-    }
-    const state = reactive({
-      id_endereco: "",
-      dados: { cidade_id: '', cidades: { estado_id: '', estado: {} } },
-      estados: "",
-      cidades: [{}],
-      estado_id: '',
-    });
+const router = useRouter();
+const clienteAuthStore = useClienteAuthStore();
+const { client_token, client_id } = storeToRefs(clienteAuthStore);
+if (!client_id.value || !client_token.value) {
+  router.push({ name: "index" });
+}
+const state = reactive({
+  id_endereco: "",
+  dados: { cidade_id: '', cidades: { estado_id: '', estado: {} } },
+  estados: "",
+  cidades: [{}],
+  estado_id: '',
+});
 
-    onMounted(() => {
-      getEstados();
-      fetchDataCliente();
-    });
+onMounted(() => {
+  getEstados();
+  fetchDataCliente();
+});
 
-    async function fetchDataCliente() {
-      try {
-        const { data } = await services.clientes.getDataCliente({
-          client_token: client_token.value,
-          client_id: client_id.value,
-        });
-        state.dados = data.enderecos[0];
-        state.id_endereco = data.enderecos[0].id;
-        state.estado_id = data.enderecos[0].cidades.estado_id;
-        getCidade(state.estado_id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    async function upEndereco() {
-      console.log(state.id_endereco)
-      console.log(state.dados)
-      try {
-        await services.clientes.upEndereco({
-          id_endereco: state.id_endereco,
-          endereco: state.dados,
-          client_token: client_token.value,
-        });
-        fetchDataCliente();
-      } catch (error) {
-        console.log(error);
-      }
-      router.push('/minha-conta')
-    }
-    async function cepAtributes() {
-      var cep = state.dados.cep;
-      state.dados.cep = cep.replace("-", "").replace(".", "");
-      await services.cep.apiCep(state.dados.cep).then((res) => {
-        console.log(res.data);
-        state.dados.logradouro = res.data.logradouro;
-        state.dados.bairro = res.data.bairro;
-        state.dados.codigo_ibge = res.data.ibge;
-      });
-    }
-    async function getEstados() {
-      try {
-        const { data } = await services.endereco.getEstados();
-        state.estados = data;
-        console.log(state.estados);
-      } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
-    async function getCidade(estado_id) {
-      try {
-        const { data } = await services.endereco.getCidade(estado_id);
-        state.cidades = data;
-        console.log(state.cidades);
-      } catch (error) {
-        console.log("aqui:" + error);
-      }
-    }
-    return {
-      getCidade,
-      getEstados,
-      upEndereco,
-      cepAtributes,
-      state,
-    };
-  },
-};
+async function fetchDataCliente() {
+  try {
+    const { data } = await services.clientes.getDataCliente({
+      client_token: client_token.value,
+      client_id: client_id.value,
+    });
+    state.dados = data.enderecos[0];
+    state.id_endereco = data.enderecos[0].id;
+    state.estado_id = data.enderecos[0].cidades.estado_id;
+    getCidade(state.estado_id);
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function upEndereco() {
+  console.log(state.id_endereco)
+  console.log(state.dados)
+  try {
+    await services.clientes.upEndereco({
+      id_endereco: state.id_endereco,
+      endereco: state.dados,
+      client_token: client_token.value,
+    });
+    fetchDataCliente();
+  } catch (error) {
+    console.log(error);
+  }
+  router.push('/minha-conta')
+}
+async function cepAtributes() {
+  var cep = state.dados.cep;
+  state.dados.cep = cep.replace("-", "").replace(".", "");
+  await services.cep.apiCep(state.dados.cep).then((res) => {
+    console.log(res.data);
+    state.dados.logradouro = res.data.logradouro;
+    state.dados.bairro = res.data.bairro;
+    state.dados.codigo_ibge = res.data.ibge;
+  });
+}
+async function getEstados() {
+  try {
+    const { data } = await services.endereco.getEstados();
+    state.estados = data;
+    console.log(state.estados);
+  } catch (error) {
+    console.log("aqui:" + error);
+  }
+}
+async function getCidade(estado_id) {
+  try {
+    const { data } = await services.endereco.getCidade(estado_id);
+    state.cidades = data;
+    console.log(state.cidades);
+  } catch (error) {
+    console.log("aqui:" + error);
+  }
+}
 </script>
 <style scoped>
 .title {

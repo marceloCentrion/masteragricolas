@@ -167,6 +167,7 @@ export default {
   setup() {
     definePageMeta({
       layout: "blank",
+      middleware: 'client',
     });
     useHead({
       title: "Comparts - Finalizar Pedido",

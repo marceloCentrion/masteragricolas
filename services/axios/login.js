@@ -20,7 +20,7 @@ export default httpClient => ({
     let headers = {
       "Authorization": "Bearer " + token
     }
-    const response = await httpClient.get('/admin/verifica-token', {
+    const response = await httpClient.get('/admin-verifica-token', {
       headers
     })
 
@@ -59,7 +59,7 @@ export default httpClient => ({
     let headers = {
       "Authorization": "Bearer " + client_token
     }
-    const response = await httpClient.get('/clientes/verifica-token', {
+    const response = await httpClient.get('/clientes-verifica-token', {
       headers
     })
     let errors = null
