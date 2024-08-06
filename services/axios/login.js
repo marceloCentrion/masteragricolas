@@ -55,6 +55,7 @@ export default httpClient => ({
     }
   },
   verificaTokenClientes: async ({ client_token }) => {
+    console.log('Aqui é o verfica token cliente  ' + client_token)
     let headers = {
       "Authorization": "Bearer " + client_token
     }
