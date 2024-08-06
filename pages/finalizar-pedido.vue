@@ -678,6 +678,7 @@ export default {
 
     async function alterarFrete(frete) {
       limparFrete();
+      //fretes declarado aqui embaixo
       adicionaFrete(state.fretes, frete);
       state.frete_selecionado = frete;
       state.frete_selecionado.valor_frete = frete.preco;
@@ -711,6 +712,8 @@ export default {
           produtos_req,
           cep_destinatario: cep_sem_traco,
         });
+
+        //fretes declarado aqui embaixo
         state.frete = {};
         if (data.fretes[0].error) {
           adicionaFrete(data, data.fretes[1]);
@@ -724,6 +727,8 @@ export default {
           // state.carrinho.valor_total =
           //   valores_produtos.value.total// + parseFloat(data.fretes[1].preco);
         } else {
+
+          //fretes declarado aqui embaixo
           state.fretes = data.fretes;
           adicionaFrete(data, data.fretes[0]);
           state.obj_frete_selecionado = data.fretes[0];
@@ -738,6 +743,8 @@ export default {
         console.log(data.fretes);
         //  state.tipo_frete_selecionado = data.fretes[0].nome;
         state.loader = false;
+
+        //fretes declarado aqui embaixo
         state.frete = data;
         state.frete.fretes = state.fretes;
         state.carrinho.valor_total = valores_produtos.value.total;
