@@ -165,19 +165,14 @@
 <script>
 import { reactive, onMounted } from "vue";
 import services from "../services/axios";
-import { useRouter } from "vue-router";
 import { useClienteAuthStore } from "../stores/clienteAuth";
 import { storeToRefs } from "pinia";
-
 export default {
   setup() {
-    const router = useRouter();
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
-    if (!client_id.value || !client_token.value) {
-      router.push({ name: "index" });
-    }
     definePageMeta({
+      middleware: 'client',
       layout: "site",
     });
     const state = reactive({

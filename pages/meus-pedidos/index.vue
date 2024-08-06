@@ -81,6 +81,7 @@ export default {
     });
     definePageMeta({
       layout: "site",
+      middleware: 'client',
     });
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);

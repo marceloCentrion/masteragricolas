@@ -82,10 +82,11 @@ export default {
     const router = useRouter();
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
-
     definePageMeta({
       layout: "site",
+      middleware: 'client',
     });
+    
     onMounted(() => {
       fetchDataCliente();
       getEstados();

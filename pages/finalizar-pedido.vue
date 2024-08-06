@@ -657,6 +657,7 @@ export default {
   setup() {
     definePageMeta({
       layout: "blank",
+      middleware: "client",
     });
     useHead({
       title: "Máster - Finalizar Pedido",
