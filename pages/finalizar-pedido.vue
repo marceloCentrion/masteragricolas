@@ -500,8 +500,7 @@ export default {
     const router = useRouter();
     const carrinhoStore = useCarrinhoStore();
     const { itens, valores_produtos, frete_selecionado, fretes, obj_frete } = storeToRefs(carrinhoStore);
-    const { limparCarrinho, adicionarPedido, adicionaFrete, limparFrete } =
-      carrinhoStore;
+    const { limparCarrinho, adicionarPedido, adicionaFrete, limparFrete } = carrinhoStore;
     const clienteAuthStore = useClienteAuthStore();
     const { client_token, client_id } = storeToRefs(clienteAuthStore);
     if (!client_id.value || !client_token.value || itens.value.length == 0) {
