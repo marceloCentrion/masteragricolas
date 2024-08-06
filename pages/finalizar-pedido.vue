@@ -746,6 +746,8 @@ export default {
         cidade_id: null,
       },
       loader: false,
+      obj_frete: {},
+      frete: {},
     });
 
     onMounted(() => {
