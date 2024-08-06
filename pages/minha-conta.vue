@@ -79,71 +79,64 @@
         </div>
       </div>
     </div>
-    <loader :loader="state.loader"/>
+    <loader :loader="state.loader" />
   </section>
 </template>
-<script>
+<script setup>
 import services from "../services/axios";
-export default {
-  setup() {
-    useHead({
-      title: "Minha Conta",
+useHead({
+  title: "Minha Conta",
+});
+definePageMeta({
+  layout: "site",
+  middleware: 'client',
+});
+
+const state = reactive({
+  dados: { enderecos: { cidade_id: "" } },
+  tipo_senha: "password",
+  id_endereco: "",
+  loader: false,
+});
+
+const router = useRouter();
+const clienteAuthStore = useClienteAuthStore();
+const { client_token, client_id } = storeToRefs(clienteAuthStore);
+onMounted(() => {
+  fetchDataCliente();
+});
+
+async function fetchDataCliente() {
+  try {
+    state.loader = true;
+    const { data } = await services.clientes.getDataCliente({
+      client_token: client_token.value,
+      client_id: client_id.value,
     });
-    definePageMeta({
-      layout: "site",
-    });
+    state.dados = data;
+    state.id_endereco = data.enderecos[0].id;
+    var data_nascimento = data.data_nascimento;
+    formatarData(data_nascimento);
+    // var estado_id = data.enderecos.cidade.estado_id;
+    // getCidade(estado_id);
+    state.loader = false;
 
-    const state = reactive({
-      dados: { enderecos: { cidade_id: "" } },
-      tipo_senha: "password",
-      id_endereco: "",
-      loader: false,
-    });
+  } catch (error) {
+    console.log(error);
+    state.loader = false;
+  } finally {
+    state.loader = false;
+  }
+}
+function irParaEnd() {
+  router.push('/meus-enderecos')
+}
 
-    const router = useRouter();
-    const clienteAuthStore = useClienteAuthStore();
-    const { client_token, client_id } = storeToRefs(clienteAuthStore);
-    onMounted(() => {
-      fetchDataCliente();
-    });
-
-    async function fetchDataCliente() {
-      try {
-        state.loader = true;
-        const { data } = await services.clientes.getDataCliente({
-          client_token: client_token.value,
-          client_id: client_id.value,
-        });
-        state.dados = data;
-        state.id_endereco = data.enderecos[0].id;
-        var data_nascimento = data.data_nascimento;
-        formatarData(data_nascimento);
-        // var estado_id = data.enderecos.cidade.estado_id;
-        // getCidade(estado_id);
-        state.loader = false;
-
-      } catch (error) {
-        console.log(error);
-        state.loader = false;
-      } finally {
-        state.loader = false;
-      }
-    }
-    function irParaEnd() {
-      router.push('/meus-enderecos')
-    }
-
-    function formatarData(data_nascimento) {
-      let data_americana = data_nascimento;
-      let data_brasileira = data_americana.split("-").reverse().join("/");
-      state.dados.data_nascimento = data_brasileira;
-    }
-    return {
-      state,
-      irParaEnd,
-    };
-  },
-};
+function formatarData(data_nascimento) {
+  let data_americana = data_nascimento;
+  let data_brasileira = data_americana.split("-").reverse().join("/");
+  state.dados.data_nascimento = data_brasileira;
+}
 </script>
 <style scoped>
 .title h2 {

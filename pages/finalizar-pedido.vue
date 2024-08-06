@@ -52,19 +52,9 @@
               <div class="card-body" v-if="state.enderecos.length > 0">
                 <div class="mb-2" v-for="endereco in state.enderecos" :key="endereco.id">
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      :id="'endereco_' + endereco.id"
-                      :value="endereco.id"
-                      v-model="state.endereco_id"
-                      name="endereco"
-                      @change="setEnderecoSelecionado(endereco)"
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'endereco_' + endereco.id"
-                    >
+                    <input class="form-check-input" type="radio" :id="'endereco_' + endereco.id" :value="endereco.id"
+                      v-model="state.endereco_id" name="endereco" @change="setEnderecoSelecionado(endereco)" />
+                    <label class="form-check-label" :for="'endereco_' + endereco.id">
                       <p class="endereco_principal">
                         <strong>
                           {{ endereco.nome }}
@@ -87,6 +77,56 @@
                 <button type="button" class="btn-end" @click="openModal()">
                   <i class="bi bi-house-add"></i> Adicionar Endereço
                 </button>
+              </div>
+            </div>
+            <div class="card card_endereco">
+              <h5 class="card-header"><i class="bi bi-truck"></i> Frete</h5>
+              <div class="card-body">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    Frete: {{ state.obj_frete.nome }} - entrega em
+                    {{ state.obj_frete.dias_entrega }} dias
+                  </div>
+
+                  <div>
+                    {{
+                      parseFloat(state.obj_frete.preco).toLocaleString(
+                        "pt-br",
+                        {
+                          style: "currency",
+                          currency: "BRL",
+                        }
+                      )
+                    }}
+                  </div>
+                </div>
+                <p>
+                  <a style="
+                      font-size: 11px;
+                      font-weight: bold;
+                      text-decoration: underline;
+                    " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                    aria-controls="collapseExample">
+                    Ver outras opções de frete
+                  </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div class="" v-for="(tipo_frete, i) in state.frete.fretes" :key="tipo_frete.id">
+                    <div v-if="!state.frete.fretes[i].error">
+                      <input type="radio" class="radio_frete" :id="'radio_frete_' + i"
+                        v-model="state.tipo_frete_selecionado" :value="tipo_frete.id" @change="alterarFrete(tipo_frete)"
+                        style="margin-right: 5px" />
+                      <label :for="'radio_frete_' + i">
+                        {{
+                          parseFloat(tipo_frete.preco).toLocaleString("pt-br", {
+                            style: "currency",
+                            currency: "BRL",
+                          })
+                        }}
+                        <span>{{ tipo_frete.nome }}</span></label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
