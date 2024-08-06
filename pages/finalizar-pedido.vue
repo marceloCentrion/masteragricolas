@@ -587,15 +587,15 @@ export default {
       const principal = state.enderecos.find(
         (endereco) => endereco.principal === "SIM"
       );
+
+      //OBJ FRETE CHAMANDO AQUI LOGO ABAIXO
       state.obj_frete = obj_frete;
 
       state.tipo_frete_selecionado = obj_frete.value.id;
-      console.log(principal);
+
       if (principal) {
         state.endereco_id = principal.id;
       }
-      //  state.fretes = fretes.value;
-
       const isEmpty = (obj) => {
         return Object.keys(obj).length === 0;
       };
